@@ -1,3 +1,4 @@
+import Models.Auction;
 import Models.BidInfo;
 import Models.ProjectInfo;
 import Models.RegisterRequest;
@@ -34,6 +35,7 @@ public class Main {
                     break;
                 case "auction":
                     System.out.println(commandData);
+                    Auction auction = mapper.readValue(commandData, Auction.class);
                     isFinished = true;
                     break;
             }
