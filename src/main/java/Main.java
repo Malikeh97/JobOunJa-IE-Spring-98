@@ -1,3 +1,4 @@
+import Models.ProjectInfo;
 import Models.RegisterRequest;
 import javafx.util.Pair;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -24,6 +25,7 @@ public class Main {
                     break;
                 case "addProject":
                     System.out.println(commandData);
+                    ProjectInfo projectInfo = mapper.readValue(commandData, ProjectInfo.class);
                     break;
                 case "bid":
                     System.out.println(commandData);
