@@ -1,3 +1,4 @@
+import Models.BidInfo;
 import Models.ProjectInfo;
 import Models.RegisterRequest;
 import javafx.util.Pair;
@@ -29,6 +30,7 @@ public class Main {
                     break;
                 case "bid":
                     System.out.println(commandData);
+                    BidInfo bidInfo = mapper.readValue(commandData, BidInfo.class);
                     break;
                 case "auction":
                     System.out.println(commandData);
