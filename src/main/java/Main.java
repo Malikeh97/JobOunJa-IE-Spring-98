@@ -1,17 +1,18 @@
-import Models.AuctionRequest;
-import Models.BidRequest;
-import Models.AddProjectRequest;
-import Models.RegisterRequest;
+import Models.*;
 import javafx.util.Pair;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.IOException;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
     private static Scanner scanner = new Scanner(System.in);
     private static boolean isFinished = false;
     private static ObjectMapper mapper = new ObjectMapper();
+
+    private static HashMap<String, HashMap<String, Integer>> users = new HashMap<>();
+    private static List<AddProjectRequest> projects = new ArrayList<>();
+    private static List<BidRequest> bids = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
         while (!isFinished) {
@@ -22,24 +23,81 @@ public class Main {
 
             switch (commandName) {
                 case "register":
-                    System.out.println(commandData);
-                    RegisterRequest registerRequest = mapper.readValue(commandData, RegisterRequest.class);
+                    register(commandData);
                     break;
                 case "addProject":
-                    System.out.println(commandData);
-                    AddProjectRequest addProjectRequest = mapper.readValue(commandData, AddProjectRequest.class);
+                    addProject(commandData);
                     break;
                 case "bid":
-                    System.out.println(commandData);
-                    BidRequest bidRequest = mapper.readValue(commandData, BidRequest.class);
+                    bid(commandData);
                     break;
-                case "auctionRequest":
-                    System.out.println(commandData);
-                    AuctionRequest auctionRequest = mapper.readValue(commandData, AuctionRequest.class);
-                    isFinished = true;
+                case "auction":
+                    auction(commandData);
                     break;
             }
         }
+    }
+
+    private static void register(String commandData) throws IOException {
+        System.out.println(commandData);
+        RegisterRequest registerRequest = mapper.readValue(commandData, RegisterRequest.class);
+        if (users.containsKey(registerRequest.getUsername())) {
+            System.out.println("ERROR: " + registerRequest.getUsername() + ", This username is duplicate.");
+        } else {
+            HashMap<String, Integer> skills = new HashMap<>();
+            for(Skill skill : registerRequest.getSkills()) {
+                skills.put(skill.getName(), skill.getPoints());
+            }
+            users.put(registerRequest.getUsername(), skills);
+        }
+    }
+
+    private static void addProject(String commandData) throws IOException {
+        System.out.println(commandData);
+        AddProjectRequest addProjectRequest = mapper.readValue(commandData, AddProjectRequest.class);
+        projects.add(addProjectRequest);
+    }
+
+    private static void bid(String commandData) throws IOException {
+        System.out.println(commandData);
+        BidRequest bidRequest = mapper.readValue(commandData, BidRequest.class);
+        if(isElligibleBid(bidRequest)) {
+            bids.add(bidRequest);
+        } else {
+            System.out.println("ERROR: " + "Bid is not elligible.");
+        }
+    }
+
+    private static boolean isElligibleBid(BidRequest bidRequest) {
+        AddProjectRequest project = getProject(bidRequest.getProjectTitle());
+        HashMap<String, Integer> userSkills = users.get(bidRequest.getBiddingUser());
+        if(project == null || userSkills == null)
+            return false;
+
+        if(bidRequest.getBidAmount() > project.getBudget())
+            return false;
+
+        for (Skill skill : project.getSkills()) {
+            if (!userSkills.containsKey(skill.getName()))
+                return false;
+            if(skill.getPoints() > userSkills.get(skill.getName()))
+                return false;
+        }
+        return true;
+    }
+
+    private static AddProjectRequest getProject(String projectTitle) {
+        return projects.stream()
+                .filter(p -> p.getTitle().equals(projectTitle))
+                .findFirst()
+                .orElse(null);
+    }
+
+    private static void auction(String commandData) throws IOException {
+        System.out.println(commandData);
+        AuctionRequest auctionRequest = mapper.readValue(commandData, AuctionRequest.class);
+        // Todo: implement functionality
+        isFinished = true;
     }
 
     private static Pair<String, String> getCommandParts() {

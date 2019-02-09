@@ -12,5 +12,4 @@ import java.util.List;
 public class RegisterRequest {
     private String username;
     private List<Skill> skills;
-
 }

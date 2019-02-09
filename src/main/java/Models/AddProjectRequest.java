@@ -12,5 +12,5 @@ import java.util.List;
 public class AddProjectRequest {
     private String title;
     private List<Skill> skills;
-    private String budget;
+    private Integer budget;
 }
