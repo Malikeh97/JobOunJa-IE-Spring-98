@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProjectInfo {
+public class AddProjectRequest {
     private String title;
     private List<Skill> skills;
     private String budget;

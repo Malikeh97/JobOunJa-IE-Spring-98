@@ -1,6 +1,6 @@
-import Models.Auction;
-import Models.BidInfo;
-import Models.ProjectInfo;
+import Models.AuctionRequest;
+import Models.BidRequest;
+import Models.AddProjectRequest;
 import Models.RegisterRequest;
 import javafx.util.Pair;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -27,15 +27,15 @@ public class Main {
                     break;
                 case "addProject":
                     System.out.println(commandData);
-                    ProjectInfo projectInfo = mapper.readValue(commandData, ProjectInfo.class);
+                    AddProjectRequest addProjectRequest = mapper.readValue(commandData, AddProjectRequest.class);
                     break;
                 case "bid":
                     System.out.println(commandData);
-                    BidInfo bidInfo = mapper.readValue(commandData, BidInfo.class);
+                    BidRequest bidRequest = mapper.readValue(commandData, BidRequest.class);
                     break;
-                case "auction":
+                case "auctionRequest":
                     System.out.println(commandData);
-                    Auction auction = mapper.readValue(commandData, Auction.class);
+                    AuctionRequest auctionRequest = mapper.readValue(commandData, AuctionRequest.class);
                     isFinished = true;
                     break;
             }
