@@ -42,7 +42,7 @@ public class Main {
         System.out.println(commandData);
         RegisterRequest registerRequest = mapper.readValue(commandData, RegisterRequest.class);
         if (users.containsKey(registerRequest.getUsername())) {
-            System.out.println("ERROR: " + registerRequest.getUsername() + ", This username is duplicate.");
+            System.out.println("ERROR: " + registerRequest.getUsername() + ", This username exists.");
         } else {
             HashMap<String, Integer> skills = new HashMap<>();
             for(Skill skill : registerRequest.getSkills()) {
@@ -55,20 +55,25 @@ public class Main {
     private static void addProject(String commandData) throws IOException {
         System.out.println(commandData);
         AddProjectRequest addProjectRequest = mapper.readValue(commandData, AddProjectRequest.class);
-        projects.add(addProjectRequest);
+        if(getProject(addProjectRequest.getTitle()) == null) {
+            System.out.println("ERROR: " + "This project title exists.");
+        } else {
+            projects.add(addProjectRequest);
+        }
+
     }
 
     private static void bid(String commandData) throws IOException {
         System.out.println(commandData);
         BidRequest bidRequest = mapper.readValue(commandData, BidRequest.class);
-        if(isElligibleBid(bidRequest)) {
+        if(isEligibleBid(bidRequest)) {
             bids.add(bidRequest);
         } else {
-            System.out.println("ERROR: " + "Bid is not elligible.");
+            System.out.println("ERROR: " + "Bid is not eligible.");
         }
     }
 
-    private static boolean isElligibleBid(BidRequest bidRequest) {
+    private static boolean isEligibleBid(BidRequest bidRequest) {
         AddProjectRequest project = getProject(bidRequest.getProjectTitle());
         HashMap<String, Integer> userSkills = users.get(bidRequest.getBiddingUser());
         if(project == null || userSkills == null)
@@ -105,4 +110,8 @@ public class Main {
         int spaceIndex = command.indexOf(" ");
         return new Pair<>(command.substring(0, spaceIndex), command.substring(spaceIndex));
     }
+
+    // Todo: correct throw handling problem
+    // Todo: implement validation
+    // Todo:test the code
 }
