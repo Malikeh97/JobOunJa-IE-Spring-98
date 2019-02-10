@@ -14,27 +14,32 @@ public class Main {
     private static List<AddProjectRequest> projects = new ArrayList<>();
     private static List<BidRequest> bids = new ArrayList<>();
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args){
         while (!isFinished) {
             Pair<String, String> commandParts = getCommandParts();
             String commandName = commandParts.getKey();
             String commandData = commandParts.getValue();
 
+            try {
+                switch (commandName) {
+                    case "register":
+                        register(commandData);
+                        break;
+                    case "addProject":
+                        addProject(commandData);
+                        break;
+                    case "bid":
+                        bid(commandData);
+                        break;
+                    case "auction":
+                        auction(commandData);
+                        break;
+                }
 
-            switch (commandName) {
-                case "register":
-                    register(commandData);
-                    break;
-                case "addProject":
-                    addProject(commandData);
-                    break;
-                case "bid":
-                    bid(commandData);
-                    break;
-                case "auction":
-                    auction(commandData);
-                    break;
+            } catch (IOException ex) {
+                System.out.println(ex.getLocalizedMessage());
             }
+
         }
     }
 
@@ -111,7 +116,6 @@ public class Main {
         return new Pair<>(command.substring(0, spaceIndex), command.substring(spaceIndex));
     }
 
-    // Todo: correct throw handling problem
     // Todo: implement validation
     // Todo:test the code
 }
