@@ -55,7 +55,7 @@ public class MainTest {
 	private Object[] readFile(String path) throws FileNotFoundException {
 		StringBuilder data = new StringBuilder();
 		String expectedResult = "";
-		File file = new File("src/test/resources/" + path);
+		File file = new File("src/test/resources/testcases/" + path);
 		Scanner scanner = new Scanner(file);
 
 		while (scanner.hasNextLine()) {
