@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 public class Main {
 	private static Scanner scanner;
-	private static boolean isFinished = false;
+	private static boolean isFinished;
 	private static ObjectMapper mapper = new ObjectMapper();
 
 	private static HashMap<String, HashMap<String, Integer>> users = new HashMap<>();
@@ -19,7 +19,6 @@ public class Main {
 
 	public static void main(String[] args) {
 		setUp();
-		isFinished = false;
 		while (!isFinished) {
 			Pair<String, String> commandParts = getCommandParts();
 			String commandName = commandParts.getKey();
@@ -48,6 +47,7 @@ public class Main {
 	}
 
 	private static void setUp() {
+		isFinished = false;
 		users = new HashMap<>();
 		projects = new ArrayList<>();
 		bids = new ArrayList<>();
@@ -98,7 +98,7 @@ public class Main {
 			List<BidRequest> projectBids = getAllProjectBids(auctionRequest.getProjectTitle());
 			List<String> winners = getWinners(project, projectBids);
 			if (winners == null || winners.size() == 0) {
-				System.out.println("No bid for this project exists.");
+				System.out.println("There is no winner.");
 			} else if (winners.size() == 1) {
 				System.out.println("Winner is: " + winners.get(0));
 			} else {
