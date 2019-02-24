@@ -6,10 +6,7 @@ import java.util.StringTokenizer;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
-import services.AllProjectsPage;
-import services.IPage;
-import services.NotFoundPage;
-import services.SingleUserPage;
+import services.*;
 
 public class Server {
     private final String projectContext = "project";
@@ -32,7 +29,7 @@ public class Server {
             try {
                 if (context.equals(projectContext)) {
                     if (tokenizer.hasMoreTokens()) {
-                        page = new SingleUserPage();
+                        page = new SingleProjectPage();
                     } else {
                         page = new AllProjectsPage();
                     }
