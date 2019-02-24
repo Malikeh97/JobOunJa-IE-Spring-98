@@ -5,12 +5,8 @@ import domain.Project;
 import domain.Skill;
 import domain.User;
 import gateways.HttpGateway;
-import javafx.util.Pair;
-import org.codehaus.jackson.map.ObjectMapper;
 
-import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 public class Main {
@@ -18,25 +14,20 @@ public class Main {
 	public static void main(String[] args) {
 
 		User newUser = createHardCodedUser();
-		//test:
-		List<Project> projectList = new ArrayList<Project>();
-		List<Skill> skillList = new ArrayList<Skill>();
-
 		InMemoryDBManager.shared.addUser(newUser);
 
 		HttpGateway httpGateway = new HttpGateway();
-		projectList = httpGateway.getProjects();
-		skillList = httpGateway.getSkills();
+        List<Project> projectList = httpGateway.getProjects();
+        List<Skill> skillList = httpGateway.getSkills();
 		InMemoryDBManager.shared.setProjects(projectList);
 		InMemoryDBManager.shared.setSkills(skillList);
 
-		// TODO: implement Server
-//		Server s = new Server();
-//		try {
-//			s.start();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
+		Server s = new Server();
+		try {
+			s.start();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	private static User createHardCodedUser() {
