@@ -3,7 +3,6 @@ package Repository;
 import domain.Project;
 import domain.Skill;
 import domain.User;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -47,5 +46,10 @@ public class InMemoryDBManager implements IDBManager {
                 .filter(project -> project.getId().equals(id))
                 .findAny()
                 .orElse(null);
+    }
+
+    @Override
+    public void addUser(User newUser) {
+        users.add(newUser);
     }
 }
