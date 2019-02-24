@@ -6,10 +6,8 @@ import com.sun.net.httpserver.HttpExchange;
 import domain.User;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 
-public class SingleUserPage implements IPage {
+public class SingleUserPage extends IPage {
     @Override
     public void handleRequest(HttpExchange httpExchange) throws IOException {
         httpExchange.getResponseHeaders().set("Content-Type", "text/html; charset=utf-8");
@@ -29,11 +27,6 @@ public class SingleUserPage implements IPage {
                 "<li>bio: " + user.getBio() + "</li>" +
                 "</ul>";
         HTMLResponse htmlResponse = new HTMLResponse("User", body);
-
-        byte[] bytes = htmlResponse.getResponse(StandardCharsets.UTF_8);
-        httpExchange.sendResponseHeaders(200, bytes.length);
-        OutputStream os = httpExchange.getResponseBody();
-        os.write(bytes);
-        os.close();
+        this.sendResponse(httpExchange, 200, htmlResponse);
     }
 }

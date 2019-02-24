@@ -6,11 +6,9 @@ import com.sun.net.httpserver.HttpExchange;
 import domain.Project;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-public class AllProjectsPage implements IPage {
+public class AllProjectsPage extends IPage {
     @Override
     public void handleRequest(HttpExchange httpExchange) throws IOException {
         httpExchange.getResponseHeaders().set("Content-Type", "text/html; charset=utf-8");
@@ -50,10 +48,7 @@ public class AllProjectsPage implements IPage {
 
         body.append("    </table>");
         HTMLResponse htmlResponse = new HTMLResponse("Project", style, body.toString());
-        byte[] bytes = htmlResponse.getResponse(StandardCharsets.UTF_8);
-        httpExchange.sendResponseHeaders(200, bytes.length);
-        OutputStream os = httpExchange.getResponseBody();
-        os.write(bytes);
-        os.close();
+        this.sendResponse(httpExchange, 200, htmlResponse);
+
     }
 }

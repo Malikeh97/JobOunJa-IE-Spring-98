@@ -1,5 +1,3 @@
-
-
 import Repository.InMemoryDBManager;
 import domain.Project;
 import domain.Skill;
@@ -7,7 +5,6 @@ import domain.User;
 import gateways.HttpGateway;
 
 import java.util.*;
-
 
 public class Main {
 
