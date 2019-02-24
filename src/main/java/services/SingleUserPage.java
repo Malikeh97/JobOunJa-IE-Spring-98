@@ -16,7 +16,11 @@ public class SingleUserPage implements IPage {
         String[] tokens = httpExchange.getRequestURI().getPath().split("/");
         String id = tokens[tokens.length - 1];
         User user = InMemoryDBManager.shared.findUserById(id);
-
+        if (user == null) {
+            IPage notFoundPage = new NotFoundPage();
+            notFoundPage.handleRequest(httpExchange);
+            return;
+        }
         String body = "<ul>" +
                 "<li>id: " + user.getId() + "</li>" +
                 "<li>first name: " + user.getFirstName() + "</li>" +
