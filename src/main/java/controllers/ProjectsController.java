@@ -11,16 +11,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 @WebServlet("/projects/*")
-public class ProjectsServlet extends HttpServlet {
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-	}
-
+public class ProjectsController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String[] splittedURI = request.getRequestURI().split("/");
 		ProjectsService projectsService = new ProjectsService();
 		if (splittedURI.length == 3) {
-			System.out.println("here");
 			projectsService.handleAllProjectsRequest(request, response);
 		} else if (splittedURI.length == 4) {
 			projectsService.handleSingleProjectRequest(request, response, splittedURI[3]);
