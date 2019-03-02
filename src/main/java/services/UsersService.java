@@ -23,7 +23,11 @@ public class UsersService {
 			return;
 		}
 		if (user == loggedInUser) {
-
+			List<Skill> skills = InMemoryDBManager.shared.findAllSkills();
+			System.out.println(skills);
+			request.setAttribute("user", user);
+			request.setAttribute("skills", skills);
+			request.getRequestDispatcher("/myProfile.jsp").forward(request, response);
 		} else {
 			List<String> endrosedSkills = new ArrayList<>();
 			user.getSkills().forEach(skill -> {
