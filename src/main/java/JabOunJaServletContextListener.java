@@ -1,30 +1,26 @@
 import Repository.InMemoryDBManager;
-import domain.Project;
 import domain.Skill;
 import domain.User;
 import gateways.HttpGateway;
+import gateways.IGateway;
 
-import java.util.*;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+import javax.servlet.annotation.WebListener;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Main {
+@WebListener
+public class JabOunJaServletContextListener implements ServletContextListener {
 
-	public static void main(String[] args) {
+	@Override
+	public void contextInitialized(ServletContextEvent arg0) {
+		IGateway gateway = new HttpGateway();
+		InMemoryDBManager.shared.setProjects(gateway.getProjects());
+		InMemoryDBManager.shared.setSkills(gateway.getSkills());
 
 		User newUser = createHardCodedUser();
 		InMemoryDBManager.shared.addUser(newUser);
-
-		HttpGateway httpGateway = new HttpGateway();
-        List<Project> projectList = httpGateway.getProjects();
-        List<Skill> skillList = httpGateway.getSkills();
-		InMemoryDBManager.shared.setProjects(projectList);
-		InMemoryDBManager.shared.setSkills(skillList);
-
-		Server s = new Server();
-		try {
-			s.start();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	private static User createHardCodedUser() {
