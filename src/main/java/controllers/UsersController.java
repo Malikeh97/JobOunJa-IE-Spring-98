@@ -13,7 +13,13 @@ import java.io.IOException;
 @WebServlet("/users/*")
 public class UsersController extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		String[] splittedURI = request.getRequestURI().split("/");
+		UsersService usersService = new UsersService();
+		if (splittedURI.length == 4) {
+			usersService.handleEndorseRequest(request, response, splittedURI[3]);
+		} else {
+			request.getRequestDispatcher("/notFound.jsp").forward(request, response);
+		}
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class UsersService {
@@ -44,4 +45,19 @@ public class UsersService {
 		}
 	}
 
+	public void handleEndorseRequest(HttpServletRequest request, HttpServletResponse response, String id) throws ServletException, IOException {
+		User user = InMemoryDBManager.shared.findUserById(id);
+		User loggedInUser = InMemoryDBManager.shared.findUserById("1");
+		System.out.println(request.getParameter("skill"));
+		for (Skill skill: user.getSkills()) {
+			if((skill.getName()).equals(request.getParameter("skill"))) {
+				skill.getEndorsers().add(loggedInUser.getId());
+				skill.setPoint(skill.getPoint()+1);
+				break;
+			}
+		}
+		request.setAttribute("user", user);
+		request.setAttribute("loggedInUser", loggedInUser);
+		request.getRequestDispatcher("/anotherUser.jsp").forward(request, response);
+	}
 }
