@@ -8,6 +8,8 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @WebListener
@@ -21,14 +23,29 @@ public class JabOunJaServletContextListener implements ServletContextListener {
 
 		User newUser = createHardCodedUser();
 		InMemoryDBManager.shared.addUser(newUser);
+		List<Skill> newUserSkills = new ArrayList<>();
+		newUserSkills.add(new Skill("HTML", 10, null));
+		newUserSkills.add(new Skill("Javascript", 10, null));
+		newUserSkills.add(new Skill("C++", 5, null));
+		newUserSkills.add(new Skill("Java", 8, new ArrayList<>(Collections.singletonList("1"))));
+
+		newUser = new User();
+		newUser.setId("2");
+		newUser.setFirstName("علی");
+		newUser.setLastName("طبا");
+		newUser.setJobTitle("برنامه نویس");
+		newUser.setProfilePictureURL(null);
+		newUser.setSkills(newUserSkills);
+		newUser.setBio("نظری ندارم");
+		InMemoryDBManager.shared.addUser(newUser);
 	}
 
 	private static User createHardCodedUser() {
 		List<Skill> newUserSkills = new ArrayList<>();
-		newUserSkills.add(new Skill("HTML", 5));
-		newUserSkills.add(new Skill("Javascript", 4));
-		newUserSkills.add(new Skill("C++", 2));
-		newUserSkills.add(new Skill("Java", 3));
+		newUserSkills.add(new Skill("HTML", 5, null));
+		newUserSkills.add(new Skill("Javascript", 4, null));
+		newUserSkills.add(new Skill("C++", 2, null));
+		newUserSkills.add(new Skill("Java", 3, null));
 
 		User newUser = new User();
 		newUser.setId("1");

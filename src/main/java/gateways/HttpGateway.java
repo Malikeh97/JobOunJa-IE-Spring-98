@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class HttpGateway implements IGateway {
 	public List<Project> getProjects() {
 		try {
 			String projectJSON = getResponse("/project");
-			return Arrays.asList(mapper.readValue(projectJSON, Project[].class));
+			return new ArrayList<>(Arrays.asList(mapper.readValue(projectJSON, Project[].class)));
 		} catch (IOException ex) {
 			System.err.println(ex.getLocalizedMessage());
 		}
@@ -31,7 +32,7 @@ public class HttpGateway implements IGateway {
 	public List<Skill> getSkills() {
 		try {
 			String projectJSON = getResponse("/skill");
-			return Arrays.asList(mapper.readValue(projectJSON, Skill[].class));
+			return new ArrayList<>(Arrays.asList(mapper.readValue(projectJSON, Skill[].class)));
 		} catch (IOException ex) {
 			System.err.println(ex.getLocalizedMessage());
 		}
