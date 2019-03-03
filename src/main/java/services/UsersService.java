@@ -38,13 +38,8 @@ public class UsersService {
 			request.setAttribute("skills", skills);
 			request.getRequestDispatcher("/myProfile.jsp").forward(request, response);
 		} else {
-			List<String> endrosedSkills = new ArrayList<>();
-			user.getSkills().forEach(skill -> {
-				if (skill.getEndorsers() != null && skill.getEndorsers().indexOf(loggedInUser.getId()) >= 0)
-					endrosedSkills.add(skill.getName());
-			});
 			request.setAttribute("user", user);
-			request.setAttribute("endorsedSkills", endrosedSkills);
+			request.setAttribute("loggedInUser", loggedInUser);
 			request.getRequestDispatcher("/anotherUser.jsp").forward(request, response);
 		}
 	}

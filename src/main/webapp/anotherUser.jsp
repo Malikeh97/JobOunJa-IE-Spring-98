@@ -21,13 +21,13 @@
             <li>
                 <c:out value="${skill.name}"/>: <c:out value="${skill.point}"/>
                 <c:choose>
-                    <c:when test="${endorsedSkills.indexOf(skill.name) < 0}">
+                    <c:when test="${skill.endorsers.indexOf(loggedInUser.id) < 0}">
                         <form action="" method="">
                             <button>Endorse</button>
                         </form>
                     </c:when>
                     <c:otherwise>
-                        <div>endorsed</div>
+                        <div>Endorsed by you</div>
                     </c:otherwise>
                 </c:choose>
             </li>

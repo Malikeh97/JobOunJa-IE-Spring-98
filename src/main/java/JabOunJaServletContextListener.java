@@ -34,10 +34,10 @@ public class JabOunJaServletContextListener implements ServletContextListener {
 
 	private static User createHardCodedUser1() {
 		List<Skill> newUserSkills = new ArrayList<>();
-		newUserSkills.add(new Skill("HTML", 5, null));
-		newUserSkills.add(new Skill("Javascript", 4, null));
-		newUserSkills.add(new Skill("C++", 2, null));
-		newUserSkills.add(new Skill("Java", 3, null));
+		newUserSkills.add(new Skill("HTML", 5, new ArrayList<>()));
+		newUserSkills.add(new Skill("Javascript", 4, new ArrayList<>()));
+		newUserSkills.add(new Skill("C++", 2, new ArrayList<>()));
+		newUserSkills.add(new Skill("Java", 3, new ArrayList<>()));
 
 		User newUser = new User();
 		newUser.setId("1");
@@ -53,9 +53,9 @@ public class JabOunJaServletContextListener implements ServletContextListener {
 
 	private static User createHardCodedUser2() {
 		List<Skill> newUserSkills = new ArrayList<>();
-		newUserSkills.add(new Skill("HTML", 10, null));
-		newUserSkills.add(new Skill("Javascript", 10, null));
-		newUserSkills.add(new Skill("C++", 5, null));
+		newUserSkills.add(new Skill("HTML", 10, new ArrayList<>()));
+		newUserSkills.add(new Skill("Javascript", 10, new ArrayList<>()));
+		newUserSkills.add(new Skill("C++", 5, new ArrayList<>()));
 		newUserSkills.add(new Skill("Java", 8, new ArrayList<>(Collections.singletonList("1"))));
 
 		User newUser = new User();
@@ -71,9 +71,9 @@ public class JabOunJaServletContextListener implements ServletContextListener {
 
 	private static User createHardCodedUser3() {
 		List<Skill> newUserSkills = new ArrayList<>();
-		newUserSkills.add(new Skill("Python", 10, null));
-		newUserSkills.add(new Skill("Javascript", 2, null));
-		newUserSkills.add(new Skill("C++", 8, null));
+		newUserSkills.add(new Skill("Python", 10, new ArrayList<>()));
+		newUserSkills.add(new Skill("Javascript", 2, new ArrayList<>()));
+		newUserSkills.add(new Skill("C++", 8, new ArrayList<>()));
 		newUserSkills.add(new Skill("ML", 8, new ArrayList<>(Arrays.asList("1", "2"))));
 		newUserSkills.add(new Skill("Java", 5, new ArrayList<>(Collections.singletonList("1"))));
 
