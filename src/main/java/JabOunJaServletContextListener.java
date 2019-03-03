@@ -21,26 +21,18 @@ public class JabOunJaServletContextListener implements ServletContextListener {
 		InMemoryDBManager.shared.setProjects(gateway.getProjects());
 		InMemoryDBManager.shared.setSkills(gateway.getSkills());
 
-		User newUser = createHardCodedUser();
-		InMemoryDBManager.shared.addUser(newUser);
-		List<Skill> newUserSkills = new ArrayList<>();
-		newUserSkills.add(new Skill("HTML", 10, null));
-		newUserSkills.add(new Skill("Javascript", 10, null));
-		newUserSkills.add(new Skill("C++", 5, null));
-		newUserSkills.add(new Skill("Java", 8, new ArrayList<>(Collections.singletonList("1"))));
+		User newUser1 = createHardCodedUser1();
+		InMemoryDBManager.shared.addUser(newUser1);
 
-		newUser = new User();
-		newUser.setId("2");
-		newUser.setFirstName("علی");
-		newUser.setLastName("طبا");
-		newUser.setJobTitle("برنامه نویس");
-		newUser.setProfilePictureURL(null);
-		newUser.setSkills(newUserSkills);
-		newUser.setBio("نظری ندارم");
-		InMemoryDBManager.shared.addUser(newUser);
+		User newUser2 = createHardCodedUser2();
+		InMemoryDBManager.shared.addUser(newUser2);
+
+		User newUser3 = createHardCodedUser3();
+		InMemoryDBManager.shared.addUser(newUser3);
+
 	}
 
-	private static User createHardCodedUser() {
+	private static User createHardCodedUser1() {
 		List<Skill> newUserSkills = new ArrayList<>();
 		newUserSkills.add(new Skill("HTML", 5, null));
 		newUserSkills.add(new Skill("Javascript", 4, null));
@@ -55,6 +47,44 @@ public class JabOunJaServletContextListener implements ServletContextListener {
 		newUser.setProfilePictureURL(null);
 		newUser.setSkills(newUserSkills);
 		newUser.setBio("روی سنگ قبرم بنویسید: خدا بیامرز می خواست خیلی کارا بکنه ولی پول نداشت");
+		return newUser;
+	}
+
+
+	private static User createHardCodedUser2() {
+		List<Skill> newUserSkills = new ArrayList<>();
+		newUserSkills.add(new Skill("HTML", 10, null));
+		newUserSkills.add(new Skill("Javascript", 10, null));
+		newUserSkills.add(new Skill("C++", 5, null));
+		newUserSkills.add(new Skill("Java", 8, new ArrayList<>(Collections.singletonList("1"))));
+
+		User newUser = new User();
+		newUser.setId("2");
+		newUser.setFirstName("علی");
+		newUser.setLastName("طبا");
+		newUser.setJobTitle("برنامه نویس");
+		newUser.setProfilePictureURL(null);
+		newUser.setSkills(newUserSkills);
+		newUser.setBio("نظری ندارم");
+		return newUser;
+	}
+
+	private static User createHardCodedUser3() {
+		List<Skill> newUserSkills = new ArrayList<>();
+		newUserSkills.add(new Skill("Python", 10, null));
+		newUserSkills.add(new Skill("Javascript", 2, null));
+		newUserSkills.add(new Skill("C++", 8, null));
+		newUserSkills.add(new Skill("ML", 8, new ArrayList<>(Arrays.asList("1", "2"))));
+		newUserSkills.add(new Skill("Java", 5, new ArrayList<>(Collections.singletonList("1"))));
+
+		User newUser = new User();
+		newUser.setId("3");
+		newUser.setFirstName("ملیکه");
+		newUser.setLastName("احقاقی");
+		newUser.setJobTitle("دانش پژوه");
+		newUser.setProfilePictureURL(null);
+		newUser.setSkills(newUserSkills);
+		newUser.setBio("تولدم مبارک");
 		return newUser;
 	}
 }

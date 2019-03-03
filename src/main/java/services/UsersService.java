@@ -14,6 +14,16 @@ import java.util.List;
 
 public class UsersService {
 	public void handleAllUsersRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		List<User> allUsers = InMemoryDBManager.shared.findAllUsers();
+		User loggedInUser = InMemoryDBManager.shared.findUserById("1");
+		if (allUsers == null || allUsers.size() < 2) {
+			request.getRequestDispatcher("/notFound.jsp").forward(request, response);
+			return;
+		}
+		allUsers.remove(loggedInUser);
+		request.setAttribute("users", allUsers);
+		request.getRequestDispatcher("/allUsers.jsp").forward(request, response);
+
 	}
 	public void handleSingleUserRequest(HttpServletRequest request, HttpServletResponse response, String id) throws ServletException, IOException {
 		User user = InMemoryDBManager.shared.findUserById(id);
@@ -24,7 +34,6 @@ public class UsersService {
 		}
 		if (user == loggedInUser) {
 			List<Skill> skills = InMemoryDBManager.shared.findAllSkills();
-			System.out.println(skills);
 			request.setAttribute("user", user);
 			request.setAttribute("skills", skills);
 			request.getRequestDispatcher("/myProfile.jsp").forward(request, response);

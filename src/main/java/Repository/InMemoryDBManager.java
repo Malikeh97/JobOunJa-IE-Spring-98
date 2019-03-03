@@ -36,13 +36,14 @@ public class InMemoryDBManager implements IDBManager {
 
 	@Override
 	public List<Project> findAllProjects() {
-		return this.projects;
+		return new ArrayList<>(this.projects);
 	}
 
 	@Override
-	public List<Skill> findAllSkills() {
-		return this.skills;
-	}
+	public List<Skill> findAllSkills() { return new ArrayList<>(this.skills); }
+
+	@Override
+	public List<User> findAllUsers() { return new ArrayList<>(this.users);}
 
 	@Override
 	public Project findProjectById(String id) {
