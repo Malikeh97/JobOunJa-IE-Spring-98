@@ -25,6 +25,11 @@ public class InMemoryDBManager implements IDBManager {
 		this.skills = new ArrayList<>();
 	}
 
+	public void setProjects(List<Project> projects) {
+		projects.forEach(project -> project.setBids(new ArrayList<>()));
+		this.projects = projects;
+	}
+
 	@Override
 	public User findUserById(String id) {
 		return this.users

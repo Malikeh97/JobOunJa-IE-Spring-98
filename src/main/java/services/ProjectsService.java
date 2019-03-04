@@ -1,6 +1,7 @@
 package services;
 
 import Repository.InMemoryDBManager;
+import domain.Bid;
 import domain.Project;
 import domain.Skill;
 import domain.User;
@@ -26,6 +27,8 @@ public class ProjectsService {
 	}
 	public void handleSingleProjectRequest(HttpServletRequest request, HttpServletResponse response, String id) throws ServletException, IOException {
 		Project project = InMemoryDBManager.shared.findProjectById(id);
+
+		boolean isBidAdded = false;
 		User loggedInUser = InMemoryDBManager.shared.findUserById("1");
 		if (project == null) {
 			request.getRequestDispatcher("/notFound.jsp").forward(request, response);
@@ -35,6 +38,12 @@ public class ProjectsService {
 			request.getRequestDispatcher("/forbidden.jsp").forward(request, response);
 			return;
 		}
+		for(Bid bid : project.getBids()) {
+			if(bid.getBiddingUser() == loggedInUser) {
+				isBidAdded = true;
+			}
+		}
+		request.setAttribute("isBidAdded", isBidAdded);
 		request.setAttribute("project", project);
 		request.getRequestDispatcher("/singleProject.jsp").forward(request, response);
 	}
@@ -52,4 +61,20 @@ public class ProjectsService {
 		return false;
 	}
 
+	public void handleAddBidRequest(HttpServletRequest request, HttpServletResponse response, String id) throws ServletException, IOException {
+		User loggedInUser = InMemoryDBManager.shared.findUserById("1");
+		Project project = InMemoryDBManager.shared.findProjectById(id);
+		Integer bidAmount = Integer.valueOf(request.getParameter("bidAmount"));
+		if (bidAmount > project.getBudget()) {
+			request.setAttribute("msg", "bidAmount was too big! try another value");
+			request.setAttribute("isBidAdded", false);
+		} else {
+			Bid bid = new Bid(loggedInUser, project, bidAmount);
+			project.getBids().add(bid);
+			request.setAttribute("isBidAdded", true);
+		}
+
+		request.setAttribute("project", project);
+		request.getRequestDispatcher("/singleProject.jsp").forward(request, response);
+	}
 }

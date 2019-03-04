@@ -8,19 +8,33 @@
     <title>Project</title>
 </head>
 <body>
+
+<c:if test="${not empty msg}">
+    <div style="color: red;"><c:out value="${msg}"/></div>
+</c:if>
+
 <ul>
     <li>id: <c:out value="${project.id}"/></li>
     <li>title: <c:out value="${project.title}"/></li>
     <li>description: <c:out value="${project.description}"/></li>
     <li>imageUrl: <img src="${project.imageURL}" style="width: 50px; height: 50px;"></li>
-    <li>budget: <C:out value="${project.budget}"/></li>
+    <li>budget: <c:out value="${project.budget}"/></li>
 </ul>
 <!-- display form if user has not bidded before -->
-<form action="" method="">
-    <label for="bidAmount">Bid Amount:</label>
-    <input type="number" name="bidAmount">
+<c:choose>
+    <c:when test="${!isBidAdded}">
+        <form action="http://localhost:8080/ali_malikeh_war_exploded/projects/${project.id}/add_bid" method="POST">
+            <label for="bidAmount">Bid Amount:</label>
+            <input type="number" name="bidAmount">
 
-    <button>Submit</button>
-</form>
+            <button>Submit</button>
+        </form>
+    </c:when>
+    <c:otherwise>
+        <div>Bid already assigned!</div>
+    </c:otherwise>
+</c:choose>
+
+
 </body>
 </html>
