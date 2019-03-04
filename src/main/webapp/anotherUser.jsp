@@ -22,7 +22,7 @@
                 <c:out value="${skill.name}"/>: <c:out value="${skill.point}"/>
                 <c:choose>
                     <c:when test="${skill.endorsers.indexOf(loggedInUser.id) < 0}">
-                        <form action="http://localhost:8080/ali_malikeh_war_exploded/users/${user.id}" method="POST">
+                        <form action="http://localhost:8080/ali_malikeh_war_exploded/users/${user.id}/endorse" method="POST">
                             <input name="skill" type="hidden" value="${skill.name}"/>
                             <button>Endorse</button >
                         </form>

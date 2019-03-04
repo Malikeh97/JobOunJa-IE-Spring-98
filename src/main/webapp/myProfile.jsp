@@ -29,14 +29,13 @@
     </li>
 </ul>
 Add Skill:
-<form action="" method="">
+<form action="http://localhost:8080/ali_malikeh_war_exploded/users/${user.id}/add_skill" method="POST" >
     <label>skill: </label>
-    <select name="">
+    <select name="skill_name" >
         <c:forEach var="skill" items="${skills}">
             <option value="${skill.name}"><c:out value="${skill.name}"/></option>
         </c:forEach>
     </select>
-    <label>point: </label><input type="text" placeholder="point" />
     <button>Add</button>
 </form>
 </body>

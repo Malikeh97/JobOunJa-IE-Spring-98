@@ -48,7 +48,6 @@ public class UsersService {
 	public void handleEndorseRequest(HttpServletRequest request, HttpServletResponse response, String id) throws ServletException, IOException {
 		User user = InMemoryDBManager.shared.findUserById(id);
 		User loggedInUser = InMemoryDBManager.shared.findUserById("1");
-		System.out.println(request.getParameter("skill"));
 		for (Skill skill: user.getSkills()) {
 			if((skill.getName()).equals(request.getParameter("skill"))) {
 				skill.getEndorsers().add(loggedInUser.getId());
@@ -59,5 +58,27 @@ public class UsersService {
 		request.setAttribute("user", user);
 		request.setAttribute("loggedInUser", loggedInUser);
 		request.getRequestDispatcher("/anotherUser.jsp").forward(request, response);
+	}
+
+	public void handleAddSkillRequest(HttpServletRequest request, HttpServletResponse response, String id) throws ServletException, IOException {
+		User loggedInUser = InMemoryDBManager.shared.findUserById("1");
+		List<Skill> skills = InMemoryDBManager.shared.findAllSkills();
+		boolean isRepeated = false;
+		if(id.equals(loggedInUser.getId())) {
+			for (Skill skill: loggedInUser.getSkills()) {
+				if((skill.getName()).equals(request.getParameter("skill_name"))) {
+					isRepeated = true;
+					break;
+				}
+			}
+			if (!isRepeated) {
+				Skill newSkill = new Skill(request.getParameter("skill_name"), 0, new ArrayList<>());
+				loggedInUser.getSkills().add(newSkill);
+			}
+		}
+
+		request.setAttribute("user", loggedInUser);
+		request.setAttribute("skills", skills);
+		request.getRequestDispatcher("/myProfile.jsp").forward(request, response);
 	}
 }
