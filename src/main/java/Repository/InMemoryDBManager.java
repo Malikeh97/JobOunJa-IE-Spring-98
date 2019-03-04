@@ -25,6 +25,11 @@ public class InMemoryDBManager implements IDBManager {
 		this.skills = new ArrayList<>();
 	}
 
+	public void setProjects(List<Project> projects) {
+		projects.forEach(project -> project.setBids(new ArrayList<>()));
+		this.projects = projects;
+	}
+
 	@Override
 	public User findUserById(String id) {
 		return this.users
@@ -36,13 +41,14 @@ public class InMemoryDBManager implements IDBManager {
 
 	@Override
 	public List<Project> findAllProjects() {
-		return this.projects;
+		return new ArrayList<>(this.projects);
 	}
 
 	@Override
-	public List<Skill> findAllSkills() {
-		return this.skills;
-	}
+	public List<Skill> findAllSkills() { return new ArrayList<>(this.skills); }
+
+	@Override
+	public List<User> findAllUsers() { return new ArrayList<>(this.users);}
 
 	@Override
 	public Project findProjectById(String id) {
