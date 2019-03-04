@@ -20,7 +20,8 @@
             <c:forEach var="skill" items="${user.skills}">
                 <li>
                     <c:out value="${skill.name}"/>: <c:out value="${skill.point}"/>
-                    <form action="" method="">
+                    <form action="http://localhost:8080/ali_malikeh_war_exploded/users/${user.id}/delete_skill" method="POST" >
+                        <input name="skill" type="hidden" value="${skill.name}"/>
                         <button>Delete</button>
                     </form>
                 </li>

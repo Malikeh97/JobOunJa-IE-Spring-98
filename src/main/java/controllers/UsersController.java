@@ -20,7 +20,9 @@ public class UsersController extends HttpServlet {
                 usersService.handleAddSkillRequest(request, response, splittedURI[3]);
             } else if (splittedURI[4].equals("endorse")) {
                 usersService.handleEndorseRequest(request, response, splittedURI[3]);
-            } else {
+            } else if (splittedURI[4].equals("delete_skill")) {
+				usersService.handleDeleteRequest(request, response, splittedURI[3]);
+			} else {
                 request.getRequestDispatcher("/notFound.jsp").forward(request, response);
             }
 		} else {

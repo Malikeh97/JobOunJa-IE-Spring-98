@@ -81,4 +81,22 @@ public class UsersService {
 		request.setAttribute("skills", skills);
 		request.getRequestDispatcher("/myProfile.jsp").forward(request, response);
 	}
+
+	public void handleDeleteRequest(HttpServletRequest request, HttpServletResponse response, String id) throws ServletException, IOException {
+		User loggedInUser = InMemoryDBManager.shared.findUserById("1");
+		List<Skill> skills = InMemoryDBManager.shared.findAllSkills();
+		if(id.equals(loggedInUser.getId())) {
+			for (Skill skill: loggedInUser.getSkills()) {
+				if((skill.getName()).equals(request.getParameter("skill"))) {
+					loggedInUser.getSkills().remove(skill);
+					break;
+				}
+			}
+		}
+
+		request.setAttribute("user", loggedInUser);
+		request.setAttribute("skills", skills);
+		request.getRequestDispatcher("/myProfile.jsp").forward(request, response);
+
+	}
 }
