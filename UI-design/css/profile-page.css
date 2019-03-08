@@ -52,3 +52,31 @@ main {
     background: rgb(195, 237, 241);
     height: 17vh;
 }
+
+#description{
+    color: #555;
+    text-align: justify;
+    line-height: 2;
+}
+
+#profile-picture .img-thumbnail {
+    padding: 0.75rem;
+    border-radius:1.25rem;
+    transform: translateY(-50%);
+
+}
+
+/*.under*/
+/*{*/
+    /*position:absolute;*/
+    /*right:0px;*/
+    /*top:0px;*/
+    /*z-index:-1;*/
+/*}*/
+/*.over*/
+/*{*/
+    /*position:absolute;*/
+    /*right:40px;*/
+    /*top:10px;*/
+    /*z-index:-1;*/
+/*}*/
