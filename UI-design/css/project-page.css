@@ -3,6 +3,10 @@ body {
     font-family: Vazir, serif;
 }
 
+input:focus {
+    outline: 0 !important;
+}
+
 .navbar {
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 
@@ -56,7 +60,7 @@ main {
 #white-section .well {
     position: relative;
     top: -8.5vh;
-    height: 60vh;
+    height: 68vh;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
     padding: 0;
 }
@@ -165,8 +169,32 @@ main {
     text-align: center;
 }
 
-#description {
-    color: #555;
-    text-align: justify;
-    line-height: 2;
+#white-section .well .row:nth-child(3) {
+    font-weight: bold;
+    font-size: 20px;
+    padding-bottom: 0;
+}
+
+#white-section .well .row:nth-child(4) > div {
+    padding: 0;
+}
+
+.bid-input.input-group {
+    display: inline-flex;
+    width: 50%;
+}
+
+.bid-input input {
+    border-left: 0;
+    border-color: rgb(98, 173, 189);
+    border-width: 2px;
+}
+
+.bid-input .input-group-append .input-group-text {
+    border-right: 0;
+    color: rgb(98, 173, 189);
+    background-color: #fff;
+    border-color: rgb(98, 173, 189);
+    border-width: 2px;
+    padding: 0.3rem .75rem;
 }
