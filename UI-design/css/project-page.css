@@ -58,6 +58,47 @@ main {
     top: -8.5vh;
     height: 60vh;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    padding: 0;
+}
+
+#white-section .well .row:first-child {
+    padding: 20px;
+    margin: 0;
+    height: 30vh;
+    border-bottom: 2px dashed rgb(115, 205, 216);
+}
+
+#white-section .well .row #profile-picture img.img-thumbnail {
+    border-color: #f0f0f0;
+}
+
+#white-section .well .row #project-title {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+#white-section .well .row #remaining-time, #white-section .well .row #budget {
+    margin-top: 10px;
+    color: #666;
+}
+
+#white-section .well .row #remaining-time img, #white-section .well .row #budget img {
+    width: 16px;
+}
+
+#white-section .well .row #remaining-time .static, #white-section .well .row #budget .static {
+    font-weight: bold;
+    margin: 0 5px;
+}
+
+#white-section .well .row #budget {
+    color: rgb(75, 132, 139);
+}
+
+#white-section .well .row #description-static {
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 10px;
 }
 
 #description {
