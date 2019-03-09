@@ -1,0 +1,67 @@
+
+body {
+    font-family: Vazir, serif;
+}
+
+.navbar {
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+
+    height: 60px;
+    padding: 0px;
+}
+
+.navbar:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.navbar .navbar-nav {
+    padding: 0px;
+}
+
+.navbar .navbar-brand {
+    padding: 0px;
+}
+
+#logo {
+    height: 60px;
+}
+
+.navbar .nav-item .nav-link {
+    color: #222;
+}
+
+footer {
+    height: 60px;
+    background: #444;
+    position: relative;
+}
+
+footer div {
+    color: #999;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+main {
+    min-height: calc(100vh - 60px - 60px);
+}
+
+#blue-section {
+    background: rgb(195, 237, 241);
+    height: 17vh;
+}
+
+#white-section .well {
+    position: relative;
+    top: -8.5vh;
+    height: 60vh;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+#description {
+    color: #555;
+    text-align: justify;
+    line-height: 2;
+}
