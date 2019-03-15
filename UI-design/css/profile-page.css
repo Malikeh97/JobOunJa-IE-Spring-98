@@ -6,7 +6,6 @@ body {
 
 .navbar {
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-
     height: 60px;
     padding: 0px;
 }
@@ -90,14 +89,14 @@ main {
     height: 6vh;
 }
 
-#skills {
+#skills_text {
     width: 10%;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-#skills p:first-child {
+#skills_text p:first-child {
     font-weight: bold;
     color: #333;
     font-size: 25px;
@@ -131,6 +130,51 @@ main {
 #dropdownMenu1 {
     flex-shrink: 0;
     color: #444;
+}
+
+
+#skills {
+    width: 100%;
+}
+
+#skills .skill {
+    float: left;
+    height: 35px;
+    background-color: #fff;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+}
+
+#skills .skill:not(:first-child) {
+    margin-left: 10px;
+}
+
+#skills .skill .name {
+    float: left;
+    margin: 8px 10px 7px 10px;
+}
+
+#skills .skill .point {
+    float: left;
+    margin: 5px 5px 5px 0;
+    height: 25px;
+    width: 25px;
+    border-radius: 0.2rem;
+}
+
+#not_assigned {
+    background-color: rgb(230, 0, 0);
+    color: #fff;
+}
+
+#is_assigned {
+    background-color: rgb(201, 238, 242);
+    color: rgb(96, 149, 151);
+}
+
+#skills .skill .point > div {
+    transform: translate(0, 12%);
+    text-align: center;
 }
 
 
