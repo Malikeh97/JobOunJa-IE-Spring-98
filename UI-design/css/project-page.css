@@ -93,7 +93,7 @@ main {
     color: #666;
 }
 
-#white-section .well .row #remaining-time img, #white-section .well .row #budget img {
+#white-section .well .row #remaining-time img, #white-section .well .row #budget img, #white-section .well .row #bid img {
     width: 16px;
 }
 
@@ -185,16 +185,20 @@ main {
 }
 
 .bid-input input {
-    border-left: 0;
     border-color: rgb(98, 173, 189);
     border-width: 2px;
+    border-left: 0;
 }
 
 .bid-input .input-group-append .input-group-text {
-    border-right: 0;
     color: rgb(98, 173, 189);
     background-color: #fff;
     border-color: rgb(98, 173, 189);
     border-width: 2px;
+    border-right: 0;
     padding: 0.3rem .75rem;
+}
+
+#white-section .well .row #bid .text {
+    color: rgb(79, 140, 68);
 }
