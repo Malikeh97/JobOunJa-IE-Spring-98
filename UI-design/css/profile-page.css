@@ -1,6 +1,7 @@
 
 body {
     font-family: Vazir, serif;
+    height: 100%;
 }
 
 .navbar {
@@ -58,6 +59,7 @@ main {
     color: #555;
     text-align: justify;
     line-height: 2;
+
 }
 
 #profile-picture .img-thumbnail {
@@ -83,12 +85,53 @@ main {
     height: 17vh;
 }
 
-#skills {
-    font-weight: bold;
-    color: #000;
-    font-size: 25px;
+
+#skill_row {
+    height: 6vh;
 }
 
+#skills {
+    width: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#skills p:first-child {
+    font-weight: bold;
+    color: #333;
+    font-size: 25px;
+    flex-shrink: 0;
+}
+
+
+#skill_container {
+    /*width: 30%;*/
+    margin-right: 0.5vh;
+    border-radius:0.2rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+#skill_btn {
+    background-color: rgb(64,151,163);
+    color:#fff;
+    font-size: 15px;
+    margin: 0.2rem;
+    border-radius:0.2rem;
+}
+
+.dropdown {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0.2rem;
+    box-shadow: 0 1px 4px rgba(125, 125, 125, 0.3);
+}
+
+#dropdownMenu1 {
+    flex-shrink: 0;
+    color: #444;
+}
 
 
 
