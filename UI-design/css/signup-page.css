@@ -39,7 +39,7 @@
 
 #slideshow {
     overflow: hidden;
-    height: 200px;
+    height: 240px;
     width: 500px;
     margin: -125px auto 0;
 }
@@ -51,7 +51,7 @@
 
 .slide {
     float: right;
-    height: 250px;
+    height: 240px;
     width: 500px;
 }
 
