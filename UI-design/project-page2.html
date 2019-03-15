@@ -4,6 +4,7 @@
     <title>Profile Page</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="normalize.css">
     <link rel="stylesheet" href="css/bootstrap-rtl.min.css">
     <!--<script src="js/jquery.min.js"></script>-->
     <!--<script src="js/bootstrap.min.js"></script>-->
@@ -25,7 +26,7 @@
 
         <ul class="navbar-nav" style="float: left">
             <li class="nav-item">
-                <a class="nav-link" href="#">حساب کاربری</a>
+                <a class="nav-link" href="profile-page.html">حساب کاربری</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">خروج</a>
@@ -41,8 +42,8 @@
 
             <div class="well card card-body">
                 <div class="row">
-                    <div id="profile-picture" class="col-md-2">
-                        <img src="assets/target.png" class="img-thumbnail over" alt="default image">
+                    <div class="col-md-2 p-0">
+                        <img src="assets/target.png" class="img-thumbnail over" alt="default image" id="profile-picture">
                     </div>
                     <div class="col-md-10">
                         <div id="project-title">پروژه طراحی سایت جاب اونجا</div>
@@ -53,8 +54,8 @@
                         </div>
                         <div id="budget">
                             <img src="assets/money-bag.svg" alt="money-bag"/>
-                            <span class="static">بودجه:</span>
-                            <span class="text">۲۵۰۰ تومان</span>
+                            <span class="static job-ounja-primary-color-text">بودجه:</span>
+                            <span class="text job-ounja-primary-color-text">۲۵۰۰ تومان</span>
                         </div>
                         <div id="description-static">
                             توضیحات
@@ -69,34 +70,34 @@
                     </div>
                 </div>
                 <div class="row" id="skills-row">
-                    <div id="skills-static">
+                    <div id="skills-static" class="job-ounja-primary-color-text">
                         مهارت های لازم:
                     </div>
                     <div id="skills">
                         <div class="skill">
                             <span class="name">HTML</span>
-                            <span class="point">
+                            <span class="point job-ounja-primary-color-text">
                                 <div>5</div>
                             </span>
                         </div>
 
                         <div class="skill">
                             <span class="name">CSS</span>
-                            <span class="point">
+                            <span class="point job-ounja-primary-color-text">
                                 <div>3</div>
                             </span>
                         </div>
 
                         <div class="skill">
                             <span class="name">JavaScript</span>
-                            <span class="point">
+                            <span class="point job-ounja-primary-color-text">
                                 <div>16</div>
                             </span>
                         </div>
 
                         <div class="skill">
                             <span class="name">TypeScript</span>
-                            <span class="point">
+                            <span class="point job-ounja-primary-color-text">
                                 <div>2</div>
                             </span>
                         </div>

@@ -13,69 +13,60 @@
     border-bottom: 2px dashed rgb(115, 205, 216);
 }
 
-#white-section .well .row #profile-picture img.img-thumbnail {
+#profile-picture {
     border-color: #f0f0f0;
 }
 
-#white-section .well .row #profile-picture {
-    padding: 0;
-}
-
-#white-section .well .row #project-title {
+#project-title {
     font-size: 32px;
     font-weight: bold;
 }
 
-#white-section .well .row #remaining-time, #white-section .well .row #budget, #white-section .well .row #winner {
+#remaining-time, #budget, #winner {
     margin-top: 10px;
     color: #666;
 }
 
-#white-section .well .row #remaining-time img, #white-section .well .row #budget img, #white-section .well .row#bid-info-row img, #white-section .well .row #winner img {
+#white-section .well .row img:not(#profile-picture) {
     width: 16px;
 }
 
-#white-section .well .row #remaining-time .static, #white-section .well .row #budget .static, #white-section .well .row #winner .static {
+.static {
     font-weight: bold;
     margin: 0 5px;
 }
 
-#white-section .well .row #budget, #white-section .well .row #winner {
+#budget, #winner {
     font-weight: bold;
     font-size: 18px;
 }
 
-#white-section .well .row #budget {
-    color: rgb(75, 132, 139);
-}
-
-#white-section .well .row #description-static {
+#description-static {
     font-size: 20px;
     font-weight: bold;
     margin-top: 10px;
 }
 
-#white-section .well .row #description-text {
+#description-text {
     margin-top: 10px;
     text-align: justify;
 }
 
-#white-section .well .row#skills-row  {
+#skills-row {
     background-color: #fafafa;
     border-bottom: 1px solid #ccc;
 }
 
-#white-section .well .row #skills-static {
-    color: rgb(75, 132, 139);
+#skills-static {
     font-weight: bold;
     width: 100%;
 }
 
-#white-section .well .row #skills {
+#skills {
     width: 100%;
 }
 
-#white-section .well .row #skills .skill {
+#skills .skill {
     float: left;
     height: 35px;
     background-color: #fff;
@@ -83,30 +74,29 @@
     border-radius: 5px;
 }
 
-#white-section .well .row #skills .skill:not(:first-child) {
+#skills .skill:not(:first-child) {
     margin-left: 10px;
 }
 
-#white-section .well .row #skills .skill .name {
+#skills .skill .name {
     float: left;
     margin: 8px 10px 7px 10px;
 }
 
-#white-section .well .row #skills .skill .point {
+#skills .skill .point {
     float: left;
     margin: 5px 5px 5px 0;
     background-color: rgb(201, 238, 242);
-    color: rgb(96, 149, 151);
     height: 25px;
     width: 25px;
 }
 
-#white-section .well .row #skills .skill .point > div {
+#skills .skill .point > div {
     transform: translate(0, 12%);
     text-align: center;
 }
 
-#white-section .well .row#make-bid-row {
+#make-bid-row {
     font-weight: bold;
     font-size: 20px;
     padding-bottom: 0;
@@ -138,4 +128,8 @@
 
 .red {
     color: rgb(230, 0, 0) !important;
+}
+
+.job-ounja-primary-color-text {
+    color: rgb(75, 132, 139);
 }
