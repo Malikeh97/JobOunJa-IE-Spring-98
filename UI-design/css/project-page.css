@@ -1,0 +1,135 @@
+#white-section .well {
+    margin-top: -8.5vh;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    padding: 0;
+}
+
+#white-section .well > .row {
+    padding: 20px;
+    margin: 0;
+}
+
+#white-section .well > .row:first-child {
+    border-bottom: 2px dashed rgb(115, 205, 216);
+}
+
+#profile-picture {
+    border-color: #f0f0f0;
+}
+
+#project-title {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+#remaining-time, #budget, #winner {
+    margin-top: 10px;
+    color: #666;
+}
+
+#white-section .well .row img:not(#profile-picture) {
+    width: 16px;
+}
+
+.static {
+    font-weight: bold;
+    margin: 0 5px;
+}
+
+#budget, #winner {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+#description-static {
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+#description-text {
+    margin-top: 10px;
+    text-align: justify;
+}
+
+#skills-row {
+    background-color: #fafafa;
+    border-bottom: 1px solid #ccc;
+}
+
+#skills-static {
+    font-weight: bold;
+    width: 100%;
+}
+
+#skills {
+    width: 100%;
+}
+
+#skills .skill {
+    float: left;
+    height: 35px;
+    background-color: #fff;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+}
+
+#skills .skill:not(:first-child) {
+    margin-left: 10px;
+}
+
+#skills .skill .name {
+    float: left;
+    margin: 8px 10px 7px 10px;
+}
+
+#skills .skill .point {
+    float: left;
+    margin: 5px 5px 5px 0;
+    background-color: rgb(201, 238, 242);
+    height: 25px;
+    width: 25px;
+}
+
+#skills .skill .point > div {
+    transform: translate(0, 12%);
+    text-align: center;
+}
+
+#make-bid-row {
+    font-weight: bold;
+    font-size: 20px;
+    padding-bottom: 0;
+}
+
+.bid-input.input-group {
+    display: inline-flex;
+    width: 50%;
+}
+
+.bid-input input {
+    border-color: rgb(98, 173, 189);
+    border-width: 2px;
+    border-left: 0;
+}
+
+.bid-input .input-group-append .input-group-text {
+    color: rgb(98, 173, 189);
+    background-color: #fff;
+    border-color: rgb(98, 173, 189);
+    border-width: 2px;
+    border-right: 0;
+    padding: 0.3rem .75rem;
+}
+
+.green {
+    color: rgb(79, 140, 68) !important;
+}
+
+.red {
+    color: rgb(230, 0, 0) !important;
+}
+
+.job-ounja-primary-color-text {
+    color: rgb(75, 132, 139);
+}
