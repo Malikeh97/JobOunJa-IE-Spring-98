@@ -1,0 +1,203 @@
+
+body {
+    font-family: Vazir, serif;
+}
+
+input:focus {
+    outline: 0 !important;
+}
+
+.navbar {
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+
+    height: 60px;
+    padding: 0px;
+}
+
+.navbar:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.navbar .navbar-nav {
+    padding: 0px;
+}
+
+.navbar .navbar-brand {
+    padding: 0px;
+}
+
+#logo {
+    height: 60px;
+}
+
+.navbar .nav-item .nav-link {
+    color: #222;
+}
+
+footer {
+    height: 60px;
+    background: #444;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+footer div {
+    color: #999;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+main {
+    min-height: calc(100vh - 60px - 60px);
+}
+
+#blue-section {
+    background: rgb(195, 237, 241);
+    height: 17vh;
+}
+
+#white-section .well {
+    margin-top: -8.5vh;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    padding: 0;
+}
+
+#white-section .well > .row {
+    padding: 20px;
+    margin: 0;
+}
+
+#white-section .well > .row:first-child {
+    border-bottom: 2px dashed rgb(115, 205, 216);
+}
+
+#white-section .well .row #profile-picture img.img-thumbnail {
+    border-color: #f0f0f0;
+}
+
+#white-section .well .row #profile-picture {
+    padding: 0;
+}
+
+#white-section .well .row #project-title {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+#white-section .well .row #remaining-time, #white-section .well .row #budget, #white-section .well .row #winner {
+    margin-top: 10px;
+    color: #666;
+}
+
+#white-section .well .row #remaining-time img, #white-section .well .row #budget img, #white-section .well .row#bid-info-row img, #white-section .well .row #winner img {
+    width: 16px;
+}
+
+#white-section .well .row #remaining-time .static, #white-section .well .row #budget .static, #white-section .well .row #winner .static {
+    font-weight: bold;
+    margin: 0 5px;
+}
+
+#white-section .well .row #budget, #white-section .well .row #winner {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+#white-section .well .row #budget {
+    color: rgb(75, 132, 139);
+}
+
+#white-section .well .row #description-static {
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+#white-section .well .row #description-text {
+    margin-top: 10px;
+    text-align: justify;
+}
+
+#white-section .well .row#skills-row  {
+    background-color: #fafafa;
+    border-bottom: 1px solid #ccc;
+}
+
+#white-section .well .row #skills-static {
+    color: rgb(75, 132, 139);
+    font-weight: bold;
+    width: 100%;
+}
+
+#white-section .well .row #skills {
+    width: 100%;
+}
+
+#white-section .well .row #skills .skill {
+    float: left;
+    height: 35px;
+    background-color: #fff;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+}
+
+#white-section .well .row #skills .skill:not(:first-child) {
+    margin-left: 10px;
+}
+
+#white-section .well .row #skills .skill .name {
+    float: left;
+    margin: 8px 10px 7px 10px;
+}
+
+#white-section .well .row #skills .skill .point {
+    float: left;
+    margin: 5px 5px 5px 0;
+    background-color: rgb(201, 238, 242);
+    color: rgb(96, 149, 151);
+    height: 25px;
+    width: 25px;
+}
+
+#white-section .well .row #skills .skill .point > div {
+    transform: translate(0, 12%);
+    text-align: center;
+}
+
+#white-section .well .row#make-bid-row {
+    font-weight: bold;
+    font-size: 20px;
+    padding-bottom: 0;
+}
+
+.bid-input.input-group {
+    display: inline-flex;
+    width: 50%;
+}
+
+.bid-input input {
+    border-color: rgb(98, 173, 189);
+    border-width: 2px;
+    border-left: 0;
+}
+
+.bid-input .input-group-append .input-group-text {
+    color: rgb(98, 173, 189);
+    background-color: #fff;
+    border-color: rgb(98, 173, 189);
+    border-width: 2px;
+    border-right: 0;
+    padding: 0.3rem .75rem;
+}
+
+.green {
+    color: rgb(79, 140, 68) !important;
+}
+
+.red {
+    color: rgb(230, 0, 0) !important;
+}
