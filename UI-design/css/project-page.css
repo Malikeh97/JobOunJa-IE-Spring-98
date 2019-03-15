@@ -37,7 +37,10 @@ input:focus {
 footer {
     height: 60px;
     background: #444;
-    position: relative;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }
 
 footer div {
@@ -58,9 +61,7 @@ main {
 }
 
 #white-section .well {
-    position: relative;
-    top: -8.5vh;
-    height: 68vh;
+    margin-top: -8.5vh;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
     padding: 0;
 }
@@ -71,7 +72,6 @@ main {
 }
 
 #white-section .well > .row:first-child {
-    height: 38vh;
     border-bottom: 2px dashed rgb(115, 205, 216);
 }
 
@@ -88,21 +88,21 @@ main {
     font-weight: bold;
 }
 
-#white-section .well .row #remaining-time, #white-section .well .row #budget {
+#white-section .well .row #remaining-time, #white-section .well .row #budget, #white-section .well .row #winner {
     margin-top: 10px;
     color: #666;
 }
 
-#white-section .well .row #remaining-time img, #white-section .well .row #budget img, #white-section .well .row #bid img {
+#white-section .well .row #remaining-time img, #white-section .well .row #budget img, #white-section .well .row#bid-info-row img, #white-section .well .row #winner img {
     width: 16px;
 }
 
-#white-section .well .row #remaining-time .static, #white-section .well .row #budget .static {
+#white-section .well .row #remaining-time .static, #white-section .well .row #budget .static, #white-section .well .row #winner .static {
     font-weight: bold;
     margin: 0 5px;
 }
 
-#white-section .well .row #budget {
+#white-section .well .row #budget, #white-section .well .row #winner {
     font-weight: bold;
     font-size: 18px;
 }
@@ -122,10 +122,9 @@ main {
     text-align: justify;
 }
 
-#white-section .well .row:nth-child(2)  {
+#white-section .well .row#skills-row  {
     background-color: #fafafa;
     border-bottom: 1px solid #ccc;
-    height: 14vh;
 }
 
 #white-section .well .row #skills-static {
@@ -169,14 +168,10 @@ main {
     text-align: center;
 }
 
-#white-section .well .row:nth-child(3) {
+#white-section .well .row#make-bid-row {
     font-weight: bold;
     font-size: 20px;
     padding-bottom: 0;
-}
-
-#white-section .well .row:nth-child(4) > div {
-    padding: 0;
 }
 
 .bid-input.input-group {
@@ -199,6 +194,10 @@ main {
     padding: 0.3rem .75rem;
 }
 
-#white-section .well .row #bid .text {
-    color: rgb(79, 140, 68);
+.green {
+    color: rgb(79, 140, 68) !important;
+}
+
+.red {
+    color: rgb(230, 0, 0) !important;
 }
