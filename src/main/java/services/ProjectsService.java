@@ -1,7 +1,10 @@
 package services;
 
+import API.AllProjectsResponse;
 import API.ErrorResponse;
+import API.SingleProjectResponse;
 import API.SuccessResponse;
+import API.data.SingleProjectData;
 import Repository.InMemoryDBManager;
 import domain.Bid;
 import domain.Project;
@@ -25,30 +28,32 @@ public class ProjectsService {
 		}
 		projectList.removeIf(project -> isForbidden(project, loggedInUser));
 
-		SuccessResponse<List<Project>> successResponse = new SuccessResponse<>(projectList);
+		AllProjectsResponse successResponse = new AllProjectsResponse(projectList);
 		return successResponse.toJSON();
 	}
-	public void handleSingleProjectRequest(HttpServletRequest request, HttpServletResponse response, String id) throws ServletException, IOException {
+	public String handleSingleProjectRequest(HttpServletRequest request, HttpServletResponse response, String id) throws ServletException, IOException {
 		Project project = InMemoryDBManager.shared.findProjectById(id);
 
 		boolean isBidAdded = false;
 		User loggedInUser = InMemoryDBManager.shared.findUserById("1");
 		if (project == null) {
-			request.getRequestDispatcher("/notFound.jsp").forward(request, response);
-			return;
+			ErrorResponse errorResponse = new ErrorResponse("No project found", 404);
+			response.setStatus(404);
+			return errorResponse.toJSON();
 		}
 		if (isForbidden(project, loggedInUser)) {
-			request.getRequestDispatcher("/forbidden.jsp").forward(request, response);
-			return;
+			ErrorResponse errorResponse = new ErrorResponse("Access denied", 403);
+			response.setStatus(403);
+			return errorResponse.toJSON();
 		}
 		for(Bid bid : project.getBids()) {
 			if(bid.getBiddingUser() == loggedInUser) {
 				isBidAdded = true;
 			}
 		}
-		request.setAttribute("isBidAdded", isBidAdded);
-		request.setAttribute("project", project);
-		request.getRequestDispatcher("/singleProject.jsp").forward(request, response);
+		SingleProjectResponse singleProjectResponse = new SingleProjectResponse(new SingleProjectData(project,isBidAdded));
+		return singleProjectResponse.toJSON();
+
 	}
 
 	private boolean isForbidden(Project project, User loggedInUser) {
