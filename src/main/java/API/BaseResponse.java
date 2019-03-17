@@ -1,14 +1,20 @@
 package API;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.IOException;
 
-public abstract class BaseResponse<T> {
-    protected T data;
-    protected String status;
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class BaseResponse<T> {
+    private T data;
+    private String status;
 
-    private String JSONBuilder() throws IOException {
+    public String toJSON() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         return mapper.writeValueAsString(this);
     }

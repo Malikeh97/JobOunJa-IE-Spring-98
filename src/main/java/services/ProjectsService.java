@@ -1,5 +1,7 @@
 package services;
 
+import API.ErrorResponse;
+import API.SuccessResponse;
 import Repository.InMemoryDBManager;
 import domain.Bid;
 import domain.Project;
@@ -13,17 +15,18 @@ import java.io.IOException;
 import java.util.List;
 
 public class ProjectsService {
-	public void handleAllProjectsRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public String handleAllProjectsRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		List<Project> projectList = InMemoryDBManager.shared.findAllProjects();
 		User loggedInUser = InMemoryDBManager.shared.findUserById("1");
 		if (projectList == null || projectList.isEmpty()) {
-			request.getRequestDispatcher("/notFound.jsp").forward(request, response);
-			return;
+			ErrorResponse errorResponse = new ErrorResponse("No project found", 404);
+			response.setStatus(404);
+			return errorResponse.toJSON();
 		}
 		projectList.removeIf(project -> isForbidden(project, loggedInUser));
 
-		request.setAttribute("projects", projectList);
-		request.getRequestDispatcher("/allProjects.jsp").forward(request, response);
+		SuccessResponse<List<Project>> successResponse = new SuccessResponse<>(projectList);
+		return successResponse.toJSON();
 	}
 	public void handleSingleProjectRequest(HttpServletRequest request, HttpServletResponse response, String id) throws ServletException, IOException {
 		Project project = InMemoryDBManager.shared.findProjectById(id);

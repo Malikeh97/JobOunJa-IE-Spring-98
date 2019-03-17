@@ -1,5 +1,6 @@
 package controllers;
 
+import API.ErrorResponse;
 import services.ProjectsService;
 
 import javax.servlet.ServletException;
@@ -10,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet("/projects/*")
-public class ProjectsController extends HttpServlet {
+public class ProjectsController extends BaseController {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String[] splittedURI = request.getRequestURI().split("/");
         ProjectsService projectsService = new ProjectsService();
@@ -28,13 +29,16 @@ public class ProjectsController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String[] splittedURI = request.getRequestURI().split("/");
         ProjectsService projectsService = new ProjectsService();
+        String stringResponse = "";
         if (splittedURI.length == 3) {
-            projectsService.handleAllProjectsRequest(request, response);
+            stringResponse = projectsService.handleAllProjectsRequest(request, response);
         } else if (splittedURI.length == 4) {
             projectsService.handleSingleProjectRequest(request, response, splittedURI[3]);
         } else {
-            request.getRequestDispatcher("/notFound.jsp").forward(request, response);
+            ErrorResponse errorResponse = new ErrorResponse(request.getRequestURI() + " not found", 404);
+            stringResponse = errorResponse.toJSON();
+            response.setStatus(404);
         }
-
+        this.sendResponse(stringResponse, response);
     }
 }

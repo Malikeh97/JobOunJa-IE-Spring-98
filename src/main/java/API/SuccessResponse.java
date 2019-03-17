@@ -1,8 +1,9 @@
 package API;
 
-public class SuccessResponse extends BaseResponse {
-     <T> SuccessResponse(T data) {
-        this.status = "success";
-        this.data = data;
+public class SuccessResponse<T> extends BaseResponse<T> {
+    public SuccessResponse(T data) {
+        super();
+        this.setStatus("success");
+        this.setData(data);
     }
 }

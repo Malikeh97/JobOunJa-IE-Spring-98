@@ -1,8 +1,9 @@
 package API;
 
-public class FailResponse extends BaseResponse  {
-    FailResponse(String data) {
-        this.status = "fail";
-        this.data = data;
+public class FailResponse extends BaseResponse<String>  {
+    public FailResponse(String data) {
+        super();
+        this.setStatus("fail");
+        this.setData(data);
     }
 }

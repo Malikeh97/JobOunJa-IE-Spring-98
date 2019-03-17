@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet("/users/*")
-public class UsersController extends HttpServlet {
+public class UsersController extends BaseController{
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String[] splittedURI = request.getRequestURI().split("/");
 		UsersService usersService = new UsersService();
