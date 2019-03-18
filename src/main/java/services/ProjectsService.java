@@ -1,24 +1,25 @@
 package services;
 
-import API.AllProjectsResponse;
-import API.ErrorResponse;
-import API.SingleProjectResponse;
-import API.SuccessResponse;
-import API.data.SingleProjectData;
+import api.*;
+import api.data.SingleProjectData;
 import Repository.InMemoryDBManager;
 import domain.Bid;
 import domain.Project;
 import domain.Skill;
 import domain.User;
+import org.codehaus.jackson.map.ObjectMapper;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ProjectsService {
-	public String handleAllProjectsRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public String handleAllProjectsRequest(HttpServletResponse response) throws ServletException, IOException {
 		List<Project> projectList = InMemoryDBManager.shared.findAllProjects();
 		User loggedInUser = InMemoryDBManager.shared.findUserById("1");
 		if (projectList == null || projectList.isEmpty()) {
@@ -31,7 +32,7 @@ public class ProjectsService {
 		AllProjectsResponse successResponse = new AllProjectsResponse(projectList);
 		return successResponse.toJSON();
 	}
-	public String handleSingleProjectRequest(HttpServletRequest request, HttpServletResponse response, String id) throws ServletException, IOException {
+	public String handleSingleProjectRequest(HttpServletResponse response, String id) throws ServletException, IOException {
 		Project project = InMemoryDBManager.shared.findProjectById(id);
 
 		boolean isBidAdded = false;
@@ -56,6 +57,28 @@ public class ProjectsService {
 
 	}
 
+	public String handleAddBidRequest(AddBidRequest request, HttpServletResponse response, String id) throws ServletException, IOException {
+		ObjectMapper mapper = new ObjectMapper();
+
+		User loggedInUser = InMemoryDBManager.shared.findUserById("1");
+		Project project = InMemoryDBManager.shared.findProjectById(id);
+		if (request.getBidAmount() > project.getBudget()) {
+			Map<String, String> failures = new HashMap<>();
+			failures.put("bidAmount", "bidAmount was too big! try another value");
+			FailResponse failResponse = new FailResponse(mapper.writeValueAsString(failures));
+			response.setStatus(400);
+			return failResponse.toJSON();
+		} else if (project.getBids().stream().filter(bid -> bid.getBiddingUser().getId().equals(loggedInUser.getId())).findFirst().orElse(null) != null) {
+			ErrorResponse errorResponse = new ErrorResponse("Cannot bid twice on a single project", 1000);
+			response.setStatus(403);
+			return errorResponse.toJSON();
+		}
+		Bid bid = new Bid(loggedInUser, project, request.getBidAmount());
+		project.getBids().add(bid);
+		AddBidResponse addBidResponse = new AddBidResponse("Bid added successfully");
+		return addBidResponse.toJSON();
+	}
+
 	private boolean isForbidden(Project project, User loggedInUser) {
 		for(Skill projectSkill : project.getSkills()) {
 			Skill userSkill = loggedInUser.getSkills()
@@ -67,22 +90,5 @@ public class ProjectsService {
 				return true;
 		}
 		return false;
-	}
-
-	public void handleAddBidRequest(HttpServletRequest request, HttpServletResponse response, String id) throws ServletException, IOException {
-		User loggedInUser = InMemoryDBManager.shared.findUserById("1");
-		Project project = InMemoryDBManager.shared.findProjectById(id);
-		Integer bidAmount = Integer.valueOf(request.getParameter("bidAmount"));
-		if (bidAmount > project.getBudget()) {
-			request.setAttribute("msg", "bidAmount was too big! try another value");
-			request.setAttribute("isBidAdded", false);
-		} else {
-			Bid bid = new Bid(loggedInUser, project, bidAmount);
-			project.getBids().add(bid);
-			request.setAttribute("isBidAdded", true);
-		}
-
-		request.setAttribute("project", project);
-		request.getRequestDispatcher("/singleProject.jsp").forward(request, response);
 	}
 }

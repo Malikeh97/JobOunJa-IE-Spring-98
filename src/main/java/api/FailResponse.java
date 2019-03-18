@@ -1,4 +1,4 @@
-package API;
+package api;
 
 public class FailResponse extends BaseResponse<String>  {
     public FailResponse(String data) {

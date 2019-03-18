@@ -1,6 +1,6 @@
-package API;
+package api;
 
-import API.data.SingleProjectData;
+import api.data.SingleProjectData;
 
 public class SingleProjectResponse extends SuccessResponse<SingleProjectData> {
     public SingleProjectResponse(SingleProjectData data) {

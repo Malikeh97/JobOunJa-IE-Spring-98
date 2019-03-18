@@ -1,6 +1,5 @@
-package API.data;
+package api;
 
-import domain.Project;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,7 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SingleProjectData {
-    private Project project;
-    private boolean isBidAdded;
+public class AddBidRequest {
+	private Integer bidAmount;
 }
