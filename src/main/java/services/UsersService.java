@@ -1,7 +1,9 @@
 package services;
 
 import Repository.InMemoryDBManager;
-import domain.Project;
+import api.AllUsersResponse;
+import api.ErrorResponse;
+import api.UserProfileResponse;
 import domain.Skill;
 import domain.User;
 
@@ -10,38 +12,37 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class UsersService {
-	public void handleAllUsersRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public String handleAllUsersRequest(HttpServletResponse response) throws IOException {
 		List<User> allUsers = InMemoryDBManager.shared.findAllUsers();
 		User loggedInUser = InMemoryDBManager.shared.findUserById("1");
 		if (allUsers == null || allUsers.size() < 2) {
-			request.getRequestDispatcher("/notFound.jsp").forward(request, response);
-			return;
+			ErrorResponse errorResponse = new ErrorResponse("User not found", 404);
+			response.setStatus(404);
+			return errorResponse.toJSON();
 		}
 		allUsers.remove(loggedInUser);
-		request.setAttribute("users", allUsers);
-		request.getRequestDispatcher("/allUsers.jsp").forward(request, response);
-
+		AllUsersResponse allUsersResponse = new AllUsersResponse(allUsers);
+		return allUsersResponse.toJSON();
 	}
-	public void handleSingleUserRequest(HttpServletRequest request, HttpServletResponse response, String id) throws ServletException, IOException {
+
+	public String handleSingleUserRequest(HttpServletResponse response, String id) throws IOException {
 		User user = InMemoryDBManager.shared.findUserById(id);
 		User loggedInUser = InMemoryDBManager.shared.findUserById("1");
 		if (user == null) {
-			request.getRequestDispatcher("/notFound.jsp").forward(request, response);
-			return;
+			ErrorResponse errorResponse = new ErrorResponse("User not found", 404);
+			response.setStatus(404);
+			return errorResponse.toJSON();
 		}
 		if (user == loggedInUser) {
-			List<Skill> skills = InMemoryDBManager.shared.findAllSkills();
-			request.setAttribute("user", user);
-			request.setAttribute("skills", skills);
-			request.getRequestDispatcher("/myProfile.jsp").forward(request, response);
-		} else {
-			request.setAttribute("user", user);
-			request.setAttribute("loggedInUser", loggedInUser);
-			request.getRequestDispatcher("/anotherUser.jsp").forward(request, response);
+//			List<Skill> skills = InMemoryDBManager.shared.findAllSkills();
+			UserProfileResponse userProfileResponse = new UserProfileResponse(user);
+			return userProfileResponse.toJSON();
+		} else { // may be changing it later
+			UserProfileResponse userProfileResponse = new UserProfileResponse(user);
+			return userProfileResponse.toJSON();
 		}
 	}
 

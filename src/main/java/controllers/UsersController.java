@@ -1,5 +1,6 @@
 package controllers;
 
+import api.ErrorResponse;
 import services.ProjectsService;
 import services.UsersService;
 
@@ -33,13 +34,16 @@ public class UsersController extends BaseController{
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String[] splittedURI = request.getRequestURI().split("/");
 		UsersService usersService = new UsersService();
+		String stringResponse;
 		if (splittedURI.length == 3) {
-			usersService.handleAllUsersRequest(request, response);
+			stringResponse = usersService.handleAllUsersRequest(response);
 		} else if (splittedURI.length == 4) {
-			usersService.handleSingleUserRequest(request, response, splittedURI[3]);
+			stringResponse = usersService.handleSingleUserRequest(response, splittedURI[3]);
 		} else {
-			request.getRequestDispatcher("/notFound.jsp").forward(request, response);
+			ErrorResponse errorResponse = new ErrorResponse(request.getRequestURI() + " not found", 404);
+			stringResponse = errorResponse.toJSON();
+			response.setStatus(404);
 		}
-
+		this.sendResponse(stringResponse, response);
 	}
 }

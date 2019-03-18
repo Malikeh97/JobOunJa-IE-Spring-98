@@ -30,8 +30,9 @@ public class ProjectsController extends BaseController {
                     failures.put("bidAmount", "bidAmount is required");
                     FailResponse failResponse = new FailResponse(mapper.writeValueAsString(failures));
                     stringResponse = failResponse.toJSON();
-                }
-                stringResponse = projectsService.handleAddBidRequest(addBidRequest, response, splittedURI[3]);
+                } else {
+					stringResponse = projectsService.handleAddBidRequest(addBidRequest, response, splittedURI[3]);
+				}
             } else {
                 ErrorResponse errorResponse = new ErrorResponse(request.getRequestURI() + " not found", 404);
                 stringResponse = errorResponse.toJSON();
