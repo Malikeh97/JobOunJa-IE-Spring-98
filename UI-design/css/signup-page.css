@@ -71,6 +71,11 @@
     background: #D9D055;
 }
 
+.slide img {
+    height: 240px;
+    width: 500px;
+}
+
 .slide-number {
     color: #000;
     text-align: center;
