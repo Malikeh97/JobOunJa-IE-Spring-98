@@ -5,7 +5,7 @@ function loadDoc() {
             console.log(this.status, JSON.parse(this.responseText))
         }
     };
-    xhttp.open("GET", "http://localhost:8080/ali_malikeh_war_exploded/projects", true);
+    xhttp.open("GET", "http://localhost:8080/JobOunJa_IE_Spring_98_war/projects", true);
     xhttp.send();
 }
 
