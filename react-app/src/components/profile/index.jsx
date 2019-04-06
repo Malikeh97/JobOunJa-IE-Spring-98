@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import './profile.css';
+import Skill from "../common/skill";
 
 class Profile extends Component {
     render() {
@@ -63,19 +64,9 @@ class Profile extends Component {
                     </span>
                     </div>
 
-                    <div className="skill">
-                        <span className="name">JavaScript</span>
-                        <span className="point is_assigned">
-                                <div>16</div>
-                    </span>
-                    </div>
+                    <Skill skill={{name: 'JavaScipt', point: 16}}/>
 
-                    <div className="skill">
-                        <span className="name">TypeScript</span>
-                        <span className="point not_assigned">
-                                <div>-</div>
-                    </span>
-                    </div>
+                    <Skill skill={{name: 'TypeScript', point: 0}}/>
                 </div>
             </div>
         );

@@ -106,34 +106,6 @@
     margin-left: 10px;
 }
 
-#skills .skill .name {
-    float: left;
-    margin: 8px 10px 7px 10px;
-}
-
-#skills .skill .point {
-    float: left;
-    margin: 5px 5px 5px 0;
-    height: 25px;
-    width: 25px;
-    border-radius: 0.2rem;
-}
-
-.not_assigned {
-    background-color: rgb(230, 0, 0);
-    color: #fff;
-}
-
-.is_assigned {
-    background-color: rgb(201, 238, 242);
-    color: rgb(96, 149, 151);
-}
-
-.not-endorced {
-    background-color: rgb(80, 180, 52);
-    color: #fff;
-}
-
 #skills .skill .point > div {
     transform: translate(0, 12%);
     text-align: center;
