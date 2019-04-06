@@ -1,0 +1,150 @@
+.container {
+    background-color: #f5f5f5;
+}
+
+#description{
+    margin-top: 0;
+    color: #555;
+    text-align: justify;
+    line-height: 2;
+
+}
+
+#profile-picture .img-thumbnail {
+    padding: 0.75rem;
+    border-radius:1.25rem;
+    transform: translateY(-50%);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+#username {
+    margin-top: 3vh;
+    color: #444;
+    font-size: 40px;
+    font-weight: bold;
+}
+
+#title {
+    color: #888;
+    font-size: 18px;
+}
+
+#title_bar {
+    height: 165px;
+}
+
+#skills_text {
+    width: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#skills_text p:first-child {
+    font-weight: bold;
+    color: #333;
+    font-size: 22px;
+    flex-shrink: 0;
+    margin: 0;
+}
+
+
+#skill_container {
+    margin-right: 10px;
+    border-radius:0.2rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+    padding: 3px;
+}
+
+#skill_btn {
+    background-color: rgb(64,151,163);
+    color:#fff;
+    font-size: 15px;
+    margin: 0.2rem;
+    border-radius:0.2rem;
+    font-weight: lighter;
+}
+
+#skill_container .dropdown {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0.2rem;
+    box-shadow: inset 0 0 6px rgba(125, 125, 125, 0.3);
+    height: 40px;
+    background: #fafafa;
+}
+
+#skill_container .dropdown button {
+    color: #444;
+    width: 250px;
+}
+
+#skill_container .dropdown button span {
+    float: right;
+}
+
+#skill_container .dropdown-toggle::after {
+    float: left;
+    transform: translateY(8px);
+}
+
+
+#skills {
+    width: 100%;
+}
+
+#skills .skill {
+    float: left;
+    height: 35px;
+    background-color: #fff;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+}
+
+#skills .skill:not(:first-child) {
+    margin-left: 10px;
+}
+
+#skills .skill .name {
+    float: left;
+    margin: 8px 10px 7px 10px;
+}
+
+#skills .skill .point {
+    float: left;
+    margin: 5px 5px 5px 0;
+    height: 25px;
+    width: 25px;
+    border-radius: 0.2rem;
+}
+
+.not_assigned {
+    background-color: rgb(230, 0, 0);
+    color: #fff;
+}
+
+.is_assigned {
+    background-color: rgb(201, 238, 242);
+    color: rgb(96, 149, 151);
+}
+
+.not-endorced {
+    background-color: rgb(80, 180, 52);
+    color: #fff;
+}
+
+#skills .skill .point > div {
+    transform: translate(0, 12%);
+    text-align: center;
+}
+
+#title_bar svg {
+    margin-top: -30px;
+    margin-right: -28px;
+    z-index: 999;
+}
+
+#user-details {
+    margin-right: -100px;
+}

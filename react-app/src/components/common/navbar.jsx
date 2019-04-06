@@ -27,6 +27,5 @@ const NavBar = props => {
     );
 };
 
-NavBar.propType = {};
 
 export default NavBar;
