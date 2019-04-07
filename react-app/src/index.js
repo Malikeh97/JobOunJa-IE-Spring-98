@@ -8,6 +8,8 @@ import 'bootstrap-v4-rtl/dist/css/bootstrap-rtl.min.css';
 import 'vazir-font/dist/font-face.css';
 import {BrowserRouter} from "react-router-dom";
 
+localStorage.setItem('userId', '1');
+
 ReactDOM.render(
     <BrowserRouter>
         <App/>

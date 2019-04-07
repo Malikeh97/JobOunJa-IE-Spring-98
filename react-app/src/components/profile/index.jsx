@@ -3,12 +3,29 @@ import './profile.css';
 import Skill from "../common/skill";
 
 class Profile extends Component {
+    state = {
+        skills: []
+    };
+
+    componentDidMount() {
+        // send request to get skills
+    }
+
+    handleOnSkillClick = (isOwnSkill, isEndorsed) => {
+        if (!isOwnSkill && !isEndorsed) {
+            // send endorse request
+        }
+    };
+
     render() {
+        let userId = localStorage.getItem('userId');
+        const isOwnSkill = userId === this.props.match.params.id;
+
         return (
             <div className="container">
                 <div className="row" id="title_bar">
                     <div id="profile-picture" className="col-md-3">
-                        <img src="assets/alahazrat.jpg" className="img-thumbnail over" alt="Cinque Terre"/>
+                        <img src="" className="img-thumbnail over" alt="Cinque Terre"/>
                     </div>
                     <svg height="30" width="150">
                         <polygon points="40,0 0,40 150,40 150,0" style={{ fill: "rgb(147, 216, 221)" }}/>
@@ -38,12 +55,12 @@ class Profile extends Component {
                                 <span className="caret">-- انتخاب مهارت --</span>
                             </button>
                             {/*<ul className="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">*/}
-                                {/*<li role="presentation"><a role="menuitem" tabIndex="-1" href="#">Unsorted <span*/}
-                                    {/*className="badge">12</span></a></li>*/}
-                                {/*<li role="presentation"><a role="menuitem" tabIndex="-1" href="#">Another action <span*/}
-                                    {/*className="badge">42</span></a></li>*/}
-                                {/*<li role="presentation"><a role="menuitem" tabIndex="-1" href="#">Something else*/}
-                                    {/*here <span className="badge">42</span></a></li>*/}
+                            {/*<li role="presentation"><a role="menuitem" tabIndex="-1" href="#">Unsorted <span*/}
+                            {/*className="badge">12</span></a></li>*/}
+                            {/*<li role="presentation"><a role="menuitem" tabIndex="-1" href="#">Another action <span*/}
+                            {/*className="badge">42</span></a></li>*/}
+                            {/*<li role="presentation"><a role="menuitem" tabIndex="-1" href="#">Something else*/}
+                            {/*here <span className="badge">42</span></a></li>*/}
                             {/*</ul>*/}
                         </div>
                         <button type="button" id="skill_btn">افزودن مهارت</button>
@@ -54,19 +71,24 @@ class Profile extends Component {
                         <span className="name">HTML</span>
                         <span className="point is_assigned">
                                 <div>5</div>
-                    </span>
+                        </span>
                     </div>
 
-                    <div className="skill">
-                        <span className="name">CSS</span>
-                        <span className="point is_assigned">
-                                <div>3</div>
-                    </span>
-                    </div>
+                    {
+                        this.state.skills.map(skill => {
+                            let isEndorsed = skill.endorsers && skill.endorsers.find(endorser => endorser === userId);
+                            return <Skill skill={skill}
+                                          isOwnSkill={isOwnSkill}
+                                          onClick={() => this.handleOnSkillClick(isOwnSkill, isEndorsed)}
+                            />
+                        })
+                    }
 
-                    <Skill skill={{name: 'JavaScipt', point: 16}}/>
+                    <Skill skill={{ name: 'CSS', point: 3 }} isOwnSkill={isOwnSkill}/>
 
-                    <Skill skill={{name: 'TypeScript', point: 0}}/>
+                    <Skill skill={{ name: 'JavaScript', point: 16, endorsers: ['1'] }} isOwnSkill={isOwnSkill}/>
+
+                    {/*// <Skill skill={{ name: 'TypeScript', point: 0 }} isOwnSkill={true} onClick={() =>}/>*/}
                 </div>
             </div>
         );
