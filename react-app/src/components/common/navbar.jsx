@@ -9,7 +9,7 @@ const NavBar = props => {
                 <ul className="navbar-nav">
                     <li className="nav-item">
                         <Link className="navbar-brand" to="/">
-                            <img src="assets/logo%20v1.png" alt="Logo" id="logo"/>
+                            <img src={require("./logo v1.png")} alt="Logo" id="logo"/>
                         </Link>
                     </li>
                 </ul>

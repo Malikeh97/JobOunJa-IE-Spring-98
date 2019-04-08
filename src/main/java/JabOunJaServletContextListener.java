@@ -44,7 +44,7 @@ public class JabOunJaServletContextListener implements ServletContextListener {
 		newUser.setFirstName("علی");
 		newUser.setLastName("شریف‌ زاده");
 		newUser.setJobTitle("برنامه نویس وب");
-		newUser.setProfilePictureURL(null);
+		newUser.setProfilePictureURL("https://media.wired.com/photos/598e35994ab8482c0d6946e0/master/w_1164,c_limit/phonepicutres-TA.jpg");
 		newUser.setSkills(newUserSkills);
 		newUser.setBio("روی سنگ قبرم بنویسید: خدا بیامرز می خواست خیلی کارا بکنه ولی پول نداشت");
 		return newUser;
@@ -63,7 +63,7 @@ public class JabOunJaServletContextListener implements ServletContextListener {
 		newUser.setFirstName("علی");
 		newUser.setLastName("طبا");
 		newUser.setJobTitle("برنامه نویس");
-		newUser.setProfilePictureURL(null);
+		newUser.setProfilePictureURL("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXogamGH0DqrmeiWioGZf8uOf9d9_eht0ttGJLSKxQRopOB9aI");
 		newUser.setSkills(newUserSkills);
 		newUser.setBio("نظری ندارم");
 		return newUser;
@@ -82,7 +82,7 @@ public class JabOunJaServletContextListener implements ServletContextListener {
 		newUser.setFirstName("ملیکه");
 		newUser.setLastName("احقاقی");
 		newUser.setJobTitle("دانش پژوه");
-		newUser.setProfilePictureURL(null);
+		newUser.setProfilePictureURL("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTnM3fgM_n92xa8Eak83eMRtU266NMhOBjHHlhfdCnPyhP1Qlth");
 		newUser.setSkills(newUserSkills);
 		newUser.setBio("تولدم مبارک");
 		return newUser;

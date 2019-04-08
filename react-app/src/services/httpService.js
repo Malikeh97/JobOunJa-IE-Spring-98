@@ -1,23 +1,23 @@
 import axios from "axios";
-import { toast } from "react-toastify";
+import {toast} from "react-toastify";
 
 axios.interceptors.response.use(null, error => {
-  const expectedError =
-    error.response &&
-    error.response.status >= 400 &&
-    error.response.status < 500;
+    const expectedError =
+        error.response &&
+        error.response.status >= 400 &&
+        error.response.status < 500;
 
-  if (!expectedError) {
-    console.error(error);
-    toast.error("An unexpected error occurred.");
-  }
+    if (!expectedError) {
+        console.error(error);
+        toast.error('خطایی رخ داده است');
+    }
 
-  return Promise.reject(error);
+    return Promise.reject(error);
 });
 
 export default {
-  get: axios.get,
-  post: axios.post,
-  put: axios.put,
-  delete: axios.delete
+    get: axios.get,
+    post: axios.post,
+    put: axios.put,
+    delete: axios.delete
 };

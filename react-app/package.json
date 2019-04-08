@@ -11,6 +11,7 @@
     "react-router-dom": "^5.0.0",
     "react-scripts": "2.1.8",
     "react-toastify": "^5.0.0-rc.6",
+    "reactstrap": "^8.0.0",
     "vazir-font": "^19.2.0"
   },
   "scripts": {

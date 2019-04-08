@@ -48,6 +48,10 @@
     margin: 0;
 }
 
+#skill_row {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
 
 #skill_container {
     margin-right: 10px;
@@ -70,7 +74,7 @@
     justify-content: center;
     align-items: center;
     margin: 0.2rem;
-    box-shadow: inset 0 0 6px rgba(125, 125, 125, 0.3);
+    box-shadow: inset 0 0 6px rgba(125, 125, 125, 0.5);
     height: 40px;
     background: #fafafa;
 }
@@ -80,35 +84,14 @@
     width: 250px;
 }
 
-#skill_container .dropdown button span {
-    float: right;
-}
-
 #skill_container .dropdown-toggle::after {
     float: left;
     transform: translateY(8px);
 }
 
-
 #skills {
     width: 100%;
-}
-
-#skills .skill {
-    float: left;
-    height: 35px;
-    background-color: #fff;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
-}
-
-#skills .skill:not(:first-child) {
-    margin-left: 10px;
-}
-
-#skills .skill .point > div {
-    transform: translate(0, 12%);
-    text-align: center;
+    margin-top: 20px;
 }
 
 #title_bar svg {

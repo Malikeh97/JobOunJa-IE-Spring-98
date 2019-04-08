@@ -2,13 +2,26 @@ import React, {Component} from "react";
 import './profile.css';
 import Skill from "../common/skill";
 
+import {getUser} from '../../services/userService';
+import SkillDropDown from "./SkillDropdown";
+import {getSkills} from "../../services/skillsService";
+
 class Profile extends Component {
     state = {
-        skills: []
+        user: {
+            skills: []
+        },
+        allSkills: [],
+        dropdownIsOpen: false,
+        selectedValue: '-- انتخاب مهارت --'
     };
 
-    componentDidMount() {
-        // send request to get skills
+    async componentDidMount() {
+        const { data: userData } = await getUser(this.props.match.params.id);
+        const { data: skillsData } = await getSkills();
+        const allSkills = [];
+        skillsData.data.forEach(skill => allSkills.push(skill.name));
+        this.setState({ user: userData.data, allSkills })
     }
 
     handleOnSkillClick = (isOwnSkill, isEndorsed) => {
@@ -17,78 +30,60 @@ class Profile extends Component {
         }
     };
 
+    onSkillSelect = (skill) => {
+        this.setState({ selectedValue: skill })
+    };
+
+    toggle = () => {
+        this.setState(prevState => ({
+            dropdownIsOpen: !prevState.dropdownIsOpen
+        }));
+    };
+
     render() {
         let userId = localStorage.getItem('userId');
         const isOwnSkill = userId === this.props.match.params.id;
+        const { user, allSkills, dropdownIsOpen, selectedValue } = this.state;
 
         return (
             <div className="container">
                 <div className="row" id="title_bar">
                     <div id="profile-picture" className="col-md-3">
-                        <img src="" className="img-thumbnail over" alt="Cinque Terre"/>
+                        <img src={user.profilePictureURL} className="img-thumbnail over" alt="Cinque Terre"/>
                     </div>
                     <svg height="30" width="150">
                         <polygon points="40,0 0,40 150,40 150,0" style={{ fill: "rgb(147, 216, 221)" }}/>
                         <polygon points="55,0 15,40 138,40 138,0" style={{ fill: "rgb(129, 199, 204)" }}/>
-                        Sorry, your browser does not support inline SVG.
                     </svg>
                     <div id="user-details">
-                        <div id="username">محمدرضا کیانی</div>
-                        <div id="title">اعلی حضرت</div>
+                        <div id="username">{`${user.firstName} ${user.lastName}`}</div>
+                        <div id="title">{user.jobTitle}</div>
                     </div>
                 </div>
-                <div className="row" id="description"> لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با
-                    استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و
-                    برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد. کتابهای
-                    زیادی در شصت و سه درصد گذشته، حال و آینده شناخت فراوان جامعه و متخصصان را می طلبد تا با نرم افزارها
-                    شناخت بیشتری را برای طراحان رایانه ای علی الخصوص طراحان خلاقی و فرهنگ پیشرو در زبان فارسی ایجاد کرد.
-                    در این صورت می توان امید داشت که تمام و دشواری موجود در ارائه راهکارها و شرایط سخت تایپ به پایان رسد
-                    وزمان مورد نیاز شامل حروفچینی دستاوردهای اصلی و جوابگوی سوالات پیوسته اهل دنیای موجود طراحی اساسا
-                    مورد استفاده قرار گیرد.
+                <div className="row" id="description">
+                    {user.bio}
                 </div>
                 <div className="row" id="skill_row">
-                    <div id="skills_text"><p>مهارت ها:</p></div>
-                    <div className="row" id="skill_container">
-                        <div className="dropdown">
-                            <button className="btn btn-xs btn-default dropdown-toggle" type="button" id="dropdownMenu1"
-                                    data-toggle="dropdown">
-                                <span className="caret">-- انتخاب مهارت --</span>
-                            </button>
-                            {/*<ul className="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">*/}
-                            {/*<li role="presentation"><a role="menuitem" tabIndex="-1" href="#">Unsorted <span*/}
-                            {/*className="badge">12</span></a></li>*/}
-                            {/*<li role="presentation"><a role="menuitem" tabIndex="-1" href="#">Another action <span*/}
-                            {/*className="badge">42</span></a></li>*/}
-                            {/*<li role="presentation"><a role="menuitem" tabIndex="-1" href="#">Something else*/}
-                            {/*here <span className="badge">42</span></a></li>*/}
-                            {/*</ul>*/}
-                        </div>
-                        <button type="button" id="skill_btn">افزودن مهارت</button>
-                    </div>
+                    <SkillDropDown
+                        items={allSkills}
+                        selectedValue={selectedValue}
+                        dropdownIsOpen={dropdownIsOpen}
+                        onItemSelect={this.onSkillSelect}
+                        toggle={this.toggle}
+                    />
                 </div>
                 <div id="skills">
-                    <div className="skill">
-                        <span className="name">HTML</span>
-                        <span className="point is_assigned">
-                                <div>5</div>
-                        </span>
-                    </div>
-
                     {
-                        this.state.skills.map(skill => {
+                        user.skills.map(skill => {
                             let isEndorsed = skill.endorsers && skill.endorsers.find(endorser => endorser === userId);
-                            return <Skill skill={skill}
-                                          isOwnSkill={isOwnSkill}
-                                          onClick={() => this.handleOnSkillClick(isOwnSkill, isEndorsed)}
-                            />
+                            return (
+                                <Skill key={skill.name}
+                                       skill={skill}
+                                       isOwnSkill={isOwnSkill}
+                                       onClick={() => this.handleOnSkillClick(isOwnSkill, isEndorsed)}
+                                />)
                         })
                     }
-
-                    <Skill skill={{ name: 'CSS', point: 3 }} isOwnSkill={isOwnSkill}/>
-
-                    <Skill skill={{ name: 'JavaScript', point: 16, endorsers: ['1'] }} isOwnSkill={isOwnSkill}/>
-
-                    {/*// <Skill skill={{ name: 'TypeScript', point: 0 }} isOwnSkill={true} onClick={() =>}/>*/}
                 </div>
             </div>
         );
