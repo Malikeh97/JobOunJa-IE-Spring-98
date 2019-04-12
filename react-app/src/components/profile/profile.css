@@ -11,7 +11,7 @@
     color: #555;
     text-align: justify;
     line-height: 2;
-
+    padding: 0 15px;
 }
 
 #profile-picture .img-thumbnail {
@@ -19,6 +19,7 @@
     border-radius:1.25rem;
     transform: translateY(-50%);
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    min-height: 120px;
 }
 
 #username {

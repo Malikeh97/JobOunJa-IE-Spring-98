@@ -14,7 +14,7 @@ class Profile extends Component {
             firstName: '',
             lastName: '',
             skills: [],
-            profilePictureURL: 'https://cdn.guidingtech.com/media/assets/WordPress-Import/2012/10/Smiley-Thumbnail.png'
+            profilePictureURL: ''
         },
         availableSkills: [],
         dropdownIsOpen: false,
@@ -71,7 +71,7 @@ class Profile extends Component {
             <div className="container">
                 <div className="row" id="title_bar">
                     <div id="profile-picture" className="col-md-3">
-                        <img src={user.profilePictureURL} className="img-thumbnail over" alt="Cinque Terre"/>
+                        <img src={user.profilePictureURL} className="img-thumbnail over" alt="Profile picture"/>
                     </div>
                     <svg height="30" width="150">
                         <polygon points="40,0 0,40 150,40 150,0" style={{ fill: "rgb(147, 216, 221)" }}/>
