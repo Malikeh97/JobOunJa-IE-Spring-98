@@ -2,9 +2,10 @@ import React, {Component} from "react";
 import './profile.css';
 import Skill from "../common/skill";
 
-import {addSkill, getUser} from '../../services/userService';
+import {addSkill, endorse, getUser} from '../../services/userService';
 import Dropdown from "../common/dropdown";
 import {getSkills} from "../../services/skillsService";
+import {toast} from "react-toastify";
 
 class Profile extends Component {
     state = {
@@ -17,7 +18,7 @@ class Profile extends Component {
         },
         availableSkills: [],
         dropdownIsOpen: false,
-        selectedNewSkill: '-- انتخاب مهارت --'
+        selectedNewSkill: ''
     };
 
     async componentDidMount() {
@@ -28,9 +29,14 @@ class Profile extends Component {
         this.setState({ user: userData.data, availableSkills })
     }
 
-    handleOnSkillClick = (isOwnSkill, isEndorsed) => {
+    handleOnSkillClick = async (skill, isOwnSkill, isEndorsed) => {
         if (!isOwnSkill && !isEndorsed) {
-            // send endorse request
+            try {
+                const { data } = await endorse(this.state.user.id, { skill });
+                this.setState({ user: data.data })
+            } catch (ex) {
+                toast.error(ex.response.data.data)
+            }
         }
     };
 
@@ -45,8 +51,14 @@ class Profile extends Component {
     };
 
     handleDropdownButtonClick = async () => {
-        const { data } = await addSkill(this.state.user.id, { skill: this.state.selectedNewSkill });
-        this.setState({ user: data.data })
+        try {
+            const { data } = await addSkill(this.state.user.id, { skill: this.state.selectedNewSkill });
+            let availableSkills = [...this.state.availableSkills];
+            availableSkills = availableSkills.filter(skill => skill !== this.state.selectedNewSkill);
+            this.setState({ user: data.data, selectedNewSkill: '', availableSkills });
+        } catch (ex) {
+            toast.error(ex.response.data.data)
+        }
     };
 
 
@@ -80,6 +92,7 @@ class Profile extends Component {
                             label="مهارت ها:"
                             buttonText="افزودن مهارت"
                             items={availableSkills}
+                            defaultValue="-- انتخاب مهارت --"
                             selectedValue={selectedNewSkill}
                             dropdownIsOpen={dropdownIsOpen}
                             onItemSelect={this.handleDropdownSelect}
@@ -96,7 +109,8 @@ class Profile extends Component {
                                 <Skill key={skill.name}
                                        skill={skill}
                                        isOwnSkill={isOwnSkill}
-                                       onClick={() => this.handleOnSkillClick(isOwnSkill, isEndorsed)}
+                                       isEndorsed={isEndorsed}
+                                       onClick={() => this.handleOnSkillClick(skill.name, isOwnSkill, isEndorsed)}
                                 />)
                         })
                     }
