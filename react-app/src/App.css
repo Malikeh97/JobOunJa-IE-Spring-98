@@ -1,0 +1,35 @@
+
+input:focus {
+  outline: 0 !important;
+}
+
+body {
+  font-family: Vazir, serif !important;
+}
+
+main {
+  overflow: hidden;
+  background: rgb(195, 237, 241);
+  height: calc(100vh - 60px - 60px);
+}
+
+.page-details {
+  background-color: #f5f5f5;
+  margin: 150px 0 0 0;
+  height: calc(100% - 150px);
+}
+
+footer {
+  height: 60px;
+  background: #444;
+  position: relative;
+}
+
+footer div {
+  color: #999;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+

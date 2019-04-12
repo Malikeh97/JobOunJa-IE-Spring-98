@@ -1,0 +1,30 @@
+.navbar {
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    height: 60px;
+    padding: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 999;
+}
+
+.navbar:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.navbar .navbar-nav {
+    padding: 0px;
+}
+
+.navbar .navbar-brand {
+    padding: 0px;
+}
+
+.navbar .nav-item .nav-link {
+    color: #222;
+}
+
+#logo {
+    height: 60px;
+}

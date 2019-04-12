@@ -1,0 +1,46 @@
+.skill {
+    direction: ltr;
+    float: left;
+    height: 35px;
+    background-color: #fff;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+}
+
+.skill {
+    margin: 10px;
+}
+
+.skill .name {
+    float: left;
+    margin: 8px 10px 7px 10px;
+}
+
+.skill .point {
+    float: left;
+    margin: 5px 5px 5px 0;
+    height: 25px;
+    width: 25px;
+    border-radius: 0.2rem;
+}
+
+.skill .point > div {
+    transform: translate(0, 12%);
+    text-align: center;
+}
+
+.skill .default {
+    background-color: rgb(201, 238, 242);
+    color: rgb(96, 149, 151);
+}
+
+.skill .not-assigned {
+    background-color: rgb(230, 0, 0);
+    color: #fff;
+}
+
+.skill .not-endorsed {
+    background-color: rgb(80, 180, 52);
+    color: #fff;
+    cursor: pointer;
+}
