@@ -2,26 +2,30 @@ import React, {Component} from "react";
 import './profile.css';
 import Skill from "../common/skill";
 
-import {getUser} from '../../services/userService';
-import SkillDropDown from "./SkillDropdown";
+import {addSkill, getUser} from '../../services/userService';
+import Dropdown from "../common/dropdown";
 import {getSkills} from "../../services/skillsService";
 
 class Profile extends Component {
     state = {
         user: {
-            skills: []
+            id: '',
+            firstName: '',
+            lastName: '',
+            skills: [],
+            profilePictureURL: 'https://cdn.guidingtech.com/media/assets/WordPress-Import/2012/10/Smiley-Thumbnail.png'
         },
-        allSkills: [],
+        availableSkills: [],
         dropdownIsOpen: false,
-        selectedValue: '-- انتخاب مهارت --'
+        selectedNewSkill: '-- انتخاب مهارت --'
     };
 
     async componentDidMount() {
         const { data: userData } = await getUser(this.props.match.params.id);
         const { data: skillsData } = await getSkills();
-        const allSkills = [];
-        skillsData.data.forEach(skill => allSkills.push(skill.name));
-        this.setState({ user: userData.data, allSkills })
+        const availableSkills = [];
+        skillsData.data.forEach(skill => availableSkills.push(skill.name));
+        this.setState({ user: userData.data, availableSkills })
     }
 
     handleOnSkillClick = (isOwnSkill, isEndorsed) => {
@@ -30,8 +34,8 @@ class Profile extends Component {
         }
     };
 
-    onSkillSelect = (skill) => {
-        this.setState({ selectedValue: skill })
+    handleDropdownSelect = (skill) => {
+        this.setState({ selectedNewSkill: skill })
     };
 
     toggle = () => {
@@ -40,10 +44,16 @@ class Profile extends Component {
         }));
     };
 
+    handleDropdownButtonClick = async () => {
+        const { data } = await addSkill(this.state.user.id, { skill: this.state.selectedNewSkill });
+        this.setState({ user: data.data })
+    };
+
+
     render() {
         let userId = localStorage.getItem('userId');
         const isOwnSkill = userId === this.props.match.params.id;
-        const { user, allSkills, dropdownIsOpen, selectedValue } = this.state;
+        const { user, availableSkills, dropdownIsOpen, selectedNewSkill } = this.state;
 
         return (
             <div className="container">
@@ -63,15 +73,21 @@ class Profile extends Component {
                 <div className="row" id="description">
                     {user.bio}
                 </div>
-                <div className="row" id="skill_row">
-                    <SkillDropDown
-                        items={allSkills}
-                        selectedValue={selectedValue}
-                        dropdownIsOpen={dropdownIsOpen}
-                        onItemSelect={this.onSkillSelect}
-                        toggle={this.toggle}
-                    />
-                </div>
+                {
+                    isOwnSkill &&
+                    <div className="row" id="skill_row">
+                        <Dropdown
+                            label="مهارت ها:"
+                            buttonText="افزودن مهارت"
+                            items={availableSkills}
+                            selectedValue={selectedNewSkill}
+                            dropdownIsOpen={dropdownIsOpen}
+                            onItemSelect={this.handleDropdownSelect}
+                            toggle={this.toggle}
+                            onButtonClick={this.handleDropdownButtonClick}
+                        />
+                    </div>
+                }
                 <div id="skills">
                     {
                         user.skills.map(skill => {

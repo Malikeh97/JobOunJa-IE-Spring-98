@@ -1,12 +1,14 @@
 import React from 'react';
-import {Dropdown, DropdownItem, DropdownMenu, DropdownToggle} from "reactstrap";
+import PropTypes from 'prop-types';
+import {Dropdown as BSDropdown, DropdownItem, DropdownMenu, DropdownToggle} from "reactstrap";
+import './dropdown.css';
 
-const SkillDropDown = ({ items, selectedValue, onItemSelect, dropdownIsOpen, toggle }) => {
+const Dropdown = ({ label, buttonText, items, selectedValue, onItemSelect, dropdownIsOpen, toggle, onButtonClick }) => {
     return (
         <React.Fragment>
-            <div id="skills_text"><p>مهارت ها:</p></div>
-            <div className="row" id="skill_container">
-                <Dropdown isOpen={dropdownIsOpen} toggle={toggle}>
+            <div id="dropdown-text"><p>{label}</p></div>
+            <div className="row" id="dropdown-container">
+                <BSDropdown isOpen={dropdownIsOpen} toggle={toggle}>
                     <DropdownToggle caret color="default">
                         {selectedValue}
                     </DropdownToggle>
@@ -32,11 +34,22 @@ const SkillDropDown = ({ items, selectedValue, onItemSelect, dropdownIsOpen, tog
                                                             onClick={event => onItemSelect(event.target.innerText)}>{item}</DropdownItem>)
                         }
                     </DropdownMenu>
-                </Dropdown>
-                <button type="button" id="skill_btn">افزودن مهارت</button>
+                </BSDropdown>
+                <button type="button" id="dropdown-button" onClick={onButtonClick}>{buttonText}</button>
             </div>
         </React.Fragment>
     )
 };
 
-export default SkillDropDown;
+Dropdown.propTypes = {
+    label: PropTypes.string.isRequired,
+    buttonText: PropTypes.string.isRequired,
+    items: PropTypes.array.isRequired,
+    selectedValue: PropTypes.string.isRequired,
+    dropdownIsOpen: PropTypes.bool.isRequired,
+    onItemSelect: PropTypes.func.isRequired,
+    toggle: PropTypes.func.isRequired,
+    onButtonClick: PropTypes.func.isRequired
+}
+
+export default Dropdown;
