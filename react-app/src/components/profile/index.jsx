@@ -21,13 +21,24 @@ class Profile extends Component {
         selectedNewSkill: ''
     };
 
-    async componentDidMount() {
-        const { data: userData } = await getUser(this.props.match.params.id);
-        const { data: skillsData } = await getSkills();
-        const availableSkills = [];
-        skillsData.data.forEach(skill => availableSkills.push(skill.name));
-        this.setState({ user: userData.data, availableSkills })
+    async componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevProps.match.params.id !== this.props.match.params.id)
+            await this.getData()
     }
+
+    async componentDidMount() {
+        await this.getData()
+    }
+
+    getData = async () => {
+        const { data: userData } = await getUser(this.props.match.params.id);
+        const availableSkills = [];
+        if (this.state.isOwnSkill) {
+            const { data: skillsData } = await getSkills();
+            skillsData.data.forEach(skill => availableSkills.push(skill.name));
+        }
+        this.setState({ user: userData.data, availableSkills })
+    };
 
     handleOnSkillClick = async (skill, isOwnSkill, isEndorsed) => {
         if (!isOwnSkill && !isEndorsed) {

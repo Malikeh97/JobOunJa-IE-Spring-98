@@ -1,9 +1,11 @@
 import React, {Component} from 'react';
 import {Route, Switch} from 'react-router-dom';
+import {ToastContainer} from "react-toastify";
 
 import NavBar from "./components/common/navbar";
 import Profile from "./components/profile";
-import {ToastContainer} from "react-toastify";
+import Home from "./components/home";
+
 import 'react-toastify/dist/ReactToastify.min.css';
 import './App.css';
 
@@ -19,6 +21,7 @@ class App extends Component {
                         <div className="page-details">
                             <Switch>
                                 <Route path="/profile/:id" component={Profile}/>
+                                <Route path="/" component={Home}/>
                             </Switch>
                         </div>
                     </main>

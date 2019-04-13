@@ -3,6 +3,8 @@ import './navbar.css';
 import {Link, NavLink} from "react-router-dom";
 
 const NavBar = props => {
+    const loggedInUserId = localStorage.getItem('userId');
+    const loggedInUserProfileURL = `/profile/${loggedInUserId}`;
     return (
         <nav className="navbar navbar-expand-sm bg-light">
             <div className="container">
@@ -16,7 +18,7 @@ const NavBar = props => {
 
                 <ul className="navbar-nav" style={{float: 'left'}}>
                     <li className="nav-item">
-                        <NavLink className="nav-link" to="/profile">حساب کاربری</NavLink>
+                        <NavLink className="nav-link" to={loggedInUserProfileURL}>حساب کاربری</NavLink>
                     </li>
                     <li className="nav-item">
                         <NavLink className="nav-link" to="/logout">خروج</NavLink>
