@@ -4,7 +4,7 @@ import './project_info.css';
 
 const ProjectInfo = ({ infoId, altIcon, iconSrc, featureText, valueText, timeIsUp }) => {
     let featureClass = "static"
-    let valueClass = "text"b
+    let valueClass = "text"
 
     if (timeIsUp) {
         featureClass = featureClass + ' red'

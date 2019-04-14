@@ -20,7 +20,7 @@ class App extends Component {
                         <div className="page-details">
                             <Switch>
                                 <Route path="/profile/:id" component={Profile}/>
-                                <Route path="/projects/:id" component={Project}/>
+                                <Route path="/project/:id" component={Project}/>
                             </Switch>
                         </div>
                     </main>
