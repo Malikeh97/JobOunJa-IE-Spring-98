@@ -1,0 +1,26 @@
+#remaining-time, #budget, #winner {
+    margin-top: 10px;
+    color: #666;
+}
+
+#budget, #winner {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.static {
+    font-weight: bold;
+    margin: 0 5px;
+}
+
+.green {
+    color: rgb(79, 140, 68) !important;
+}
+
+.red {
+    color: rgb(230, 0, 0) !important;
+}
+
+.job-ounja-primary-color-text {
+    color: rgb(75, 132, 139);
+}
