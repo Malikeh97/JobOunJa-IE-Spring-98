@@ -1,0 +1,45 @@
+#home-head.container-fluid {
+    padding: 30px 8vw 0 8vw !important;
+    height: 250px;
+}
+
+#home-head #header-text {
+    font-size: 36px;
+    font-weight: bold;
+    color: rgb(75, 132, 139);
+}
+
+#home-head #header-description {
+    margin-top: 10px;
+    margin-right: 20px;
+    font-size: 14px;
+}
+
+#home-head #searchTextField {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+#home-head #searchTextField .form-control {
+    display: inline-block;
+    background-color: rgb(224, 248, 249);
+    border: none;
+    border-radius: 0;
+    height: 50px;
+    width: 700px;
+    border-bottom: 3px solid rgb(100, 174, 190);
+}
+
+#home-head #searchTextField .form-control::placeholder {
+    color: rgb(127, 170, 172);
+}
+
+#home-head #searchTextField button {
+    transform: translateX(106px);
+    background-color: rgb(100, 174, 190);
+    border-radius: 0;
+    border: 0;
+    width: 100px;
+}

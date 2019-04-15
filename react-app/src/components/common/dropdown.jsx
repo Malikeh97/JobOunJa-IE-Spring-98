@@ -30,8 +30,10 @@ const Dropdown = ({ label, buttonText, items, defaultValue, selectedValue, onIte
                             },
                         }}>
                         {
-                            items.map(item => <DropdownItem key={item}
-                                                            onClick={event => onItemSelect(event.target.innerText)}>{item}</DropdownItem>)
+                            items.map(item =>
+                                <DropdownItem key={item}
+                                              onClick={event => onItemSelect(event.target.innerText)}>{item}
+                                </DropdownItem>)
                         }
                     </DropdownMenu>
                 </BSDropdown>
@@ -55,6 +57,6 @@ Dropdown.propTypes = {
     onItemSelect: PropTypes.func.isRequired,
     toggle: PropTypes.func.isRequired,
     onButtonClick: PropTypes.func.isRequired
-}
+};
 
 export default Dropdown;

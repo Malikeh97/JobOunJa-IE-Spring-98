@@ -33,7 +33,8 @@ class Profile extends Component {
     getData = async () => {
         const { data: userData } = await getUser(this.props.match.params.id);
         const availableSkills = [];
-        if (this.state.isOwnSkill) {
+        const userId = localStorage.getItem('userId');
+        if (userId === this.props.match.params.id) {
             const { data: skillsData } = await getSkills();
             skillsData.data.forEach(skill => availableSkills.push(skill.name));
         }
@@ -74,15 +75,15 @@ class Profile extends Component {
 
 
     render() {
-        let userId = localStorage.getItem('userId');
+        const userId = localStorage.getItem('userId');
         const isOwnSkill = userId === this.props.match.params.id;
         const { user, availableSkills, dropdownIsOpen, selectedNewSkill } = this.state;
 
         return (
-            <div className="container">
+            <div id="profile" className="container-fluid">
                 <div className="row" id="title_bar">
                     <div id="profile-picture" className="col-md-3">
-                        <img src={user.profilePictureURL} className="img-thumbnail over" alt="Profile picture"/>
+                        <img src={user.profilePictureURL} className="img-thumbnail over" alt="Profile"/>
                     </div>
                     <svg height="30" width="150">
                         <polygon points="40,0 0,40 150,40 150,0" style={{ fill: "rgb(147, 216, 221)" }}/>
