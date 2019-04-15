@@ -10,13 +10,16 @@ const ProjectInfo = ({ infoId, altIcon, iconSrc, featureText, valueText, timeIsU
         featureClass = featureClass + ' red'
     } else if (infoId === 'budget') {
         featureClass = featureClass + ' job-ounja-primary-color-text'
-        valueClass = featureClass + ' job-ounja-primary-color-text'
+        valueClass = valueClass + ' job-ounja-primary-color-text'
+    } else if (infoId === 'winner') {
+        featureClass = featureClass + ' green'
+        valueClass = valueClass + ' green'
     }
     return (
         <div id={infoId}>
-            <img src={require( "../../assets/" + (infoId === 'budget'? "money-bag.svg" : (infoId === 'winner'? "check-mark.svg" : "deadline.svg" )  ))} alt={altIcon}/>
-            <span className={featureClass}>{featureText}</span>
-            <span className={valueClass}> {valueText} </span>
+            <img src={require( "../../assets/" + (infoId === 'budget'? "money-bag.svg" : (infoId === 'winner'? "check-mark.svg" : (timeIsUp? "deadline-red.svg" : "deadline.svg" ) )  ))} alt={altIcon}/>
+            {timeIsUp?  <span className={featureClass}>مهلت تمام شده</span> : <span className={featureClass}>{featureText}</span>}
+            {!timeIsUp && <span className={valueClass}> {valueText} </span>}
         </div>
     );
 };

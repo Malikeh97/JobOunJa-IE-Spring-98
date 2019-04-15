@@ -12,10 +12,13 @@ class Project extends Component {
             id: '',
             title: '',
             description: '',
-            imageUrl: '',
+            skills: [],
+            bids: [],
             budget: '',
             deadline:'',
-            skills: []
+            winner: null,
+            imageUrl: ''
+
         },
         isBidAdded: false,
         requiredSkills: []
@@ -29,7 +32,7 @@ class Project extends Component {
 
     render() {
         return (
-            <div className="container">
+            <div className="container" id="project">
                     <div className="under" id="blue-section">
                     </div>
                     <div id="white-section">
@@ -59,6 +62,15 @@ class Project extends Component {
                                             iconSrc= "../../assets/money-bag.svg"
                                             featureText = "بودجه:"
                                             valueText = "۲۵۰۰ تومان"
+                                            timeIsUp = {false}
+                                        />
+
+                                        <ProjectInfo
+                                            infoId = "winner"
+                                            altIcon= "winner"
+                                            iconSrc= "../../assets/check-mark.svg"
+                                            featureText = "برنده:"
+                                            valueText = "وحید محمدی"
                                             timeIsUp = {false}
                                         />
 

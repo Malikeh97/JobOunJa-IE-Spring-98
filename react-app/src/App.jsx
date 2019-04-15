@@ -3,7 +3,7 @@ import {Route, Switch} from 'react-router-dom';
 
 import NavBar from "./components/common/navbar";
 import Profile from "./components/profile";
-import Project from "./components/project/project";
+import Project from "./components/project";
 import {ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.min.css';
 import './App.css';
