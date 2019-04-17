@@ -4,9 +4,20 @@ import ProjectInfo from "../common/project_info";
 import RequiredSkills from "./required_skills";
 import BidPlaceHolder from "./BidPlaceHolder";
 import BidInfoText from "./BidInfoText";
+import moment from 'moment';
 
 import {getProjects, getProject, addBid} from '../../services/projectService';
 import {toast} from "react-toastify";
+
+
+function setInterval(deadline) {
+    var currentTime =  moment().unix();
+    var diffTime = deadline - currentTime;
+    if(diffTime <= 0)
+        return '0'
+
+}
+
 
 class Project extends Component {
     state = {
@@ -23,6 +34,7 @@ class Project extends Component {
 
         },
         isBidAdded: false,
+        timeOver: false,
         requiredSkills: []
     };
 
@@ -33,6 +45,7 @@ class Project extends Component {
     }
 
     render() {
+        setInterval(this.state.project.deadline)
         return (
             <div className="container" id="project">
                     <div className="under" id="blue-section">
@@ -63,37 +76,32 @@ class Project extends Component {
                                             altIcon= "money-bag"
                                             iconSrc= "../../assets/money-bag.svg"
                                             featureText = "بودجه:"
-                                            valueText = "۲۵۰۰ تومان"
+                                            valueText = {this.state.project.budget.toString(10)+ 'تومان'}
                                             timeIsUp = {false}
                                         />
 
-                                        <ProjectInfo
-                                            infoId = "winner"
-                                            altIcon= "winner"
-                                            iconSrc= "../../assets/check-mark.svg"
-                                            featureText = "برنده:"
-                                            valueText = "وحید محمدی"
-                                            timeIsUp = {false}
-                                        />
+                                        {
+                                            (this.state.project.winner !== null) && <ProjectInfo
+                                                infoId = "winner"
+                                                altIcon= "winner"
+                                                iconSrc= "../../assets/check-mark.svg"
+                                                featureText = "برنده:"
+                                                valueText = {this.state.project.winner.firstName+' '+this.state.project.winner.lastName}
+                                                timeIsUp = {false}
+                                            />
+                                        }
 
                                         <div id="description-static">
                                             توضیحات
                                         </div>
-                                        <div id="description-text"> لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از
-                                            صنعت چاپ و با
-                                            استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و
-                                            سطرآنچنان که لازم
-                                            است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود
-                                            ابزارهای کاربردی می
-                                            باشد. کتابهای زیادی در شصت و سه درصد گذشته، حال و آینده شناخت فراوان جامعه و
-                                            متخصصان را می
-                                            طلبد تا با نرم افزارها شناخت بیشتری را برای طراحان رایانه ای علی الخصوص
-                                            طراحان خلاقی و فرهنگ
-                                            پیشرو در زبان فارسی ایجاد کرد.
+                                        <div id="description-text">
+                                            {this.state.project.description}
                                         </div>
                                     </div>
                                 </div>
 
+
+                                {/*Required skills section: */}
                                 <div className="row" id="skills-row">
                                     <div id="skills-static" className="job-ounja-primary-color-text">
                                         مهارت های لازم:
@@ -111,9 +119,8 @@ class Project extends Component {
                                     </div>
                                 }
                                 {
-                                    !this.state.isBidAdded &&
+                                    !this.state.isBidAdded && !this.state.timeOver &&
                                      <BidPlaceHolder />
-
                                 }
                                 {
                                     this.state.isBidAdded && <BidInfoText
@@ -124,7 +131,7 @@ class Project extends Component {
                                     />
                                 }
                                 {
-                                    this.state.isBidAdded && <BidInfoText
+                                    this.state.timeOver && !this.state.isBidAdded && <BidInfoText
                                         BidState = "TimeOut"
                                         BidText = "مهلت ارسال پیشنهاد برای این پروژه به پایان رسیده است!"
                                         color = "red"
