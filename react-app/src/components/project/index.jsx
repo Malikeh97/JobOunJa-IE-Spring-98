@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import './project.css';
 import ProjectInfo from "../common/project_info";
 import RequiredSkills from "../common/required_skills";
+import BidPlaceHolder from "./BidPlaceHolder";
 
 import {getProjects, getProject, addBid} from '../../services/projectService';
 import {toast} from "react-toastify";
@@ -102,21 +103,9 @@ class Project extends Component {
                                 <div className="row" id="make-bid-row">
                                     ثبت پیشنهاد
                                 </div>
-                                <div className="row" id="bid-info-row">
-                                    <div className="col-md-6">
-                                        <form>
-                                            <div className="input-group bid-input">
-                                                <input type="text" className="form-control"
-                                                       placeholder="پیشنهاد خود را وارد کنید"/>
-                                                    <div className="input-group-append">
-                                                        <span className="input-group-text">تومان</span>
-                                                    </div>
-                                            </div>
 
-                                            <input type="submit" value="ارسال" className="btn btn-info"/>
-                                        </form>
-                                    </div>
-                                </div>
+                                <BidPlaceHolder />
+
                             </div>
                         </div>
 

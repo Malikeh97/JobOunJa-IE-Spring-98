@@ -1,0 +1,25 @@
+#make-bid-row {
+    font-weight: bold;
+    font-size: 20px;
+    padding-bottom: 0;
+}
+
+.bid-input.input-group {
+    display: inline-flex;
+    width: 50%;
+}
+
+.bid-input input {
+    border-color: rgb(98, 173, 189);
+    border-width: 2px;
+    border-left: 0;
+}
+
+.bid-input .input-group-append .input-group-text {
+    color: rgb(98, 173, 189);
+    background-color: #fff;
+    border-color: rgb(98, 173, 189);
+    border-width: 2px;
+    border-right: 0;
+    padding: 0.3rem .75rem;
+}
