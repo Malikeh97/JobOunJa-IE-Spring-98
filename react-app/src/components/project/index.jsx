@@ -1,8 +1,9 @@
 import React, {Component} from "react";
 import './project.css';
 import ProjectInfo from "../common/project_info";
-import RequiredSkills from "../common/required_skills";
+import RequiredSkills from "./required_skills";
 import BidPlaceHolder from "./BidPlaceHolder";
+import BidInfoText from "./BidInfoText";
 
 import {getProjects, getProject, addBid} from '../../services/projectService';
 import {toast} from "react-toastify";
@@ -92,6 +93,7 @@ class Project extends Component {
                                         </div>
                                     </div>
                                 </div>
+
                                 <div className="row" id="skills-row">
                                     <div id="skills-static" className="job-ounja-primary-color-text">
                                         مهارت های لازم:
@@ -100,11 +102,36 @@ class Project extends Component {
                                         skills = {this.state.requiredSkills}
                                     />
                                 </div>
-                                <div className="row" id="make-bid-row">
-                                    ثبت پیشنهاد
-                                </div>
 
-                                <BidPlaceHolder />
+
+                                {/*select bid section:*/}
+                                {   !this.state.isBidAdded &&
+                                    <div className="row" id="make-bid-row">
+                                        ثبت پیشنهاد
+                                    </div>
+                                }
+                                {
+                                    !this.state.isBidAdded &&
+                                     <BidPlaceHolder />
+
+                                }
+                                {
+                                    this.state.isBidAdded && <BidInfoText
+                                        BidState = "Selected"
+                                        BidText = "شما قبلا پیشنهاد خود را ثبت کرده اید"
+                                        color = "green"
+                                        altText = "check-mark.svg"
+                                    />
+                                }
+                                {
+                                    this.state.isBidAdded && <BidInfoText
+                                        BidState = "TimeOut"
+                                        BidText = "مهلت ارسال پیشنهاد برای این پروژه به پایان رسیده است!"
+                                        color = "red"
+                                        altText = "danger.svg"
+                                    />
+                                }
+
 
                             </div>
                         </div>
