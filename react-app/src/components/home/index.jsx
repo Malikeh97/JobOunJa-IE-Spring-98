@@ -4,17 +4,21 @@ import Header from "./header";
 import {Form, FormGroup, Input} from "reactstrap";
 import User from "./user";
 import {getUsers} from "../../services/userService";
+import Project from "./project";
+import {getProjects} from "../../services/projectService";
 
 class Home extends Component {
     state = {
         users: [],
+        projects: [],
         projectSearchValue: '',
         userSearchValue: ''
     };
 
     async componentDidMount() {
         const { data: usersData } = await getUsers();
-        this.setState({ users: usersData.data });
+        const { data: projectsData } = await getProjects();
+        this.setState({ users: usersData.data, projects: projectsData.data });
     }
 
     handleProjectSearchChange = e => {
@@ -29,8 +33,12 @@ class Home extends Component {
         this.setState({ userSearchValue: e.currentTarget.value });
     };
 
-    handleOnUserClick = (userId) => {
+    handleOnUserClick = userId => {
         this.props.history.push(`/profile/${userId}`);
+    };
+
+    handleOnProjectClick = projectId => {
+        this.props.history.push(`/projects/${projectId}`);
     };
 
     render() {
@@ -56,6 +64,7 @@ class Home extends Component {
                             {
                                 this.state.users.map(user =>
                                     <User
+                                        key={user.id}
                                         onUserClick={() => this.handleOnUserClick(user.id)}
                                         profilePictureURL={user.profilePictureURL}
                                         fullName={`${user.firstName} ${user.lastName}`}
@@ -65,7 +74,15 @@ class Home extends Component {
                             }
                         </div>
                         <div id="projectList" className="col-md-9">
-
+                            {
+                                this.state.projects.map(project =>
+                                    <Project
+                                        key={project.id}
+                                        project={project}
+                                        onProjectClick={() => this.handleOnProjectClick(project.id)}
+                                    />
+                                )
+                            }
                         </div>
                     </div>
                 </div>

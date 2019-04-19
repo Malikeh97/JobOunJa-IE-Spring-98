@@ -8,6 +8,7 @@
 #home-body.container-fluid > .row {
     position: relative;
     top: -20px;
+    height: calc(100% + 20px);
 }
 
 
@@ -25,4 +26,14 @@
 
 #home-body.container-fluid #userSearchTextField .form-control::placeholder {
     color: #888;
+}
+
+#home-body #usersList {
+    height: 100%;
+    overflow: auto;
+}
+
+#home-body #projectList {
+    height: 100%;
+    overflow: auto;
 }

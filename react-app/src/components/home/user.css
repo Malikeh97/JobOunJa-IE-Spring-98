@@ -8,6 +8,10 @@
     cursor: pointer;
 }
 
+.user:hover {
+    box-shadow: 1px 2px 10px rgba(0, 0, 0, 0.35);
+}
+
 .user .image {
     width: 60px;
     height: 60px;
