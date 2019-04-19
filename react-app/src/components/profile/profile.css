@@ -1,8 +1,12 @@
-.container {
+#profile.container-fluid {
     background-color: #f5f5f5;
+    padding: 0 12vw !important;
+    margin: 150px 0 0 0;
+    height: calc(100% - 150px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
-.container img.img-thumbnail {
+.container-fluid img.img-thumbnail {
     min-width: 100%;
 }
 
