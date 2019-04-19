@@ -1,0 +1,56 @@
+#login.container-fluid {
+    background-color: #f5f5f5;
+    padding: 0 20vw !important;
+    margin: 150px 0 0 0;
+    height: calc(100% - 150px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+#login .well {
+    position: relative;
+    top: -8.5vh;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    padding: 0 !important;
+}
+
+#login .row {
+    padding: 20px;
+    margin: 10px;
+}
+
+
+#login #title {
+    text-align: center;
+    margin-bottom: 20px;
+    color: rgba(14, 93, 163, 0.99);
+    font-size: 35px;
+    text-shadow: darkblue;
+}
+
+#login .form-control {
+    display: inline-block;
+    width: calc(100% - 115px);
+}
+
+#login .form-group {
+    margin: 0 auto;
+}
+
+#login .form-group label {
+    width: 110px;
+    text-align: left;
+    padding-left: 15px;
+}
+
+#login #login-button {
+    margin: 0 auto;
+    width: 100px;
+}
+
+
+
+
+
+
+
+
