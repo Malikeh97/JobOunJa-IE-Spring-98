@@ -27,8 +27,22 @@
     padding-right: 20px;
 }
 
-.project .details .title {
+.project .details .title span:first-of-type {
     font-weight: 700;
+}
+
+.project .details .title span:nth-of-type(2) {
+    float: left;
+    font-size: 12px;
+    background-color: #eee;
+    color: #666;
+    padding: 0 5px;
+    border-radius: 4px;
+}
+
+.project .details .title .time-over {
+    color: #f5f5f5 !important;
+    background-color: rgb(100, 150, 170) !important;
 }
 
 .project .details .description {

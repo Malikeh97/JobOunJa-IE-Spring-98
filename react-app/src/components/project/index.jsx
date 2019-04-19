@@ -4,7 +4,6 @@ import ProjectInfo from "../common/project_info";
 import RequiredSkills from "./required_skills";
 import BidPlaceHolder from "./BidPlaceHolder";
 import BidInfoText from "./BidInfoText";
-import moment from 'moment';
 import persianJs from "persianjs";
 
 import deadline from '../../assets/deadline.svg';
@@ -12,54 +11,9 @@ import deadline_red from '../../assets/deadline_red.svg';
 import money_bag from '../../assets/money_bag.svg';
 import check_mark from '../../assets/check_mark.svg';
 
-import {getProjects, getProject, addBid} from '../../services/projectService';
+import {getProject, addBid} from '../../services/projectService';
 import {toast} from "react-toastify";
-import Skill from "../profile";
-import {addSkill} from "../../services/userService";
-
-
-function timeLeft(deadline) {
-    deadline = moment(deadline)
-    let currentTime = moment();
-    let diff = deadline.diff(currentTime);
-    console.log('test: ' + diff.toString());
-    if (diff <= 0)
-        return 'مهلت تمام شده';
-
-    let x = [];
-
-    let duration = moment.duration(diff);
-    let seconds = duration.seconds();
-    x.push({value: seconds, text: 'ثانیه'});
-
-    let minutes = duration.minutes();
-    x.push({value: minutes, text: 'دقیقه'});
-
-    let hours = duration.hours();
-    x.push({value: hours, text: 'ساعت'});
-
-    let days = duration.days();
-    x.push({value: days, text: 'روز'});
-
-    let months = duration.months();
-    x.push({value: months, text: 'ماه'});
-
-    let years = duration.years();
-    x.push({value: years, text: 'سال'});
-
-    let timeLeft = '';
-
-    for (let i = x.length - 1; i >= 0; i--) {
-        let item = x[i];
-        if (item.value > 0)
-            timeLeft += `${persianJs(item.value).englishNumber()} ${item.text}`;
-        if (i !== 0)
-            timeLeft += ' و '
-    }
-    return timeLeft;
-
-}
-
+import {formatNumber, calcTimeLeft} from "../../utilities";
 
 class Project extends Component {
     state = {
@@ -77,25 +31,34 @@ class Project extends Component {
         },
         isBidAdded: false,
         timeOver: false,
+        timeLeft: '',
         requiredSkills: [],
         bidAmount: ''
     };
 
     async componentDidMount() {
-        const {data: projectData} = await getProject(this.props.match.params.id);
-        console.log(projectData.data.project.skills)
+        const { data: projectData } = await getProject(this.props.match.params.id);
+        const { timeOver, text: timeLeft } = calcTimeLeft(projectData.data.deadline);
         this.setState({
             project: projectData.data.project,
             isBidAdded: projectData.data.bidAdded,
-            requiredSkills: projectData.data.project.skills
+            requiredSkills: projectData.data.project.skills,
+            timeOver, timeLeft
         });
+        this.interval = setInterval(() => {
+            const { timeOver, text: timeLeft } = calcTimeLeft(1555696000001);
+            this.setState({ timeOver, timeLeft })
+        } , 1000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.interval);
     }
 
     handleAddBid = async () => {
         try {
-            console.log({bidAmount: this.state.bidAmount})
-            const { data } = await addBid(this.state.project.id, {bidAmount: this.state.bidAmount});
-            this.setState({ isBidAdded : true});
+            await addBid(this.state.project.id, { bidAmount: this.state.bidAmount });
+            this.setState({ isBidAdded: true });
             toast.success("مقدار پیشنهادی با موفقیت ثبت شد!")
         } catch (ex) {
             toast.error(ex.response.data.data)
@@ -107,7 +70,6 @@ class Project extends Component {
     }
 
     render() {
-        this.state.timeOver = (timeLeft(this.state.project.deadline) === 'مهلت تمام شده');
         return (
             <div className="container-fluid" id="project">
                 <div className="well card card-body">
@@ -118,7 +80,7 @@ class Project extends Component {
                                  id="profile-picture"/>
                         </div>
                         <div className="col-md-10">
-                            <div id="project-title">پروژه طراحی سایت جاب اونجا</div>
+                            <div id="project-title">{this.state.project.title}</div>
 
                             {
                                 !this.state.timeOver && <ProjectInfo
@@ -126,8 +88,8 @@ class Project extends Component {
                                     altIcon="deadline"
                                     iconSrc={deadline}
                                     featureText="زمان باقی مانده:"
-                                    valueText={timeLeft(this.state.project.deadline)}
-                                    timeIsUp={!this.state.timeOver}
+                                    valueText={this.state.timeLeft}
+                                    timeIsUp={this.state.timeOver}
                                 />
                             }
 
@@ -148,7 +110,7 @@ class Project extends Component {
                                 altIcon="money-bag"
                                 iconSrc={money_bag}
                                 featureText="بودجه:"
-                                valueText={persianJs(this.state.project.budget.toString(10)).englishNumber().toString() + ' تومان'}
+                                valueText={persianJs(formatNumber(this.state.project.budget.toString())).englishNumber().toString() + ' تومان'}
                                 timeIsUp={false}
                             />
 
