@@ -1,0 +1,87 @@
+#sign-up.container-fluid {
+    background-color: #f5f5f5;
+    padding: 0 6vw !important;
+    margin: 150px 0 0 0;
+    height: calc(100% - 150px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+#sign-up .well {
+    margin: 0 auto;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    padding: 1.25rem !important;
+}
+
+#sign-up #signup-text-row {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+#sign-up .form-control {
+    display: inline-block;
+    width: calc(100% - 115px);
+}
+
+#sign-up .form-group {
+    margin-bottom: 0.5rem;
+}
+
+#sign-up .form-group label {
+    width: 110px;
+    text-align: left;
+    padding-left: 15px;
+}
+
+#sign-up #bio * {
+    vertical-align: middle;
+}
+
+#sign-up #bio label {
+    margin: 0;
+}
+
+#sign-up #title {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#sign-up #signup-button {
+    float: left;
+}
+
+#sign-up #slideshow {
+    overflow: hidden;
+    height: 240px;
+    width: 500px;
+    position: relative;
+    top: -125px;
+    right: 50%;
+    transform: translateX(50%);
+}
+
+#sign-up .slide-wrapper {
+    width: 2000px;
+    -webkit-animation: slide2 18s ease infinite;
+}
+
+#sign-up .slide {
+    float: right;
+    height: 240px;
+    width: 500px;
+}
+
+#sign-up .slide img {
+    height: 240px;
+    width: 500px;
+}
+
+@-webkit-keyframes slide2 {
+    20% {margin-right: 0;}
+    30% {margin-right: -500px;}
+    50% {margin-right: -500px;}
+    60% {margin-right: -1000px;}
+    70% {margin-right: -1000px;}
+    80% {margin-right: -1500px;}
+    90% {margin-right: -1500px;}
+}
