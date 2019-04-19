@@ -1,8 +1,59 @@
 import React, {Component} from "react";
+import Joi from 'joi-browser';
 import './signup.css';
 
 class Signup extends Component {
-    state = {};
+    state = {
+        inputs: {
+            name: '',
+            familyName: '',
+            username: '',
+            password: '',
+            confirmPassword: '',
+            jobTitle: '',
+            image: '',
+            bio: ''
+        },
+        errors: {}
+    };
+
+    schema = {
+        name: Joi.string().required(),
+        familyName: Joi.string().required(),
+        username: Joi.string().required(),
+        password: Joi.string().required(),
+        confirmPassword: Joi.string().required(),
+        jobTitle: Joi.string().required(),
+        image: Joi.string().required(),
+        bio: Joi.string().required()
+    };
+
+    handleInputChange = ({ currentTarget: input }) => {
+        const inputs = { ...this.state.inputs };
+        inputs[input.name] = input.value;
+        this.setState({ inputs });
+    };
+
+    handleSubmit = e => {
+        e.preventDefault();
+
+        const errors = this.validate();
+        this.setState({ errors: errors || {} });
+        if (errors) return;
+
+        console.log('submitted');
+    };
+
+    validate = () => {
+        const result = Joi.validate(this.state.inputs, this.schema, {abortEarly: false});
+        if (!result.error) return null;
+
+        const errors = {};
+        for (let item of result.error.details)
+            errors[item.path[0]] = item.message;
+        return errors;
+    };
+
 
     render() {
         return (
@@ -25,47 +76,65 @@ class Signup extends Component {
                         <div className="row">
                             <div className="form-group col-md-6">
                                 <label htmlFor="name">نام:</label>
-                                <input type="text" className="form-control" id="name"/>
+                                <input type="text" className="form-control" id="name" name="name"
+                                       onChange={this.handleInputChange}/>
+                                {this.state.errors.name && <div className="alert alert-danger">{this.state.errors.name}</div>}
                             </div>
                             <div className="form-group col-md-6">
                                 <label htmlFor="family-name">نام خانوادگی:</label>
-                                <input type="text" className="form-control" id="family-name"/>
+                                <input type="text" className="form-control" id="family-name" name="familyName"
+                                       onChange={this.handleInputChange}/>
+                                {this.state.errors.familyName && <div className="alert alert-danger">{this.state.errors.familyName}</div>}
                             </div>
                         </div>
 
                         <div className="row">
                             <div className="form-group col-md-6" id="username">
                                 <label htmlFor="username-input">نام کاربری:</label>
-                                <input type="text" className="form-control" id="username-input"/>
+                                <input type="text" className="form-control" id="username-input" name="username"
+                                       onChange={this.handleInputChange}/>
+                                {this.state.errors.username && <div className="alert alert-danger">{this.state.errors.username}</div>}
                             </div>
                         </div>
                         <div className="row">
                             <div className="form-group col-md-6" id="password">
                                 <label htmlFor="password-input">رمزعبور:</label>
-                                <input type="password" className="form-control" id="password-input"/>
+                                <input type="password" className="form-control" id="password-input" name="password"
+                                       onChange={this.handleInputChange}/>
+                                {this.state.errors.password && <div className="alert alert-danger">{this.state.errors.password}</div>}
                             </div>
                             <div className="form-group col-md-6" id="confirm-password">
                                 <label htmlFor="confirm-password-input">تکرار رمزعبور:</label>
-                                <input type="password" className="form-control" id="confirm-password-input"/>
+                                <input type="password" className="form-control" id="confirm-password-input"
+                                       name="confirmPassword" onChange={this.handleInputChange}/>
+                                {this.state.errors.confirmPassword && <div className="alert alert-danger">{this.state.errors.confirmPassword}</div>}
                             </div>
                         </div>
                         <div className="row">
                             <div className="form-group col-md-6" id="job-title">
                                 <label htmlFor="job-title-input">عنوان شغلی:</label>
-                                <input type="text" className="form-control" id="job-title-input"/>
+                                <input type="text" className="form-control" id="job-title-input" name="jobTitle"
+                                       onChange={this.handleInputChange}/>
+                                {this.state.errors.jobTitle && <div className="alert alert-danger">{this.state.errors.jobTitle}</div>}
                             </div>
                             <div className="form-group col-md-6" id="image">
                                 <label htmlFor="image-input">عکس:</label>
-                                <input type="text" className="form-control" id="image-input"/>
+                                <input type="text" className="form-control" id="image-input" name="image"
+                                       onChange={this.handleInputChange}/>
+                                {this.state.errors.image && <div className="alert alert-danger">{this.state.errors.image}</div>}
                             </div>
                         </div>
                         <div className="row">
                             <div className="form-group col-md-6" id="bio">
                                 <label htmlFor="bio-input">بیوگرافی:</label>
-                                <textarea className="form-control" id="bio-input"/>
+                                <textarea className="form-control" id="bio-input" name="bio"
+                                          onChange={this.handleInputChange}/>
+                                {this.state.errors.bio && <div className="alert alert-danger">{this.state.errors.bio}</div>}
                             </div>
                         </div>
-                        <button type="submit" className="btn btn-primary" id="signup-button">ثبت نام</button>
+                        <button type="submit" className="btn btn-primary" id="signup-button"
+                                onClick={this.handleSubmit}>ثبت نام
+                        </button>
                     </form>
                 </div>
             </div>);
