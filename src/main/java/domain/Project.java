@@ -20,5 +20,7 @@ public class Project {
 	private List<Bid> bids;
 	private Integer budget;
 	private Long deadline;
+	private Long creationDate;
 	private User winner;
+
 }
