@@ -4,3 +4,25 @@
     height: calc(100% - 250px);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
+
+#home-body.container-fluid > .row {
+    position: relative;
+    top: -20px;
+}
+
+
+#home-body.container-fluid #userSearchTextField {
+    padding: 5px;
+    background-color: white;
+    border-radius: 4px;
+}
+
+#home-body.container-fluid #userSearchTextField .form-control {
+    border: none;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+}
+
+#home-body.container-fluid #userSearchTextField .form-control::placeholder {
+    color: #888;
+}

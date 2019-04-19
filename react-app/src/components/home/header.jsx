@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {Button, Form, FormGroup, Input} from 'reactstrap';
 import './header.css';
 
-const Header = ({ searchValue, onSearchClicked }) => {
+const Header = ({ searchValue, onSearchInputChange, onSearchClicked }) => {
     return (
         <div id="home-head" className="container-fluid">
             <div id="header-text">جاب اونجا خوب است!</div>
@@ -13,7 +13,7 @@ const Header = ({ searchValue, onSearchClicked }) => {
             <Form>
                 <FormGroup id="searchTextField">
                     <Input type="text" name="search" placeholder="جستجو در جاب اونجا" value={searchValue}
-                           onChange={(e) => searchValue = `${e.target.value}`}/>
+                           onChange={onSearchInputChange}/>
                     <Button onClick={onSearchClicked}>جستجو</Button>
                 </FormGroup>
             </Form>
@@ -23,6 +23,7 @@ const Header = ({ searchValue, onSearchClicked }) => {
 
 Header.propTypes = {
     searchValue: PropTypes.string.isRequired,
+    onSearchInputChange: PropTypes.func.isRequired,
     onSearchClicked: PropTypes.func.isRequired
 };
 
