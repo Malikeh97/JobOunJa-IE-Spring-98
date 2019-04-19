@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './skill.css';
+import Dropdown from "./dropdown";
 
 const Skill = ({ skill, isOwnSkill, isEndorsed, onClick }) => {
     let skillClass = 'point default';
@@ -13,6 +14,7 @@ const Skill = ({ skill, isOwnSkill, isEndorsed, onClick }) => {
         skillClass = 'point not-endorsed';
         skillButtonText = '+';
     }
+
     return (
         <div className="skill">
             <span className="name">{skill.name}</span>
@@ -23,11 +25,15 @@ const Skill = ({ skill, isOwnSkill, isEndorsed, onClick }) => {
     );
 };
 
+Skill.defaultProps = {
+    onClick: () => {}
+};
+
 Skill.propType = {
     skill: PropTypes.object.isRequired,
     isOwnSkill: PropTypes.bool.isRequired,
     isEndorsed: PropTypes.bool.isRequired,
-    onClick: PropTypes.func.isRequired
+    onClick: PropTypes.func
 };
 
 export default Skill;

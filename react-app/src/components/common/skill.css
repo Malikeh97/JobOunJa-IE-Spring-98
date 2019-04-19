@@ -30,17 +30,18 @@
 }
 
 .skill .default {
-    background-color: rgb(201, 238, 242);
+    background-color: rgb(201, 238, 242) !important;
     color: rgb(96, 149, 151);
 }
 
 .skill .not-assigned {
-    background-color: rgb(230, 0, 0);
+    background-color: rgb(230, 0, 0) !important;
     color: #fff;
 }
 
 .skill .not-endorsed {
-    background-color: rgb(80, 180, 52);
+    background-color: rgb(80, 180, 52) !important;
     color: #fff;
     cursor: pointer;
 }
+

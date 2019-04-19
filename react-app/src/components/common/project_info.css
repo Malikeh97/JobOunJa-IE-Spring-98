@@ -1,0 +1,30 @@
+.project-info #remaining-time, #budget, #winner {
+    margin-top: 10px;
+    color: #666;
+}
+
+.project-info #budget, #winner {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.project-info .static {
+    font-weight: bold;
+    margin: 0 5px;
+}
+
+.project-info .green {
+    color: rgb(60, 139, 71) !important;
+}
+
+.project-info .red {
+    color: rgb(230, 0, 0) !important;
+}
+
+.project-info .job-ounja-primary-color-text {
+    color: rgb(54, 131, 139);
+}
+
+.project-info img {
+    width: 16px;
+}

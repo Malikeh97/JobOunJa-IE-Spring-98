@@ -52,6 +52,7 @@ public class ProjectsService {
 				isBidAdded = true;
 			}
 		}
+		project.setWinner(loggedInUser);//test
 		SingleProjectResponse singleProjectResponse = new SingleProjectResponse(new SingleProjectData(project,isBidAdded));
 		return singleProjectResponse.toJSON();
 
@@ -73,7 +74,7 @@ public class ProjectsService {
 			response.setStatus(403);
 			return errorResponse.toJSON();
 		}
-		Bid bid = new Bid(loggedInUser, project, request.getBidAmount());
+		Bid bid = new Bid(loggedInUser, project.getId(), request.getBidAmount());
 		project.getBids().add(bid);
 		AddBidResponse addBidResponse = new AddBidResponse("Bid added successfully");
 		return addBidResponse.toJSON();

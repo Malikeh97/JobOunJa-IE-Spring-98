@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Bid {
     private User biddingUser;
-    private Project project;
+    private String projectId;
     private Integer bidAmount;
 }
