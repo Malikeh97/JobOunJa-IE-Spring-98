@@ -17,7 +17,8 @@ const ProjectInfo = ({ infoId, altIcon, iconSrc, featureText, valueText, timeIsU
     }
     return (
         <div id={infoId}>
-            <img src={require( "../../assets/" + (infoId === 'budget'? "money-bag.svg" : (infoId === 'winner'? "check-mark.svg" : (timeIsUp? "deadline-red.svg" : "deadline.svg" ) )  ))} alt={altIcon}/>
+            <img src={iconSrc} alt={altIcon}/>
+            {/*<img src={require( "../../assets/" + (infoId === 'budget'? "money-bag.svg" : (infoId === 'winner'? "check-mark.svg" : (timeIsUp? "deadline-red.svg" : "deadline.svg" ) )  ))} alt={altIcon}/>*/}
             {timeIsUp?  <span className={featureClass}>مهلت تمام شده</span> : <span className={featureClass}>{featureText}</span>}
             {!timeIsUp && <span className={valueClass}> {valueText} </span>}
         </div>
