@@ -1,6 +1,6 @@
 #login.container-fluid {
     background-color: #f5f5f5;
-    padding: 0 6vw !important;
+    padding: 0 20vw !important;
     margin: 150px 0 0 0;
     height: calc(100% - 150px);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
@@ -30,6 +30,10 @@
 #login .form-control {
     display: inline-block;
     width: calc(100% - 115px);
+}
+
+#login .form-group {
+    margin: 0 auto;
 }
 
 #login .form-group label {

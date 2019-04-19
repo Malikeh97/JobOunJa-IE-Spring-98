@@ -16,16 +16,16 @@ class Login extends Component {
 
                             <form>
                                 <div className="row">
-                                    <div className="form-group col-md-6" id="username">
+                                    <div className="form-group col-md-10" id="username">
                                         <label htmlFor="username-input">نام کاربری: </label>
-                                        <input type="text" className="form-control" id="username-input"/>
+                                        <input type="text" placeholder='نام کاربری' className="form-control" id="username-input"/>
                                     </div>
                                 </div>
 
                                 <div className="row">
-                                    <div className="form-group col-md-6" id="password">
+                                    <div className="form-group col-md-10" id="password">
                                         <label htmlFor="password-input">رمزعبور: </label>
-                                        <input type="password" className="form-control" id="password-input"/>
+                                        <input type="password" placeholder='رمز عبور' className="form-control" id="password-input"/>
                                     </div>
                                 </div>
                                 <div className="row">
