@@ -9,7 +9,7 @@ const BidInfoText = ({ BidState, BidText, color, altText }) => {
     return (
         <div className="row" id="bid-info-row">
             <div className="col-md-6" id="bid">
-                <img src={require( "../../assets/" + (BidState === 'Selected'? "check-mark.svg" : "danger.svg"))} alt={altText}/>
+                <img src={require( "../../assets/" + (BidState === 'Selected'? "check_mark.svg" : "danger.svg"))} alt={altText}/>
                 <span className={textColor}>{BidText}</span>
             </div>
         </div>

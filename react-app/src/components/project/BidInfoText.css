@@ -6,3 +6,8 @@
 .red {
     color: rgb(230, 0, 0) !important;
 }
+
+#bid-info-row img {
+    width: 16px;
+    margin-left: 5px;
+}

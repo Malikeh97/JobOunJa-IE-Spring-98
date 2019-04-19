@@ -14,6 +14,8 @@ import check_mark from '../../assets/check_mark.svg';
 
 import {getProjects, getProject, addBid} from '../../services/projectService';
 import {toast} from "react-toastify";
+import Skill from "../profile";
+import {addSkill} from "../../services/userService";
 
 
 function timeLeft(deadline) {
@@ -51,7 +53,7 @@ function timeLeft(deadline) {
         let item = x[i];
         if (item.value > 0)
             timeLeft += `${persianJs(item.value).englishNumber()} ${item.text}`;
-        if (i != 0)
+        if (i !== 0)
             timeLeft += ' و '
     }
     return timeLeft;
@@ -75,7 +77,8 @@ class Project extends Component {
         },
         isBidAdded: false,
         timeOver: false,
-        requiredSkills: []
+        requiredSkills: [],
+        bidAmount: ''
     };
 
     async componentDidMount() {
@@ -88,122 +91,134 @@ class Project extends Component {
         });
     }
 
+    handleAddBid = async () => {
+        try {
+            console.log({bidAmount: this.state.bidAmount})
+            const { data } = await addBid(this.state.project.id, {bidAmount: this.state.bidAmount});
+            this.setState({ isBidAdded : true});
+            toast.success("مقدار پیشنهادی با موفقیت ثبت شد!")
+        } catch (ex) {
+            toast.error(ex.response.data.data)
+        }
+    };
+
+    updateBid = (e) => {
+        this.setState({ bidAmount: e.currentTarget.value });
+    }
+
     render() {
         this.state.timeOver = (timeLeft(this.state.project.deadline) === 'مهلت تمام شده');
         return (
-            <div className="container" id="project">
-                <div className="under" id="blue-section">
-                </div>
-                <div id="white-section">
-                    <div className="container">
+            <div className="container-fluid" id="project">
+                <div className="well card card-body">
+                    <div className="row">
+                        <div className="col-md-2 p-0">
+                            <img src={require("../../assets/target.png")} className="img-thumbnail over"
+                                 alt="default image"
+                                 id="profile-picture"/>
+                        </div>
+                        <div className="col-md-10">
+                            <div id="project-title">پروژه طراحی سایت جاب اونجا</div>
 
-                        <div className="well card card-body">
-                            <div className="row">
-                                <div className="col-md-2 p-0">
-                                    <img src={require("../../assets/target.png")} className="img-thumbnail over"
-                                         alt="default image"
-                                         id="profile-picture"/>
-                                </div>
-                                <div className="col-md-10">
-                                    <div id="project-title">پروژه طراحی سایت جاب اونجا</div>
-
-                                    {
-                                        !this.state.timeOver &&  <ProjectInfo
-                                            infoId="remaining-time"
-                                            altIcon="deadline"
-                                            iconSrc={deadline}
-                                            featureText="زمان باقی مانده:"
-                                            valueText={timeLeft(this.state.project.deadline)}
-                                            timeIsUp={!this.state.timeOver}
-                                        />
-                                    }
-
-                                    {
-                                        this.state.timeOver &&  <ProjectInfo
-                                            infoId="remaining-time"
-                                            altIcon="deadliner_red"
-                                            iconSrc={deadline_red}
-                                            featureText=""
-                                            valueText=""
-                                            timeIsUp={this.state.timeOver}
-                                        />
-                                    }
-
-
-                                    <ProjectInfo
-                                        infoId="budget"
-                                        altIcon="money-bag"
-                                        iconSrc={money_bag}
-                                        featureText="بودجه:"
-                                        valueText={persianJs(this.state.project.budget.toString(10)).englishNumber().toString() + ' تومان'}
-                                        timeIsUp={false}
-                                    />
-
-                                    {
-                                        (this.state.project.winner !== null) && <ProjectInfo
-                                            infoId="winner"
-                                            altIcon="winner"
-                                            iconSrc={check_mark}
-                                            featureText="برنده:"
-                                            valueText={this.state.project.winner.firstName + ' ' + this.state.project.winner.lastName}
-                                            timeIsUp={false}
-                                        />
-                                    }
-
-                                    <div id="description-static">
-                                        توضیحات
-                                    </div>
-                                    <div id="description-text">
-                                        {this.state.project.description}
-                                    </div>
-                                </div>
-                            </div>
-
-
-                            {/*Required skills section: */}
-                            <div className="row" id="skills-row">
-                                <div id="skills-static" className="job-ounja-primary-color-text">
-                                    مهارت های لازم:
-                                </div>
-                                <RequiredSkills
-                                    skills={this.state.requiredSkills}
-                                />
-                            </div>
-
-
-                            {/*select bid section:*/}
-                            {!this.state.isBidAdded &&
-                            <div className="row" id="make-bid-row">
-                                ثبت پیشنهاد
-                            </div>
-                            }
                             {
-                                !this.state.isBidAdded && !this.state.timeOver &&
-                                <BidPlaceHolder/>
-                            }
-                            {
-                                this.state.isBidAdded && <BidInfoText
-                                    BidState="Selected"
-                                    BidText="شما قبلا پیشنهاد خود را ثبت کرده اید"
-                                    color="green"
-                                    altText="check-mark.svg"
+                                !this.state.timeOver && <ProjectInfo
+                                    infoId="remaining-time"
+                                    altIcon="deadline"
+                                    iconSrc={deadline}
+                                    featureText="زمان باقی مانده:"
+                                    valueText={timeLeft(this.state.project.deadline)}
+                                    timeIsUp={!this.state.timeOver}
                                 />
                             }
+
                             {
-                                this.state.timeOver && !this.state.isBidAdded && <BidInfoText
-                                    BidState="TimeOut"
-                                    BidText="مهلت ارسال پیشنهاد برای این پروژه به پایان رسیده است!"
-                                    color="red"
-                                    altText="danger.svg"
+                                this.state.timeOver && <ProjectInfo
+                                    infoId="remaining-time"
+                                    altIcon="deadliner_red"
+                                    iconSrc={deadline_red}
+                                    featureText=""
+                                    valueText=""
+                                    timeIsUp={this.state.timeOver}
                                 />
                             }
 
 
+                            <ProjectInfo
+                                infoId="budget"
+                                altIcon="money-bag"
+                                iconSrc={money_bag}
+                                featureText="بودجه:"
+                                valueText={persianJs(this.state.project.budget.toString(10)).englishNumber().toString() + ' تومان'}
+                                timeIsUp={false}
+                            />
+
+                            {
+                                (this.state.project.winner !== null) && <ProjectInfo
+                                    infoId="winner"
+                                    altIcon="winner"
+                                    iconSrc={check_mark}
+                                    featureText="برنده:"
+                                    valueText={this.state.project.winner.firstName + ' ' + this.state.project.winner.lastName}
+                                    timeIsUp={false}
+                                />
+                            }
+
+                            <div id="description-static">
+                                توضیحات
+                            </div>
+                            <div id="description-text">
+                                {this.state.project.description}
+                            </div>
                         </div>
                     </div>
 
+
+                    {/*Required skills section: */}
+                    <div className="row" id="skills-row">
+                        <div id="skills-static" className="job-ounja-primary-color-text">
+                            مهارت های لازم:
+                        </div>
+                        <RequiredSkills
+                            skills={this.state.requiredSkills}
+                        />
+                    </div>
+
+
+                    {/*select bid section:*/}
+                    {!this.state.isBidAdded && !this.state.timeOver &&
+                    <div className="row" id="make-bid-row">
+                        ثبت پیشنهاد
+                    </div>
+                    }
+                    {
+                        !this.state.isBidAdded && !this.state.timeOver &&
+                        <BidPlaceHolder
+                            bidAmount={this.state.bidAmount}
+                            bidValueChanged={this.updateBid}
+                            onClick={this.handleAddBid}
+                        />
+                    }
+                    {
+                        this.state.isBidAdded && <BidInfoText
+                            BidState="Selected"
+                            BidText="شما قبلا پیشنهاد خود را ثبت کرده اید"
+                            color="green"
+                            altText="check_mark.svg"
+                        />
+                    }
+                    {
+                        this.state.timeOver && !this.state.isBidAdded && <BidInfoText
+                            BidState="TimeOut"
+                            BidText="مهلت ارسال پیشنهاد برای این پروژه به پایان رسیده است!"
+                            color="red"
+                            altText="danger.svg"
+                        />
+                    }
+
+
                 </div>
             </div>
+
         );
     }
 }

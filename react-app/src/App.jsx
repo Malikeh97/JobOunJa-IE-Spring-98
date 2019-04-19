@@ -17,12 +17,10 @@ class App extends Component {
                 <div className="rtl">
                     <NavBar/>
                     <main>
-                        <div className="page-details">
-                            <Switch>
-                                <Route path="/profile/:id" component={Profile}/>
-                                <Route path="/projects/:id" component={Project}/>
-                            </Switch>
-                        </div>
+                        <Switch>
+                            <Route path="/profile/:id" component={Profile}/>
+                            <Route path="/projects/:id" component={Project}/>
+                        </Switch>
                     </main>
                     <footer>
                         <div>&copy; تمامی حقوق این سایت متعلق به جاب اونجا می باشد</div>

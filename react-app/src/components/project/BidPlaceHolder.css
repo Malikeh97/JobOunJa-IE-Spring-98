@@ -23,3 +23,7 @@
     border-right: 0;
     padding: 0.3rem .75rem;
 }
+
+#bid-info-row .btn {
+    margin-right: 5px;
+}
