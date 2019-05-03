@@ -10,7 +10,6 @@ import utils.Column;
 @AllArgsConstructor
 public class User {
 
-
     private Integer id;
 
     @Column(name = "first_name")
