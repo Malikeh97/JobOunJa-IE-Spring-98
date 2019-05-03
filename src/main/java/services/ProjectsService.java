@@ -2,7 +2,7 @@ package services;
 
 import api.*;
 import api.data.SingleProjectData;
-import Repository.InMemoryDBManager;
+import repository.InMemoryDBManager;
 import domain.Bid;
 import domain.Project;
 import domain.Skill;
@@ -10,9 +10,7 @@ import domain.User;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;

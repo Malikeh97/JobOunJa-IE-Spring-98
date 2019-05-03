@@ -1,4 +1,4 @@
-import Repository.InMemoryDBManager;
+import repository.InMemoryDBManager;
 import domain.Skill;
 import domain.User;
 import gateways.HttpGateway;

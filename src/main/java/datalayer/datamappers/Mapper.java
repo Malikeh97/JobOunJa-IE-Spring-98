@@ -9,13 +9,10 @@ import java.util.*;
 
 public abstract class Mapper<T, ID> implements IMapper<T, ID> {
 
-    abstract protected String getFindByIdStatement();
-    abstract protected String getFindAllStatement();
-    abstract protected String getSaveStatement();
-    abstract protected String getDeleteByIdStatement();
+    abstract protected String getColumns();
+    abstract protected String getTableName();
 
     abstract protected T convertResultSetToDomainModel(ResultSet rs) throws SQLException;
-
 
     public T findById(ID id) throws SQLException {
 
@@ -132,5 +129,27 @@ public abstract class Mapper<T, ID> implements IMapper<T, ID> {
                 throw ex;
             }
         }
+    }
+
+    protected String getFindByIdStatement() {
+        return "SELECT " + getColumns() +
+                " FROM " + getTableName() +
+                " WHERE id = ?";
+    }
+
+    protected String getFindAllStatement() {
+        return "SELECT " + getColumns() +
+                " FROM " + getTableName();
+    }
+
+    protected String getSaveStatement() {
+        return "INSERT INTO " + "" + getTableName() + " (" + getColumns() + ") " +
+                "VALUES (?, ?, ?, ?)";
+    }
+
+    protected String getDeleteByIdStatement() {
+        return  "DELETE " +
+                " FROM " + getTableName() +
+                " WHERE id = ?";
     }
 }

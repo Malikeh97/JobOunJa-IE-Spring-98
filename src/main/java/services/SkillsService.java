@@ -1,7 +1,6 @@
 package services;
 
-import Repository.InMemoryDBManager;
-import api.AllProjectsResponse;
+import repository.InMemoryDBManager;
 import api.AllSkillsResponse;
 import api.ErrorResponse;
 import domain.Skill;
