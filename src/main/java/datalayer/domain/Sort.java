@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Sort {
     private String fieldName;
-    private Direction direction = Direction.DSC;
+    private Direction direction = Direction.DESC;
 
     public enum Direction {
         ASC,
-        DSC
+        DESC
     }
 }

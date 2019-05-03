@@ -9,8 +9,10 @@ import java.util.*;
 
 public abstract class Mapper<T, ID> implements IMapper<T, ID> {
 
-    abstract protected String getFindStatement();
+    abstract protected String getFindByIdStatement();
     abstract protected String getFindAllStatement();
+    abstract protected String getSaveStatement();
+    abstract protected String getDeleteByIdStatement();
 
     abstract protected T convertResultSetToDomainModel(ResultSet rs) throws SQLException;
 
@@ -18,7 +20,7 @@ public abstract class Mapper<T, ID> implements IMapper<T, ID> {
     public T findById(ID id) throws SQLException {
 
         try (Connection con = DBCPDBConnectionPool.getConnection();
-             PreparedStatement st = con.prepareStatement(getFindStatement())
+             PreparedStatement st = con.prepareStatement(getFindByIdStatement())
         ) {
             st.setString(1, id.toString());
             ResultSet resultSet;
@@ -54,8 +56,82 @@ public abstract class Mapper<T, ID> implements IMapper<T, ID> {
             }
         }
     }
-//    <S extends T> S save(S entity) throws SQLException;
-//    void deleteById(ID id) throws SQLException;
-//    List<T> findAll(Sort sort) throws SQLException;
-//    List<T> findAll(Page page) throws SQLException;
+
+    public <S extends T> S save(S entity) throws SQLException {
+        try (Connection con = DBCPDBConnectionPool.getConnection();
+             PreparedStatement st = con.prepareStatement(getSaveStatement())
+        ) {
+            try {
+                int count = st.executeUpdate();
+                if (count == 1)
+                    return entity;
+                return null;
+            } catch (SQLException ex) {
+                System.out.println("error in Mapper.save query.");
+                throw ex;
+            }
+        }
+    }
+
+    public void deleteById(ID id) throws SQLException {
+        try (Connection con = DBCPDBConnectionPool.getConnection();
+             PreparedStatement st = con.prepareStatement(getDeleteByIdStatement());
+        ) {
+            st.setString(1, id.toString());
+            try {
+                st.executeUpdate();
+            } catch (SQLException ex) {
+                System.out.println("error in Mapper.deleteById query.");
+                throw ex;
+            }
+        }
+    }
+    public List<T> findAll(Sort sort) throws SQLException {
+        String query = String.format("%s ORDER BY %s %s", getFindAllStatement(), sort.getFieldName(), sort.getDirection());
+        try (Connection con = DBCPDBConnectionPool.getConnection();
+             PreparedStatement st = con.prepareStatement(query)
+        ) {
+            ResultSet resultSet;
+            try {
+                List<T> results = new ArrayList<T>();
+                resultSet = st.executeQuery();
+                while(resultSet.next()) {
+                    T newInstance = convertResultSetToDomainModel(resultSet);
+                    results.add(newInstance);
+                }
+                return results;
+
+            } catch (SQLException ex) {
+                System.out.println("error in Mapper.findAll(sort) query.");
+                throw ex;
+            }
+        }
+    }
+    public List<T> findAll(Page page) throws SQLException {
+        String query = String.format("%s ORDER BY %s %s LIMIT %d,%d",
+                getFindAllStatement(),
+                page.getSort().getFieldName(),
+                page.getSort().getDirection(),
+                page.getStartRow(),
+                page.getPageSize()
+                );
+        try (Connection con = DBCPDBConnectionPool.getConnection();
+             PreparedStatement st = con.prepareStatement(query)
+        ) {
+            ResultSet resultSet;
+            try {
+                List<T> results = new ArrayList<T>();
+                resultSet = st.executeQuery();
+                while(resultSet.next()) {
+                    T newInstance = convertResultSetToDomainModel(resultSet);
+                    results.add(newInstance);
+                }
+                return results;
+
+            } catch (SQLException ex) {
+                System.out.println("error in Mapper.findAll(page) query.");
+                throw ex;
+            }
+        }
+    }
 }
