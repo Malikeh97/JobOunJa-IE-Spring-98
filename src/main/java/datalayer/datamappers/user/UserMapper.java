@@ -4,10 +4,7 @@ import datalayer.DBCPDBConnectionPool;
 import datalayer.datamappers.Mapper;
 import models.User;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class UserMapper extends Mapper<User, Integer> implements IUserMapper {
     private static final String TABLE_NAME = "users";
@@ -36,8 +33,18 @@ public class UserMapper extends Mapper<User, Integer> implements IUserMapper {
     }
 
     @Override
+    protected void setSavePrepareStatement(PreparedStatement st, User user) throws SQLException {
+        st.setInt(1, user.getId());
+        st.setString(2, user.getFirstName());
+        st.setString(3, user.getLastName());
+        st.setString(4, user.getJobTitle());
+        st.setString(5, user.getProfilePictureURL());
+        st.setString(6, user.getBio());
+    }
+
+    @Override
     protected User convertResultSetToDomainModel(ResultSet rs) throws SQLException {
-        return  new User(
+        return new User(
                 rs.getInt(1),
                 rs.getString(2),
                 rs.getString(3),

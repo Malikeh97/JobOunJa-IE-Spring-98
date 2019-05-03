@@ -14,6 +14,7 @@ public abstract class Mapper<T, ID> implements IMapper<T, ID> {
     abstract protected String getColumns();
     abstract protected String getTableName();
 
+    abstract protected void setSavePrepareStatement(PreparedStatement st, T entity) throws SQLException;
     abstract protected T convertResultSetToDomainModel(ResultSet rs) throws SQLException;
 
     public T findById(ID id) throws SQLException {
@@ -56,10 +57,11 @@ public abstract class Mapper<T, ID> implements IMapper<T, ID> {
         }
     }
 
-    public <S extends T> S save(S entity) throws SQLException {
+    public T save(T entity) throws SQLException {
         try (Connection con = DBCPDBConnectionPool.getConnection();
              PreparedStatement st = con.prepareStatement(getSaveStatement())
         ) {
+            setSavePrepareStatement(st, entity);
             try {
                 int count = st.executeUpdate();
                 if (count == 1)
@@ -71,6 +73,7 @@ public abstract class Mapper<T, ID> implements IMapper<T, ID> {
             }
         }
     }
+
 
     public void deleteById(ID id) throws SQLException {
         try (Connection con = DBCPDBConnectionPool.getConnection();

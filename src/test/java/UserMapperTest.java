@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.sql.SQLException;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 public class UserMapperTest {
@@ -18,7 +19,8 @@ public class UserMapperTest {
 
     @Test
     public void saveUser() throws SQLException{
-        User newUser = userMapper.save(new User(1, "Ali", "taba", "bikar", "www.google.com", "delesh pizza pepperoni baghaliashuno mikhad"));
-        assertNull("user note saved", newUser);
+        User newUser = userMapper.save(new User(2, "Ali", "taba", "bikar", "www.google.com", "delesh pizza pepperoni baghaliashuno mikhad"));
+        System.out.println(newUser.toString());
+        assertNotNull("user note saved", newUser);
     }
 }
