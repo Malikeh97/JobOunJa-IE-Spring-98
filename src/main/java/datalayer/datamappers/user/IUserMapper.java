@@ -1,4 +1,7 @@
 package datalayer.datamappers.user;
 
-public interface IUserMapper {
+import datalayer.datamappers.IMapper;
+import models.User;
+
+public interface IUserMapper extends IMapper<User, Integer> {
 }

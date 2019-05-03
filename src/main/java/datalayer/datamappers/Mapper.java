@@ -9,6 +9,8 @@ import java.util.*;
 
 public abstract class Mapper<T, ID> implements IMapper<T, ID> {
 
+    private Map<String, String> columns = new HashMap<>();
+
     abstract protected String getColumns();
     abstract protected String getTableName();
 
@@ -131,23 +133,24 @@ public abstract class Mapper<T, ID> implements IMapper<T, ID> {
         }
     }
 
-    protected String getFindByIdStatement() {
+    private String getFindByIdStatement() {
         return "SELECT " + getColumns() +
                 " FROM " + getTableName() +
                 " WHERE id = ?";
     }
 
-    protected String getFindAllStatement() {
+    private String getFindAllStatement() {
         return "SELECT " + getColumns() +
                 " FROM " + getTableName();
     }
 
-    protected String getSaveStatement() {
+    private String getSaveStatement() {
+        int numOfColumns = getColumns().split(",").length;
         return "INSERT INTO " + "" + getTableName() + " (" + getColumns() + ") " +
-                "VALUES (?, ?, ?, ?)";
+                "VALUES (" + new String(new char[numOfColumns - 1]).replace("\0", "?, ")  + "?)";
     }
 
-    protected String getDeleteByIdStatement() {
+    private String getDeleteByIdStatement() {
         return  "DELETE " +
                 " FROM " + getTableName() +
                 " WHERE id = ?";
