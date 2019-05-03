@@ -108,12 +108,12 @@ public abstract class Mapper<T, ID> implements IMapper<T, ID> {
         }
     }
     public List<T> findAll(Page page) throws SQLException {
-        String query = String.format("%s ORDER BY %s %s LIMIT %d,%d",
+        String query = String.format("%s ORDER BY %s %s LIMIT %d OFFSET %d",
                 getFindAllStatement(),
                 page.getSort().getFieldName(),
                 page.getSort().getDirection(),
-                page.getStartRow(),
-                page.getPageSize()
+                page.getLimit(),
+                page.getOffset()
                 );
         try (Connection con = DBCPDBConnectionPool.getConnection();
              PreparedStatement st = con.prepareStatement(query)
@@ -127,7 +127,6 @@ public abstract class Mapper<T, ID> implements IMapper<T, ID> {
                     results.add(newInstance);
                 }
                 return results;
-
             } catch (SQLException ex) {
                 System.out.println("error in Mapper.findAll(page) query.");
                 throw ex;

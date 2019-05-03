@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 
 public class Page {
-    private int startRow;
-    private int pageSize;
+    private int limit;
+    private int offset;
     private Sort sort;
 }
