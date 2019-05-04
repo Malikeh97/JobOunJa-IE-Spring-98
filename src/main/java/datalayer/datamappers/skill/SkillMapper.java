@@ -5,7 +5,7 @@ import models.Skill;
 
 import java.sql.*;
 
-public class SkillMapper extends Mapper<Skill, Integer> implements ISkillMapper {
+public class SkillMapper extends Mapper<Skill, String> implements ISkillMapper {
 	private static final String TABLE_NAME = "skills";
 
 	public SkillMapper() throws SQLException {

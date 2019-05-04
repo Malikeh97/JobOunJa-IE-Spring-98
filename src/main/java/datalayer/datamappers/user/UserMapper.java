@@ -5,7 +5,7 @@ import models.User;
 
 import java.sql.*;
 
-public class UserMapper extends Mapper<User, Integer> implements IUserMapper {
+public class UserMapper extends Mapper<User, String> implements IUserMapper {
     private static final String TABLE_NAME = "users";
 
     public UserMapper() throws SQLException {
