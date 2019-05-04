@@ -13,6 +13,7 @@ public class TableColumn {
 	private String name;
 	private String type;
 	private Boolean isPrimaryKey = false;
+	private String foreignKeyReference;
 	private Method getter;
 	private Method setter;
 }

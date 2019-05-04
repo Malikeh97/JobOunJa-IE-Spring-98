@@ -1,4 +1,4 @@
-package datalayer.datamappers.endorsment.project;
+package datalayer.datamappers.endorsment;
 
 import datalayer.datamappers.Mapper;
 import models.Endorsement;

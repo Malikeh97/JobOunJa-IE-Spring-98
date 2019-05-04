@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import utils.Column;
+import utils.ForeignKey;
 import utils.Id;
 
 @Data
@@ -29,5 +30,6 @@ public class Project {
 	private Long creationDate;
 
 	@Column(name = "winner_id")
+	@ForeignKey(foreignTable = "users", foreignField = "id")
 	private String winnerId;
 }

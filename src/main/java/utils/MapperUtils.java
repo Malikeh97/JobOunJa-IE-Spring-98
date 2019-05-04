@@ -74,6 +74,13 @@ public class MapperUtils {
 				tableColumn.setName(columnAnnotation.name());
 			if (field.isAnnotationPresent(Id.class))
 				tableColumn.setIsPrimaryKey(true);
+			if (field.isAnnotationPresent(ForeignKey.class)) {
+				ForeignKey foreignKeyAnnotation = field.getAnnotation(ForeignKey.class);
+				tableColumn.setForeignKeyReference(String.format("%s(%s)",
+						foreignKeyAnnotation.foreignTable(),
+						foreignKeyAnnotation.foreignField())
+				);
+			}
 			columns.add(tableColumn);
 		}
 		return columns;
@@ -81,6 +88,7 @@ public class MapperUtils {
 
 	public static String createTableSql(String tableName, List<TableColumn> columns) {
 		StringBuilder columnsSql = new StringBuilder();
+		StringBuilder foreignKeysSql = new StringBuilder();
 		for(TableColumn column : columns) {
 			columnsSql.append(column.getName()).append(" ");
 			switch (column.getType()) {
@@ -102,7 +110,13 @@ public class MapperUtils {
 			if (column.getIsPrimaryKey())
 				columnsSql.append(" ").append("PRIMARY KEY");
 			columnsSql.append(", ");
+			String foreignKeyReference = column.getForeignKeyReference();
+			if (foreignKeyReference != null) {
+				foreignKeysSql.append("FOREIGN KEY(").append(column.getName()).append(") REFERENCES ").append(foreignKeyReference).append(", ");
+			}
 		}
+		if (foreignKeysSql.length() != 0)
+			columnsSql.append(foreignKeysSql);
 		columnsSql.delete(columnsSql.length() - 2, columnsSql.length());
 		return String.format("CREATE TABLE IF NOT EXISTS %s (%s)", tableName, columnsSql.toString());
 	}

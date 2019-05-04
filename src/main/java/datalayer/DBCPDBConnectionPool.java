@@ -21,6 +21,7 @@ public class DBCPDBConnectionPool {
     private final static String dbURL = "jdbc:sqlite:jobounja.db";
 
     static {
+        ds.setDriverClassName("org.sqlite.JDBC");
         ds.setUrl(dbURL);
         ds.setMinIdle(5);
         ds.setMaxIdle(10);

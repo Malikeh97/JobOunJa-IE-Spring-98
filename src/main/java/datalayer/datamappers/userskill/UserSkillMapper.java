@@ -8,7 +8,7 @@ import java.sql.SQLException;
 public class UserSkillMapper extends Mapper<UserSkill, String> implements IUserSkillMapper {
 	private static final String TABLE_NAME = "user_skills";
 
-	protected UserSkillMapper() throws SQLException {
+	public UserSkillMapper() throws SQLException {
 		super(UserSkill.class, TABLE_NAME);
 	}
 }
