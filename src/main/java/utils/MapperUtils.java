@@ -17,15 +17,18 @@ public class MapperUtils {
 			for (int i = 0; i < columns.size(); i++) {
 				TableColumn column = columns.get(i);
 				switch (columns.get(i).getType()) {
+					case "int":
 					case "Integer":
 						column.getSetter().invoke(newInstance, rs.getInt(i + 1));
 						break;
 					case "String":
 						column.getSetter().invoke(newInstance, rs.getString(i + 1));
 						break;
+					case "boolean":
 					case "Boolean":
 						column.getSetter().invoke(newInstance, rs.getBoolean(i + 1));
 						break;
+					case "long":
 					case "Long":
 						column.getSetter().invoke(newInstance, rs.getLong(i + 1));
 						break;
@@ -81,10 +84,13 @@ public class MapperUtils {
 		for(TableColumn column : columns) {
 			columnsSql.append(column.getName()).append(" ");
 			switch (column.getType()) {
+				case "int":
 				case "Integer":
 				case "Date":
 				case "Instant":
+				case "boolean":
 				case "Boolean":
+				case "long":
 				case "Long":
 					columnsSql.append("INTEGER");
 					break;
