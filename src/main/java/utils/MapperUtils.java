@@ -65,10 +65,10 @@ public class MapperUtils {
 				System.out.println(getter + " or " + setter + " not found");
 				System.out.println("-- " + e.getLocalizedMessage());
 			}
-			if (field.isAnnotationPresent(Column.class))
-				tableColumn.setName(field.getAnnotation(Column.class).name());
-			else
-				tableColumn.setName(field.getName());
+			tableColumn.setName(field.getName());
+			Column columnAnnotation = field.getAnnotation(Column.class);
+			if (columnAnnotation != null && !columnAnnotation.name().equals(""))
+				tableColumn.setName(columnAnnotation.name());
 			if (field.isAnnotationPresent(Id.class))
 				tableColumn.setIsPrimaryKey(true);
 			columns.add(tableColumn);
