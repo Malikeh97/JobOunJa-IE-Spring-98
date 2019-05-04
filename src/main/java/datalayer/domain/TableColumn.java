@@ -12,6 +12,7 @@ import java.lang.reflect.Method;
 public class TableColumn {
 	private String name;
 	private String type;
+	private Boolean isPrimaryKey = false;
 	private Method getter;
 	private Method setter;
 }

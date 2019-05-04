@@ -8,6 +8,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.sql.SQLException;
+import java.util.UUID;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -22,7 +23,7 @@ public class UserMapperTest {
 
     @Test
     public void saveUser() throws SQLException{
-        User newUser = userMapper.save(new User(13, "Ali", "taba", "bikar", "www.google.com", "delesh pizza pepperoni baghaliashuno mikhad"));
+        User newUser = userMapper.save(new User(UUID.randomUUID().toString(), "Ali", "taba", "bikar", "www.google.com", "delesh pizza pepperoni baghaliashuno mikhad"));
         assertNotNull("user note saved", newUser);
     }
 
@@ -39,9 +40,9 @@ public class UserMapperTest {
 
     @Test
     public void findAll() throws SQLException {
-        User newUser = userMapper.save(new User(1, "Malikeh", "taba", "bikar", "www.google.com", "delesh pizza pepperoni baghaliashuno mikhad"));
-        newUser = userMapper.save(new User(2, "Ali", "taba", "bikar", "www.google.com", "delesh pizza pepperoni baghaliashuno mikhad"));
-        newUser = userMapper.save(new User(3, "Gholi", "taba", "bikar", "www.google.com", "delesh pizza pepperoni baghaliashuno mikhad"));
+        User newUser = userMapper.save(new User(UUID.randomUUID().toString(), "Malikeh", "taba", "bikar", "www.google.com", "delesh pizza pepperoni baghaliashuno mikhad"));
+        newUser = userMapper.save(new User(UUID.randomUUID().toString(), "Ali", "taba", "bikar", "www.google.com", "delesh pizza pepperoni baghaliashuno mikhad"));
+        newUser = userMapper.save(new User(UUID.randomUUID().toString(), "Gholi", "taba", "bikar", "www.google.com", "delesh pizza pepperoni baghaliashuno mikhad"));
         System.out.println(userMapper.findAll());
     }
 

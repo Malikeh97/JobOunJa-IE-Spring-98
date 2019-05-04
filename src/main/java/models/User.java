@@ -4,13 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import utils.Column;
+import utils.Id;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
 
-    private Integer id;
+    @Id
+    private String id;
 
     @Column(name = "first_name")
     private String firstName;
