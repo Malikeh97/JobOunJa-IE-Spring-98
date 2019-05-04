@@ -1,8 +1,13 @@
 package datalayer.datamappers.userskill;
 
+import datalayer.DBCPDBConnectionPool;
 import datalayer.datamappers.Mapper;
 import models.UserSkill;
+import utils.MapperUtils;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class UserSkillMapper extends Mapper<UserSkill, String> implements IUserSkillMapper {
@@ -11,4 +16,6 @@ public class UserSkillMapper extends Mapper<UserSkill, String> implements IUserS
 	public UserSkillMapper() throws SQLException {
 		super(UserSkill.class, TABLE_NAME);
 	}
+
+
 }

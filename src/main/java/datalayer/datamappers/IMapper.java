@@ -19,4 +19,6 @@ public interface IMapper<T, ID> {
     List<T> findAll(Sort sort) throws SQLException;
 
     List<T> findAll(Page page) throws SQLException;
+
+    Integer countAll() throws SQLException;
 }

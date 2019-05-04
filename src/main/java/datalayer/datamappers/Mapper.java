@@ -16,7 +16,7 @@ public abstract class Mapper<T, ID> implements IMapper<T, ID> {
 
 	private Class<T> clazz;
 	private String tableName;
-	private List<TableColumn> columns;
+	protected List<TableColumn> columns;
 
 	protected Mapper(Class<T> clazz, String tableName) throws SQLException {
 		this.clazz = clazz;
@@ -25,7 +25,7 @@ public abstract class Mapper<T, ID> implements IMapper<T, ID> {
 		try (Connection con = DBCPDBConnectionPool.getConnection();
 			 Statement st = con.createStatement()
 		) {
-			st.executeUpdate(MapperUtils.createTableSql(tableName, this.columns));
+			int x = st.executeUpdate(MapperUtils.createTableSql(tableName, this.columns));
 		}
 	}
 
@@ -100,6 +100,18 @@ public abstract class Mapper<T, ID> implements IMapper<T, ID> {
 		}
 	}
 
+	public Integer countAll() throws SQLException {
+		try (Connection con = DBCPDBConnectionPool.getConnection();
+			 PreparedStatement st = con.prepareStatement(getCountAllStatement());
+		) {
+			ResultSet resultSet = st.executeQuery();
+			if (resultSet.next()) {
+				return resultSet.getInt(1);
+			}
+			return null;
+		}
+	}
+
 	private String getFindByIdStatement() {
 		return "SELECT " + MapperUtils.getColumns(columns) +
 				" FROM " + this.tableName +
@@ -121,4 +133,10 @@ public abstract class Mapper<T, ID> implements IMapper<T, ID> {
 				" FROM " + this.tableName +
 				" WHERE id = ?";
 	}
+
+	private String getCountAllStatement() {
+		return "SELECT COUNT(id) " +
+				" FROM " + this.tableName;
+	}
+
 }
