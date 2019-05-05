@@ -149,7 +149,7 @@ public abstract class Mapper<T, ID> implements IMapper<T, ID> {
 		return " SELECT " + columns +
 				" From " + this.tableName +
 				" LEFT JOIN " + tableName1 + " ON " + onFirst +
-				" LEFT JOIN " + tableName2 + " ON " + onSecond;
+				" LEFT JOIN " + tableName2 + " ON " + onSecond ;
 	}
 
 }

@@ -30,23 +30,15 @@ public class UsersService {
 				return errorResponse.toJSON();
 			}
 			allUsers.remove(loggedInUser);
-			HashMap<String, List<models.Skill>> userSkillsModel = userSkillMapper.findUserSkills();
 			for(models.User user : allUsers) {
-				List<Skill> userSkillsDomain = new ArrayList<>();
-				for (models.Skill skill : userSkillsModel.get(user.getId())) {
-					Skill newSkill = new Skill();
-					newSkill.setName(skill.getName());
-					userSkillsDomain.add(newSkill);
-				}
 				userList.add(new User(user.getId(),
 						user.getFirstName(),
 						user.getLastName(),
 						user.getJobTitle(),
 						user.getProfilePictureURL(),
-						userSkillsDomain,
+						null,
 						user.getBio()
 				));
-
 			}
 
 			AllUsersResponse allUsersResponse = new AllUsersResponse(userList);
@@ -59,21 +51,45 @@ public class UsersService {
 	}
 
 	public String handleSingleUserRequest(HttpServletResponse response, String id) throws IOException {
-		User user = InMemoryDBManager.shared.findUserById(id);
-		User loggedInUser = InMemoryDBManager.shared.findUserById("1");
-		if (user == null) {
-			ErrorResponse errorResponse = new ErrorResponse("User not found", 404);
-			response.setStatus(404);
-			return errorResponse.toJSON();
+		try{
+			UserMapper userMapper = new UserMapper();
+			UserSkillMapper userSkillMapper = new UserSkillMapper();
+			models.User user = userMapper.findById(id);
+			models.User loggedInUser = userMapper.findById("c6a0536b-838a-4e94-9af7-fcdabfffb6e5");
+			if (user == null) {
+				ErrorResponse errorResponse = new ErrorResponse("User not found", 404);
+				response.setStatus(404);
+				return errorResponse.toJSON();
+			}
+			List<models.Skill> userSkillsModel = userSkillMapper.findUserSkillById(user.getId());
+			List<Skill> userSkillsDomain = new ArrayList<>();
+			for (models.Skill skill : userSkillsModel) {
+					Skill newSkill = new Skill();
+					newSkill.setName(skill.getName());
+					userSkillsDomain.add(newSkill);
+			}
+			User newUser = new User(user.getId(),
+					user.getFirstName(),
+					user.getLastName(),
+					user.getJobTitle(),
+					user.getProfilePictureURL(),
+					userSkillsDomain,
+					user.getBio()
+			);
+
+			if (user == loggedInUser) {
+				UserProfileResponse userProfileResponse = new UserProfileResponse(newUser);
+				return userProfileResponse.toJSON();
+			} else { // may be changing it later
+				UserProfileResponse userProfileResponse = new UserProfileResponse(newUser);
+				return userProfileResponse.toJSON();
+			}
+
+		} catch (SQLException e) {
+			System.out.println(e.getLocalizedMessage());
 		}
-		if (user == loggedInUser) {
-//			List<Skill> skills = InMemoryDBManager.shared.findAllSkills();
-			UserProfileResponse userProfileResponse = new UserProfileResponse(user);
-			return userProfileResponse.toJSON();
-		} else { // may be changing it later
-			UserProfileResponse userProfileResponse = new UserProfileResponse(user);
-			return userProfileResponse.toJSON();
-		}
+		return null;
+
 	}
 
 	public String handleEndorseRequest(SkillRequest request, HttpServletResponse response, String id) throws IOException {

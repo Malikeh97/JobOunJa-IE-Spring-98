@@ -21,26 +21,23 @@ public class UserSkillMapper extends Mapper<UserSkill, String> implements IUserS
 		super(UserSkill.class, TABLE_NAME);
 	}
 
-	public HashMap<String, List<Skill>> findUserSkills() throws SQLException {
+	public List<Skill> findUserSkillById(String userId) throws SQLException {
 		try (Connection con = DBCPDBConnectionPool.getConnection();
-			 PreparedStatement st = con.prepareStatement(getTrippleInnerJoinStatement("skills.id, skills.name, user_skills.user_id",
+			 PreparedStatement st = con.prepareStatement(getTrippleInnerJoinStatement("skills.id, skills.name",
 					 "users",
 					 "skills",
-					 " users.id = user_skills.user_id",
-					 "skills.id = user_skills.skill_id"
-					));
-		) {
+					 " users.id = user_skills.user_id ",
+					 " skills.id = user_skills.skill_id ") + " WHERE user_skills.user_id = `" + userId + "`" )
+			) {
 			ResultSet resultSet = st.executeQuery();
-			HashMap<String, List<Skill>> userSkillList = new HashMap<>();
-			while (resultSet.next()) {
+			List<Skill> skills = new ArrayList<>();
+			if (resultSet.next()) {
 				Skill newSkill = new Skill();
 				newSkill.setId(resultSet.getString(1));
 				newSkill.setName(resultSet.getString(2));
-				if(!userSkillList.containsKey(resultSet.getString(3)))
-					userSkillList.put(resultSet.getString(3), new ArrayList<>());
-				userSkillList.get(resultSet.getString(3)).add(newSkill) ;
+				skills.add(newSkill);
 			}
-			return userSkillList;
+			return skills;
 		}
 	}
 
