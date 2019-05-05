@@ -112,6 +112,7 @@ public abstract class Mapper<T, ID> implements IMapper<T, ID> {
 		}
 	}
 
+
 	private String getFindByIdStatement() {
 		return "SELECT " + MapperUtils.getColumns(columns) +
 				" FROM " + this.tableName +
@@ -136,6 +137,11 @@ public abstract class Mapper<T, ID> implements IMapper<T, ID> {
 
 	private String getCountAllStatement() {
 		return "SELECT COUNT(id) " +
+				" FROM " + this.tableName;
+	}
+
+	protected String getMaxStatement(String columnName) {
+		return "SELECT Max(" + columnName + ") " +
 				" FROM " + this.tableName;
 	}
 

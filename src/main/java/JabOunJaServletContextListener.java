@@ -31,12 +31,21 @@ public class JabOunJaServletContextListener implements ServletContextListener {
             UserMapper userMapper = new UserMapper();
             SkillMapper skillMapper = new SkillMapper();
             UserSkillMapper userSkillMapper = new UserSkillMapper();
+            HashMap<String, String> skills = new HashMap<>();
+            List<models.Skill> skillsFromDb = skillMapper.findAll();
+
+            for (models.Skill skill : skillsFromDb)
+                skills.put(skill.getName(), skill.getId());
 
             if (skillMapper.countAll() == 0) {
                 List<Skill> skillList = gateway.getSkills();
                 for (Skill skill : skillList)
                     skillMapper.save(new models.Skill(UUID.randomUUID().toString(), skill.getName()));
             }
+
+
+
+
 
 //            User newUser1 = createHardCodedUser1();
 //            String newId1 = UUID.randomUUID().toString();
@@ -94,7 +103,7 @@ public class JabOunJaServletContextListener implements ServletContextListener {
 
             scheduler = Executors.newSingleThreadScheduledExecutor();
             System.out.println(new Date());
-            scheduler.scheduleAtFixedRate(new Job(), 0, 5, TimeUnit.MINUTES);
+            scheduler.scheduleAtFixedRate(new Job(new ProjectMapper(), gateway), 0, 5, TimeUnit.MINUTES);
 
         } catch (SQLException e) {
             System.out.println(e.getLocalizedMessage());
