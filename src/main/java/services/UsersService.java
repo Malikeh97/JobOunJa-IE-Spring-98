@@ -1,5 +1,7 @@
 package services;
 
+import datalayer.datamappers.user.UserMapper;
+import datalayer.datamappers.userskill.UserSkillMapper;
 import repository.InMemoryDBManager;
 import api.*;
 import domain.Skill;
@@ -7,21 +9,53 @@ import domain.User;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class UsersService {
+
 	public String handleAllUsersRequest(HttpServletResponse response) throws IOException {
-		List<User> allUsers = InMemoryDBManager.shared.findAllUsers();
-		User loggedInUser = InMemoryDBManager.shared.findUserById("1");
-		if (allUsers == null || allUsers.size() < 2) {
-			ErrorResponse errorResponse = new ErrorResponse("User not found", 404);
-			response.setStatus(404);
-			return errorResponse.toJSON();
+		try {
+			UserMapper userMapper = new UserMapper();
+			UserSkillMapper userSkillMapper = new UserSkillMapper();
+			List<models.User> allUsers = userMapper.findAll();
+			List<User> userList = new ArrayList<>();
+			models.User loggedInUser = userMapper.findById("1");
+
+			if (allUsers == null || allUsers.size() < 2) {
+				ErrorResponse errorResponse = new ErrorResponse("User not found", 404);
+				response.setStatus(404);
+				return errorResponse.toJSON();
+			}
+			allUsers.remove(loggedInUser);
+			HashMap<String, List<models.Skill>> userSkillsModel = userSkillMapper.findUserSkills();
+			for(models.User user : allUsers) {
+				List<Skill> userSkillsDomain = new ArrayList<>();
+				for (models.Skill skill : userSkillsModel.get(user.getId())) {
+					Skill newSkill = new Skill();
+					newSkill.setName(skill.getName());
+					userSkillsDomain.add(newSkill);
+				}
+				userList.add(new User(user.getId(),
+						user.getFirstName(),
+						user.getLastName(),
+						user.getJobTitle(),
+						user.getProfilePictureURL(),
+						userSkillsDomain,
+						user.getBio()
+				));
+
+			}
+
+			AllUsersResponse allUsersResponse = new AllUsersResponse(userList);
+			return allUsersResponse.toJSON();
+		} catch (SQLException e) {
+			System.out.println(e.getLocalizedMessage());
 		}
-		allUsers.remove(loggedInUser);
-		AllUsersResponse allUsersResponse = new AllUsersResponse(allUsers);
-		return allUsersResponse.toJSON();
+		return null;
+
 	}
 
 	public String handleSingleUserRequest(HttpServletResponse response, String id) throws IOException {

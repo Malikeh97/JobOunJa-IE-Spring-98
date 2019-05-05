@@ -43,6 +43,8 @@ public class Job implements Runnable {
 
             }
 
+            System.out.println("Winter is coming...");
+
 
         } catch (SQLException e) {
             System.out.println(e.getLocalizedMessage());

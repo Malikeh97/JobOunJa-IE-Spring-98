@@ -145,4 +145,11 @@ public abstract class Mapper<T, ID> implements IMapper<T, ID> {
 				" FROM " + this.tableName;
 	}
 
+	protected String getTrippleInnerJoinStatement(String columns, String tableName1, String tableName2, String onFirst, String onSecond) {
+		return " SELECT " + columns +
+				" From " + this.tableName +
+				" LEFT JOIN " + tableName1 + " ON " + onFirst +
+				" LEFT JOIN " + tableName2 + " ON " + onSecond;
+	}
+
 }
