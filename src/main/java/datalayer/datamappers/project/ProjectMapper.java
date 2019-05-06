@@ -43,7 +43,7 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
 		Map<String, domain.Project> projectMap = new HashMap<>();
 		List<domain.Project> projectList = new ArrayList<>();
 		try (Connection con = DBCPDBConnectionPool.getConnection();
-			 PreparedStatement st = con.prepareStatement(getProjectsWithWinnerStatement(false))
+			 PreparedStatement st = con.prepareStatement(getProjectsWithWinnerStatement(false, ""))
 		) {
 			ResultSet rs = st.executeQuery();
 			while (rs.next()) {
@@ -79,11 +79,63 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
 		return projectList;
 	}
 
+	public List<domain.Project> findNameLike(String nameLike) throws SQLException {
+		Map<String, domain.Project> projectMap = new HashMap<>();
+		List<domain.Project> projectList = new ArrayList<>();
+		try (Connection con = DBCPDBConnectionPool.getConnection();
+			 PreparedStatement st = con.prepareStatement(getProjectsWithWinnerStatement(false,
+					 " WHERE p.title LIKE ? or " +
+							 " p.description LIKE ?") )
+		) {
+			st.setString(1, nameLike);
+			st.setString(2, nameLike);
+			ResultSet rs = st.executeQuery();
+			while (rs.next()) {
+				domain.Project project = new domain.Project();
+				convertWithWinner(project, rs);
+				projectMap.put(project.getId(), project);
+				projectList.add(project);
+			}
+		}
+
+		try (Connection con = DBCPDBConnectionPool.getConnection();
+			 PreparedStatement st = con.prepareStatement(getProjectsWithSkillsStatement(false) +
+					 " WHERE p.title LIKE ? or " +
+							 " p.description LIKE ? ")
+		) {
+			st.setString(1, nameLike);
+			st.setString(2, nameLike);
+			ResultSet rs = st.executeQuery();
+			while (rs.next()) {
+				String projectId = rs.getString(1);
+				domain.Project project = projectMap.get(projectId);
+				convertWithSkill(project, rs);
+			}
+		}
+
+		try (Connection con = DBCPDBConnectionPool.getConnection();
+			 PreparedStatement st = con.prepareStatement(getProjectsWithBidsStatement(false)+
+					 		" WHERE p.title LIKE ? or " +
+							 " p.description LIKE ?")
+		) {
+			st.setString(1, nameLike);
+			st.setString(2, nameLike);
+			ResultSet rs = st.executeQuery();
+			while (rs.next()) {
+				String projectId = rs.getString(1);
+				domain.Project project = projectMap.get(projectId);
+				convertWithBid(project, rs);
+			}
+		}
+
+		return projectList;
+	}
+
 	@Override
 	public domain.Project findByIdForDomain(String id) throws SQLException {
 		domain.Project project = new domain.Project();
 		try (Connection con = DBCPDBConnectionPool.getConnection();
-			 PreparedStatement st = con.prepareStatement(getProjectsWithWinnerStatement(true))
+			 PreparedStatement st = con.prepareStatement(getProjectsWithWinnerStatement(true, ""))
 		) {
 			st.setString(1, id);
 			ResultSet rs = st.executeQuery();
@@ -117,14 +169,14 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
 		return project;
 	}
 
-	private String getProjectsWithWinnerStatement(boolean single) {
+	private String getProjectsWithWinnerStatement(boolean single, String addToQuery) {
 		return String.format("SELECT p.id, p.title, p.description, p.image_url, p.budget, p.deadline, p.creation_date, " +
 						"p.winner_id, u.first_name, u.last_name " +
 						"FROM %s p " +
 						"LEFT JOIN %s u ON p.winner_id = u.id %s",
 				ProjectMapper.TABLE_NAME,
 				UserMapper.TABLE_NAME,
-				single ? "WHERE p.id = ?" : "ORDER BY p.creation_date DESC"
+				single ? "WHERE p.id = ?" : addToQuery + " ORDER BY p.creation_date DESC"
 		);
 	}
 

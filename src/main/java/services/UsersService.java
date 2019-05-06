@@ -37,7 +37,7 @@ public class UsersService {
 			List<User> userList = new ArrayList<>();
 			models.User loggedInUser = userMapper.findById("c6a0536b-838a-4e94-9af7-fcdabfffb6e5");
 
-			if (allUsers == null || allUsers.size() < 2) {
+			if (allUsers == null) {
 				ErrorResponse errorResponse = new ErrorResponse("User not found", 404);
 				response.setStatus(404);
 				return errorResponse.toJSON();

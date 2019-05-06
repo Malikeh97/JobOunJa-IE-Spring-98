@@ -59,7 +59,7 @@ public class ProjectsController extends BaseController {
         try {
             ProjectsService projectsService = new ProjectsService();
             if (splittedURI.length == 3) {
-                stringResponse = projectsService.handleAllProjectsRequest(response);
+                stringResponse = projectsService.handleAllProjectsRequest(response, request.getParameter("search"));
             } else if (splittedURI.length == 4) {
                 stringResponse = projectsService.handleSingleProjectRequest(response, splittedURI[3]);
             } else {
