@@ -1,4 +1,4 @@
-package Repository;
+package repository;
 
 import domain.Project;
 import domain.Skill;

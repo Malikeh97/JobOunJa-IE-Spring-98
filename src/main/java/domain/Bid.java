@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Bid {
-    private User biddingUser;
+    private String id;
+    private String userId;
     private String projectId;
     private Integer bidAmount;
 }
