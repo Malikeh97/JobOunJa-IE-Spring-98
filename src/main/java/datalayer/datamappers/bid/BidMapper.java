@@ -6,9 +6,9 @@ import models.Bid;
 import java.sql.SQLException;
 
 public class BidMapper extends Mapper<Bid, String> implements IBidMapper {
-	private static final String TABLE_NAME = "bids";
+	public static final String TABLE_NAME = "bids";
 
-	protected BidMapper() throws SQLException {
+	public BidMapper() throws SQLException {
 		super(Bid.class, TABLE_NAME);
 	}
 }

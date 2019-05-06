@@ -6,9 +6,9 @@ import models.ProjectSkill;
 import java.sql.SQLException;
 
 public class ProjectSkillMapper extends Mapper<ProjectSkill, String> implements IProjectSkillMapper {
-	private static final String TABLE_NAME = "user_skills";
+	public static final String TABLE_NAME = "project_skills";
 
-	protected ProjectSkillMapper() throws SQLException {
+	public ProjectSkillMapper() throws SQLException {
 		super(ProjectSkill.class, TABLE_NAME);
 	}
 }

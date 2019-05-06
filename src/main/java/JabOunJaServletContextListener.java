@@ -1,4 +1,6 @@
+import datalayer.datamappers.bid.BidMapper;
 import datalayer.datamappers.project.ProjectMapper;
+import datalayer.datamappers.projectskill.ProjectSkillMapper;
 import datalayer.datamappers.skill.SkillMapper;
 import datalayer.datamappers.user.UserMapper;
 import datalayer.datamappers.userskill.UserSkillMapper;
@@ -31,7 +33,8 @@ public class JabOunJaServletContextListener implements ServletContextListener {
             UserMapper userMapper = new UserMapper();
             SkillMapper skillMapper = new SkillMapper();
             UserSkillMapper userSkillMapper = new UserSkillMapper();
-            HashMap<String, String> skills = new HashMap<>();
+            BidMapper bidMapper = new BidMapper();
+            Map<String, String> skills = new HashMap<>();
             List<models.Skill> skillsFromDb = skillMapper.findAll();
 
             for (models.Skill skill : skillsFromDb)
@@ -103,7 +106,9 @@ public class JabOunJaServletContextListener implements ServletContextListener {
 
             scheduler = Executors.newSingleThreadScheduledExecutor();
             System.out.println(new Date());
-            scheduler.scheduleAtFixedRate(new Job(new ProjectMapper(), gateway), 0, 5, TimeUnit.MINUTES);
+            scheduler.scheduleAtFixedRate(
+                    new Job(new ProjectMapper(), new ProjectSkillMapper(), skills, gateway),
+                    0, 5, TimeUnit.MINUTES);
 
         } catch (SQLException e) {
             System.out.println(e.getLocalizedMessage());
@@ -114,10 +119,10 @@ public class JabOunJaServletContextListener implements ServletContextListener {
 
     private static User createHardCodedUser1() {
         List<Skill> newUserSkills = new ArrayList<>();
-        newUserSkills.add(new Skill("HTML", 5, new ArrayList<>()));
-        newUserSkills.add(new Skill("Javascript", 4, new ArrayList<>()));
-        newUserSkills.add(new Skill("C++", 2, new ArrayList<>()));
-        newUserSkills.add(new Skill("Java", 3, new ArrayList<>()));
+        newUserSkills.add(new Skill("", "HTML", 5, new ArrayList<>()));
+        newUserSkills.add(new Skill("", "Javascript", 4, new ArrayList<>()));
+        newUserSkills.add(new Skill("", "C++", 2, new ArrayList<>()));
+        newUserSkills.add(new Skill("", "Java", 3, new ArrayList<>()));
 
         User newUser = new User();
         newUser.setId("1");
@@ -133,10 +138,10 @@ public class JabOunJaServletContextListener implements ServletContextListener {
 
     private static User createHardCodedUser2() {
         List<Skill> newUserSkills = new ArrayList<>();
-        newUserSkills.add(new Skill("HTML", 10, new ArrayList<>()));
-        newUserSkills.add(new Skill("Javascript", 10, new ArrayList<>()));
-        newUserSkills.add(new Skill("C++", 5, new ArrayList<>()));
-        newUserSkills.add(new Skill("Java", 8, new ArrayList<>(Collections.singletonList("1"))));
+        newUserSkills.add(new Skill("", "HTML", 10, new ArrayList<>()));
+        newUserSkills.add(new Skill("", "Javascript", 10, new ArrayList<>()));
+        newUserSkills.add(new Skill("", "C++", 5, new ArrayList<>()));
+        newUserSkills.add(new Skill("", "Java", 8, new ArrayList<>(Collections.singletonList("1"))));
 
         User newUser = new User();
         newUser.setId("2");
@@ -151,10 +156,10 @@ public class JabOunJaServletContextListener implements ServletContextListener {
 
     private static User createHardCodedUser3() {
         List<Skill> newUserSkills = new ArrayList<>();
-        newUserSkills.add(new Skill("Python", 10, new ArrayList<>()));
-        newUserSkills.add(new Skill("Javascript", 2, new ArrayList<>()));
-        newUserSkills.add(new Skill("C++", 8, new ArrayList<>()));
-        newUserSkills.add(new Skill("Java", 5, new ArrayList<>(Collections.singletonList("1"))));
+        newUserSkills.add(new Skill("", "Python", 10, new ArrayList<>()));
+        newUserSkills.add(new Skill("", "Javascript", 2, new ArrayList<>()));
+        newUserSkills.add(new Skill("", "C++", 8, new ArrayList<>()));
+        newUserSkills.add(new Skill("", "Java", 5, new ArrayList<>(Collections.singletonList("1"))));
 
         User newUser = new User();
         newUser.setId("3");

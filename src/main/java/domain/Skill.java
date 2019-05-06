@@ -10,6 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Skill {
+    private String id;
     private String name;
     private Integer point;
     private List<String> endorsers;

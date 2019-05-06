@@ -1,5 +1,7 @@
 import datalayer.datamappers.project.ProjectMapper;
+import datalayer.datamappers.projectskill.ProjectSkillMapper;
 import domain.Project;
+import domain.Skill;
 import gateways.HttpGateway;
 import gateways.IGateway;
 import lombok.AllArgsConstructor;
@@ -10,46 +12,51 @@ import utils.ForeignKey;
 import utils.Id;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Job implements Runnable {
-    private ProjectMapper projectMapper;
-    private IGateway gateway;
+	private ProjectMapper projectMapper;
+	private ProjectSkillMapper projectSkillMapper;
+	private Map<String, String> skills;
+	private IGateway gateway;
 
-    @Override
-    public void run() {
-        try {
-            List<Project> projectList = gateway.getProjects();
-            Long maxCreationDate = projectMapper.maxCreationDate();
-            for (Project project : projectList) {
-                if (project.getCreationDate() > maxCreationDate) {
-                    projectMapper.save(new models.Project(project.getId(),
-                            project.getTitle(),
-                            project.getDescription(),
-                            project.getImageURL(),
-                            project.getBudget(),
-                            project.getDeadline(),
-                            project.getCreationDate(),
-                            null
-                    ));
-                    System.out.println(project.getTitle() + "added successfully");
-                }
+	@Override
+	public void run() {
+		try {
+			List<Project> projectList = gateway.getProjects();
+			Long maxCreationDate = projectMapper.maxCreationDate();
+			for (Project project : projectList) {
+				if (project.getCreationDate() > maxCreationDate) {
+					projectMapper.save(new models.Project(project.getId(),
+							project.getTitle(),
+							project.getDescription(),
+							project.getImageURL(),
+							project.getBudget(),
+							project.getDeadline(),
+							project.getCreationDate(),
+							null
+					));
+					for (Skill skill : project.getSkills())
+						projectSkillMapper.save(new models.ProjectSkill(UUID.randomUUID().toString(),
+								project.getId(),
+								skills.get(skill.getName()),
+								skill.getPoint()
+						));
+					System.out.println(project.getTitle() + "added successfully");
+				}
 
-            }
+			}
 
-            System.out.println("Winter is coming...");
-
-
-        } catch (SQLException e) {
-            System.out.println(e.getLocalizedMessage());
-        }
+			System.out.println("Winter is coming...");
 
 
-    }
+		} catch (SQLException e) {
+			System.out.println(e.getLocalizedMessage());
+		}
+
+
+	}
 }
