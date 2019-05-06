@@ -161,7 +161,9 @@ public class UsersService {
 				Skill newSkill = new Skill();
 				newSkill.setName(skill.getName());
 				int point = endorsementMapper.countNumOfEndorsements(skill.getId(), user.getId());
+				List<String> endorserIdList = endorsementMapper.findEndorserIdList(skill.getId(), id);
 				newSkill.setPoint(point);
+				newSkill.setEndorsers(endorserIdList);
 				userSkillsDomain.add(newSkill);
 			}
 
@@ -216,6 +218,8 @@ public class UsersService {
 						Skill itsSkill = new Skill();
 						itsSkill.setName(skill.getName());
 						int point = endorsementMapper.countNumOfEndorsements(skill.getId(), loggedInUser.getId());
+						List<String> endorserIdList = endorsementMapper.findEndorserIdList(skill.getId(), id);
+						itsSkill.setEndorsers(endorserIdList);
 						itsSkill.setPoint(point);
 						userSkillsDomain.add(itsSkill);
 					}
@@ -265,6 +269,8 @@ public class UsersService {
 					Skill itsSkill = new Skill();
 					itsSkill.setName(skill.getName());
 					int point = endorsementMapper.countNumOfEndorsements(skill.getId(), loggedInUser.getId());
+					List<String> endorserIdList = endorsementMapper.findEndorserIdList(skill.getId(), id);
+					itsSkill.setEndorsers(endorserIdList);
 					itsSkill.setPoint(point);
 					userSkillsDomain.add(itsSkill);
 				}
