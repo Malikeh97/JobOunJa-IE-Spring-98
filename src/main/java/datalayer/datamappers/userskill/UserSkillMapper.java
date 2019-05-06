@@ -41,5 +41,26 @@ public class UserSkillMapper extends Mapper<UserSkill, String> implements IUserS
 		}
 	}
 
+	public String findUserSkillId(String userId, String skillId) throws SQLException {
+			try (Connection con = DBCPDBConnectionPool.getConnection();
+				 PreparedStatement st = con.prepareStatement(getUserSkillIdStatement()
+			)) {
+				st.setString(1,skillId);
+				st.setString(2, userId);
+				ResultSet resultSet = st.executeQuery();
+				List<Skill> skills = new ArrayList<>();
+				if (resultSet.next()) {
+					return resultSet.getString(1);
+				}
+				return "0";
+			}
+	}
+
+	private String getUserSkillIdStatement() {
+		return "SELECT " + TABLE_NAME + ".id" +
+				" FROM " + TABLE_NAME +
+				" WHERE " + TABLE_NAME + ".skill_id = ? and " + TABLE_NAME + ".user_id = ?";
+	}
+
 
 }

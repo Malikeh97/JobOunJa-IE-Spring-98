@@ -235,20 +235,48 @@ public class UsersService {
 	}
 
 	public String handleDeleteRequest(SkillRequest request, HttpServletResponse response, String id) throws IOException {
-		User loggedInUser = InMemoryDBManager.shared.findUserById("1");
-		if(id.equals(loggedInUser.getId())) {
-			for (Skill skill: loggedInUser.getSkills()) {
-				if((skill.getName()).equals(request.getSkill())) {
-					loggedInUser.getSkills().remove(skill);
-					break;
+		try {
+			UserMapper userMapper = new UserMapper();
+			UserSkillMapper userSkillMapper = new UserSkillMapper();
+			EndorsementMapper endorsementMapper = new EndorsementMapper();
+			models.User loggedInUser = userMapper.findById("c6a0536b-838a-4e94-9af7-fcdabfffb6e5");
+			if(id.equals(loggedInUser.getId())) {
+				List<models.Skill> userSkillsModel = userSkillMapper.findUserSkillById(loggedInUser.getId());
+				for (models.Skill skill: userSkillsModel) {
+					if((skill.getName()).equals(request.getSkill())) {
+						String deleteId = userSkillMapper.findUserSkillId(loggedInUser.getId(), skill.getId());
+						userSkillMapper.deleteById(deleteId);
+						break;
+					}
 				}
+
+				List<Skill> userSkillsDomain = new ArrayList<>();
+				for (models.Skill skill : userSkillsModel) {
+					Skill itsSkill = new Skill();
+					itsSkill.setName(skill.getName());
+					int point = endorsementMapper.countNumOfEndorsements(skill.getId(), loggedInUser.getId());
+					itsSkill.setPoint(point);
+					userSkillsDomain.add(itsSkill);
+				}
+				UserProfileResponse userProfileResponse = new UserProfileResponse(new User(loggedInUser.getId(),
+						loggedInUser.getFirstName(),
+						loggedInUser.getLastName(),
+						loggedInUser.getJobTitle(),
+						loggedInUser.getProfilePictureURL(),
+						userSkillsDomain,
+						loggedInUser.getBio()));
+				return userProfileResponse.toJSON();
+
+			} else {
+				FailResponse failResponse = new FailResponse("You cannot remove skill from others");
+				response.setStatus(403);
+				return failResponse.toJSON();
 			}
-			UserProfileResponse userProfileResponse = new UserProfileResponse(loggedInUser);
-			return userProfileResponse.toJSON();
-		} else {
-			FailResponse failResponse = new FailResponse("You cannot remove skill from others");
-			response.setStatus(403);
-			return failResponse.toJSON();
+
+		} catch (SQLException e) {
+			System.out.println(e.getLocalizedMessage());
 		}
+		return null;
+
 	}
 }
