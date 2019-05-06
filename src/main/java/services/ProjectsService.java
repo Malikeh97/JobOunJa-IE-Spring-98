@@ -4,6 +4,7 @@ import api.*;
 import api.data.SingleProjectData;
 import datalayer.datamappers.project.ProjectMapper;
 import datalayer.datamappers.user.UserMapper;
+import datalayer.datamappers.userskill.UserSkillMapper;
 import repository.InMemoryDBManager;
 import domain.Bid;
 import domain.Project;
@@ -22,23 +23,24 @@ import java.util.Map;
 public class ProjectsService {
 	private ProjectMapper projectMapper = new ProjectMapper();
 	private UserMapper userMapper = new UserMapper();
+	private UserSkillMapper skillMapper = new UserSkillMapper();
 
 	public ProjectsService() throws SQLException {
 	}
 
 	public String handleAllProjectsRequest(HttpServletResponse response) throws ServletException, IOException, SQLException {
 		List<Project> projectList = this.projectMapper.findAllForDomain();
-//		models.User loggedInUser = this.userMapper.findById("c6a0536b-838a-4e94-9af7-fcdabfffb6e5");
-//		projectList.removeIf(project -> isForbidden(project, loggedInUser));
+		User loggedInUser = this.userMapper.findByIdWithSkills("c6a0536b-838a-4e94-9af7-fcdabfffb6e5");
+		projectList.removeIf(project -> isForbidden(project, loggedInUser));
 
 		AllProjectsResponse successResponse = new AllProjectsResponse(projectList);
 		return successResponse.toJSON();
 	}
-	public String handleSingleProjectRequest(HttpServletResponse response, String id) throws ServletException, IOException {
-		Project project = InMemoryDBManager.shared.findProjectById(id);
+	public String handleSingleProjectRequest(HttpServletResponse response, String id) throws ServletException, IOException, SQLException {
+		Project project = this.projectMapper.findByIdForDomain(id);
 
 		boolean isBidAdded = false;
-		User loggedInUser = InMemoryDBManager.shared.findUserById("1");
+		User loggedInUser = this.userMapper.findByIdWithSkills("c6a0536b-838a-4e94-9af7-fcdabfffb6e5");
 		if (project == null) {
 			ErrorResponse errorResponse = new ErrorResponse("No project found", 404);
 			response.setStatus(404);

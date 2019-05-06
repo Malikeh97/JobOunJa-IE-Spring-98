@@ -48,23 +48,7 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
 			ResultSet rs = st.executeQuery();
 			while (rs.next()) {
 				domain.Project project = new domain.Project();
-				project.setId(rs.getString(1));
-				project.setTitle(rs.getString(2));
-				project.setDescription(rs.getString(3));
-				project.setImageURL(rs.getString(4));
-				project.setBudget(rs.getInt(5));
-				project.setDeadline(rs.getLong(6));
-				project.setCreationDate(rs.getLong(7));
-				String winnerId = rs.getString(8);
-				if (!winnerId.equals("null")) {
-					domain.User winner = new domain.User();
-					winner.setId(winnerId);
-					winner.setFirstName(rs.getString(9));
-					winner.setLastName(rs.getString(10));
-					project.setWinner(winner);
-				}
-				project.setSkills(new ArrayList<>());
-				project.setBids(new ArrayList<>());
+				convertWithWinner(project, rs);
 				projectMap.put(project.getId(), project);
 				projectList.add(project);
 			}
@@ -77,11 +61,7 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
 			while (rs.next()) {
 				String projectId = rs.getString(1);
 				domain.Project project = projectMap.get(projectId);
-				domain.Skill skill = new domain.Skill();
-				skill.setId(rs.getString(2));
-				skill.setName(rs.getString(3));
-				skill.setPoint(rs.getInt(4));
-				project.getSkills().add(skill);
+				convertWithSkill(project, rs);
 			}
 		}
 
@@ -92,16 +72,49 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
 			while (rs.next()) {
 				String projectId = rs.getString(1);
 				domain.Project project = projectMap.get(projectId);
-				domain.Bid bid = new domain.Bid();
-				bid.setId(rs.getString(2));
-				bid.setUserId(rs.getString(3));
-				bid.setBidAmount(rs.getInt(4));
-				bid.setProjectId(projectId);
-				project.getBids().add(bid);
+				convertWithBid(project, rs);
 			}
 		}
 
 		return projectList;
+	}
+
+	@Override
+	public domain.Project findByIdForDomain(String id) throws SQLException {
+		domain.Project project = new domain.Project();
+		try (Connection con = DBCPDBConnectionPool.getConnection();
+			 PreparedStatement st = con.prepareStatement(getProjectsWithWinnerStatement(true))
+		) {
+			st.setString(1, id);
+			ResultSet rs = st.executeQuery();
+			if (rs.next()) {
+				convertWithWinner(project, rs);
+			}
+		}
+
+		try (Connection con = DBCPDBConnectionPool.getConnection();
+			 PreparedStatement st = con.prepareStatement(getProjectsWithSkillsStatement(true))
+		) {
+			st.setString(1, id);
+			ResultSet rs = st.executeQuery();
+			if (rs.next()) {
+				convertWithSkill(project, rs);
+			}
+		}
+
+		try (Connection con = DBCPDBConnectionPool.getConnection();
+			 PreparedStatement st = con.prepareStatement(getProjectsWithBidsStatement(true))
+		) {
+			st.setString(1, id);
+			ResultSet rs = st.executeQuery();
+			if (rs.next()) {
+				convertWithBid(project, rs);
+			}
+		}
+
+		if (project.getId() == null)
+			return null;
+		return project;
 	}
 
 	private String getProjectsWithWinnerStatement(boolean single) {
@@ -138,4 +151,40 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
 	}
 
 
+	private void convertWithWinner(domain.Project project, ResultSet rs) throws SQLException {
+		project.setId(rs.getString(1));
+		project.setTitle(rs.getString(2));
+		project.setDescription(rs.getString(3));
+		project.setImageURL(rs.getString(4));
+		project.setBudget(rs.getInt(5));
+		project.setDeadline(rs.getLong(6));
+		project.setCreationDate(rs.getLong(7));
+		String winnerId = rs.getString(8);
+		if (!winnerId.equals("null")) {
+			domain.User winner = new domain.User();
+			winner.setId(winnerId);
+			winner.setFirstName(rs.getString(9));
+			winner.setLastName(rs.getString(10));
+			project.setWinner(winner);
+		}
+		project.setSkills(new ArrayList<>());
+		project.setBids(new ArrayList<>());
+	}
+
+	private void convertWithSkill(domain.Project project, ResultSet rs) throws SQLException {
+		domain.Skill skill = new domain.Skill();
+		skill.setId(rs.getString(2));
+		skill.setName(rs.getString(3));
+		skill.setPoint(rs.getInt(4));
+		project.getSkills().add(skill);
+	}
+
+	private void convertWithBid(domain.Project project, ResultSet rs) throws SQLException {
+		domain.Bid bid = new domain.Bid();
+		bid.setId(rs.getString(2));
+		bid.setUserId(rs.getString(3));
+		bid.setBidAmount(rs.getInt(4));
+		bid.setProjectId(project.getId());
+		project.getBids().add(bid);
+	}
 }

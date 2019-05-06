@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class UserSkillMapper extends Mapper<UserSkill, String> implements IUserSkillMapper {
-	private static final String TABLE_NAME = "user_skills";
+	public static final String TABLE_NAME = "user_skills";
 
 	public UserSkillMapper() throws SQLException {
 		super(UserSkill.class, TABLE_NAME);

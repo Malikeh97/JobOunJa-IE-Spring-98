@@ -23,15 +23,9 @@ public class SkillsService {
 
 			List<Skill> skillList = userSkillMapper.findSkillNotOwnedById("c6a0536b-838a-4e94-9af7-fcdabfffb6e5");
 
-			if (skillList == null || skillList.isEmpty()) {
-				ErrorResponse errorResponse = new ErrorResponse("No skill found", 404);
-				response.setStatus(404);
-				return errorResponse.toJSON();
-			}
-
 			List<domain.Skill> skillNames = new ArrayList<>();
-			for(Skill skill : skillList)
-				skillNames.add(new domain.Skill(skill.getName(),0,null));
+			for (Skill skill : skillList)
+				skillNames.add(new domain.Skill(skill.getId(), skill.getName(), 0, null));
 			AllSkillsResponse successResponse = new AllSkillsResponse(skillNames);
 			return successResponse.toJSON();
 		} catch (SQLException e) {

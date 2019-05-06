@@ -11,4 +11,6 @@ public interface IProjectMapper extends IMapper<Project, String> {
 	public Long maxCreationDate() throws SQLException;
 
 	public List<domain.Project> findAllForDomain() throws SQLException;
+
+	public domain.Project findByIdForDomain(String id) throws SQLException;
 }
