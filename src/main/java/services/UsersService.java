@@ -3,10 +3,14 @@ package services;
 import datalayer.datamappers.endorsment.EndorsementMapper;
 import datalayer.datamappers.user.UserMapper;
 import datalayer.datamappers.userskill.UserSkillMapper;
+import models.Endorsement;
 import repository.InMemoryDBManager;
 import api.*;
 import domain.Skill;
 import domain.User;
+import utils.Column;
+import utils.ForeignKey;
+import utils.Id;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -14,6 +18,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 public class UsersService {
 
@@ -99,34 +104,69 @@ public class UsersService {
 	}
 
 	public String handleEndorseRequest(SkillRequest request, HttpServletResponse response, String id) throws IOException {
-		User user = InMemoryDBManager.shared.findUserById(id);
-		User loggedInUser = InMemoryDBManager.shared.findUserById("1");
-		if (id.equals(loggedInUser.getId())) {
-			FailResponse failResponse = new FailResponse("You cannot endorse skill of yours");
-			response.setStatus(403);
-			return failResponse.toJSON();
-		}
-		boolean found = false;
-		for (Skill skill: user.getSkills()) {
-			if(skill.getName().equals(request.getSkill())) {
-				if (skill.getEndorsers().stream().filter(endorser -> endorser.equals(loggedInUser.getId())).findFirst().orElse(null) != null) {
-					FailResponse failResponse = new FailResponse("You cannot endorse a skill twice");
-					response.setStatus(404);
-					return failResponse.toJSON();
-				}
-				skill.getEndorsers().add(loggedInUser.getId());
-				skill.setPoint(skill.getPoint() + 1);
-				found = true;
-				break;
+		try {
+			UserMapper userMapper = new UserMapper();
+			UserSkillMapper userSkillMapper = new UserSkillMapper();
+			EndorsementMapper endorsementMapper = new EndorsementMapper();
+
+			models.User user = userMapper.findById(id);
+			models.User loggedInUser = userMapper.findById("c6a0536b-838a-4e94-9af7-fcdabfffb6e5");
+
+			if (id.equals(loggedInUser.getId())) {
+				FailResponse failResponse = new FailResponse("You cannot endorse skill of yours");
+				response.setStatus(403);
+				return failResponse.toJSON();
 			}
+
+			boolean found = false;
+
+			List<models.Skill> userSkillsModel = userSkillMapper.findUserSkillById(user.getId());
+			List<User> endorserList = new ArrayList<>();
+
+			for (models.Skill skill: userSkillsModel) {
+				if(skill.getName().equals(request.getSkill())) {
+
+					if (EndorsementMapper.isEndorsedByUserId(loggedInUser.getId(), skill.getId())) {
+						FailResponse failResponse = new FailResponse("You cannot endorse a skill twice");
+						response.setStatus(404);
+						return failResponse.toJSON();
+					}
+
+					endorsementMapper.save(new Endorsement(UUID.randomUUID().toString(), loggedInUser.getId(), skill.getId(), user.getId()));
+					found = true;
+					break;
+				}
+			}
+
+			if (!found) {
+				FailResponse failResponse = new FailResponse("This user doesn't have this skill");
+				response.setStatus(404);
+				return failResponse.toJSON();
+			}
+
+			List<Skill> userSkillsDomain = new ArrayList<>();
+			for (models.Skill skill : userSkillsModel) {
+				Skill newSkill = new Skill();
+				newSkill.setName(skill.getName());
+				int point = endorsementMapper.countNumOfEndorsements(skill.getId(), user.getId());
+				newSkill.setPoint(point);
+				userSkillsDomain.add(newSkill);
+			}
+
+			UserProfileResponse userProfileResponse = new UserProfileResponse(new User(user.getId(),
+					user.getFirstName(),
+					user.getLastName(),
+					user.getJobTitle(),
+					user.getProfilePictureURL(),
+					userSkillsDomain,
+					user.getBio()));
+
+			return userProfileResponse.toJSON();
+
+		} catch (SQLException e) {
+			System.out.println(e.getLocalizedMessage());
 		}
-		if (!found) {
-			FailResponse failResponse = new FailResponse("This user doesn't have this skill");
-			response.setStatus(404);
-			return failResponse.toJSON();
-		}
-		UserProfileResponse userProfileResponse = new UserProfileResponse(user);
-		return userProfileResponse.toJSON();
+		return null;
 	}
 
 	public String handleAddSkillRequest(SkillRequest request, HttpServletResponse response, String id) throws IOException {
