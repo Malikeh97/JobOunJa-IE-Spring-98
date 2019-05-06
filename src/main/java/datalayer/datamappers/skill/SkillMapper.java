@@ -21,13 +21,14 @@ public class SkillMapper extends Mapper<Skill, String> implements ISkillMapper {
 			st.setString(1, String.valueOf(name));
 			ResultSet resultSet = st.executeQuery();
 			if (resultSet.next())
-				return MapperUtils.convertResultSetToDomainModel(Skill.class, columns, resultSet);
+				return new Skill(resultSet.getString(1),
+						resultSet.getString(2));
 			return null;
 		}
 	}
 
-	private String getFindByNameStatement() {
-		return "SELECT " + MapperUtils.getColumns(columns) +
+	private static String getFindByNameStatement() {
+		return "SELECT skills.id, skills.name"+
 				" FROM " + TABLE_NAME +
 				" WHERE name = ?";
 	}
