@@ -29,7 +29,7 @@ public class UserSkillMapper extends Mapper<UserSkill, String> implements IUserS
 					 " users.id = user_skills.user_id ",
 					 " skills.id = user_skills.skill_id ") + " WHERE user_skills.user_id = ?" )
 			) {
-			st.setString(1,userId);
+			st.setString(1, userId);
 			ResultSet resultSet = st.executeQuery();
 			List<Skill> skills = new ArrayList<>();
 			while (resultSet.next()) {

@@ -119,7 +119,7 @@ public abstract class Mapper<T, ID> implements IMapper<T, ID> {
 				" WHERE id = ?";
 	}
 
-	private String getFindAllStatement() {
+	protected String getFindAllStatement() {
 		return "SELECT " + MapperUtils.getColumns(columns) +
 				" FROM " + this.tableName;
 	}
