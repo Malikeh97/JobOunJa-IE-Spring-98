@@ -1,5 +1,6 @@
 package services;
 
+import datalayer.datamappers.endorsment.EndorsementMapper;
 import datalayer.datamappers.user.UserMapper;
 import datalayer.datamappers.userskill.UserSkillMapper;
 import repository.InMemoryDBManager;
@@ -54,6 +55,7 @@ public class UsersService {
 		try{
 			UserMapper userMapper = new UserMapper();
 			UserSkillMapper userSkillMapper = new UserSkillMapper();
+			EndorsementMapper endorsementMapper = new EndorsementMapper();
 			models.User user = userMapper.findById(id);
 			models.User loggedInUser = userMapper.findById("c6a0536b-838a-4e94-9af7-fcdabfffb6e5");
 			if (user == null) {
@@ -67,7 +69,10 @@ public class UsersService {
 			for (models.Skill skill : userSkillsModel) {
 					Skill newSkill = new Skill();
 					newSkill.setName(skill.getName());
+				    int point = endorsementMapper.countNumOfEndorsements(skill.getId(), user.getId());
+				    newSkill.setPoint(point);
 					userSkillsDomain.add(newSkill);
+
 			}
 			User newUser = new User(user.getId(),
 					user.getFirstName(),

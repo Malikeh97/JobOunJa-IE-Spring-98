@@ -135,7 +135,7 @@ public abstract class Mapper<T, ID> implements IMapper<T, ID> {
 				" WHERE id = ?";
 	}
 
-	private String getCountAllStatement() {
+	protected String getCountAllStatement() {
 		return "SELECT COUNT(id) " +
 				" FROM " + this.tableName;
 	}
