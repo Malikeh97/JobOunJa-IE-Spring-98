@@ -16,6 +16,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,14 +29,20 @@ public class ProjectsService {
 	public ProjectsService() throws SQLException {
 	}
 
-	public String handleAllProjectsRequest(HttpServletResponse response) throws ServletException, IOException, SQLException {
-		List<Project> projectList = this.projectMapper.findAllForDomain();
+	public String handleAllProjectsRequest(HttpServletResponse response, String nameLike) throws ServletException, IOException, SQLException {
+		List<Project> projectList = new ArrayList<>();
+		if(nameLike == null)
+			projectList = this.projectMapper.findAllForDomain();
+		else
+			projectList = this.projectMapper.findNameLike(nameLike);
+
 		User loggedInUser = this.userMapper.findByIdWithSkills("c6a0536b-838a-4e94-9af7-fcdabfffb6e5");
 		projectList.removeIf(project -> isForbidden(project, loggedInUser));
 
 		AllProjectsResponse successResponse = new AllProjectsResponse(projectList);
 		return successResponse.toJSON();
 	}
+
 	public String handleSingleProjectRequest(HttpServletResponse response, String id) throws ServletException, IOException, SQLException {
 		Project project = this.projectMapper.findByIdForDomain(id);
 
