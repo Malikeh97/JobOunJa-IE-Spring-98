@@ -214,6 +214,7 @@ public class UsersService {
 					userSkillMapper.save(new UserSkill(UUID.randomUUID().toString(), loggedInUser.getId(), newSkill.getId()));
 
 					List<Skill> userSkillsDomain = new ArrayList<>();
+					userSkillsModel = userSkillMapper.findUserSkillById(loggedInUser.getId());
 					for (models.Skill skill : userSkillsModel) {
 						Skill itsSkill = new Skill();
 						itsSkill.setName(skill.getName());
@@ -265,6 +266,7 @@ public class UsersService {
 				}
 
 				List<Skill> userSkillsDomain = new ArrayList<>();
+				userSkillsModel = userSkillMapper.findUserSkillById(loggedInUser.getId());
 				for (models.Skill skill : userSkillsModel) {
 					Skill itsSkill = new Skill();
 					itsSkill.setName(skill.getName());
