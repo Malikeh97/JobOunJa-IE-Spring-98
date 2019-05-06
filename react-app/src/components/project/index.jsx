@@ -38,7 +38,7 @@ class Project extends Component {
 
     async componentDidMount() {
         const { data: projectData } = await getProject(this.props.match.params.id);
-        const { timeOver, text: timeLeft } = calcTimeLeft(projectData.data.deadline);
+        const { timeOver, text: timeLeft } = calcTimeLeft(projectData.data.project.deadline);
         this.setState({
             project: projectData.data.project,
             isBidAdded: projectData.data.bidAdded,
@@ -46,7 +46,7 @@ class Project extends Component {
             timeOver, timeLeft
         });
         this.interval = setInterval(() => {
-            const { timeOver, text: timeLeft } = calcTimeLeft(1555696000001);
+            const { timeOver, text: timeLeft } = calcTimeLeft(projectData.data.project.deadline);
             this.setState({ timeOver, timeLeft })
         } , 1000);
     }
@@ -111,7 +111,7 @@ class Project extends Component {
                                 iconSrc={money_bag}
                                 featureText="بودجه:"
                                 valueText={persianJs(formatNumber(this.state.project.budget.toString())).englishNumber().toString() + ' تومان'}
-                                timeIsUp={false}
+                                timeIsUp={this.state.timeOver}
                             />
 
                             {
@@ -121,7 +121,7 @@ class Project extends Component {
                                     iconSrc={check_mark}
                                     featureText="برنده:"
                                     valueText={this.state.project.winner.firstName + ' ' + this.state.project.winner.lastName}
-                                    timeIsUp={false}
+                                    timeIsUp={this.state.timeOver}
                                 />
                             }
 

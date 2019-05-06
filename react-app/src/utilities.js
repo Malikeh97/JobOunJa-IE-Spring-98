@@ -6,9 +6,12 @@ export function formatNumber(num) {
 }
 
 export function calcTimeLeft(deadline) {
+    console.log(deadline);
     deadline = moment(deadline);
     let currentTime = moment();
     let diff = deadline.diff(currentTime);
+    // console.log("deadline",deadline)
+    // console.log("c",currentTime)
     if (diff <= 0)
         return {timeOver: true, text: 'مهلت تمام شده'};
 
