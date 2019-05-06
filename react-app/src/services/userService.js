@@ -2,8 +2,8 @@ import http from "./httpService";
 import { apiUrl } from "../config.json";
 
 
-export function getUsers() {
-  return http.get(`${apiUrl}/users`);
+export function getUsers(name) {
+  return http.get(`${apiUrl}/users${name ? '?name=' + name : ''}`);
 }
 
 export function getUser(id) {

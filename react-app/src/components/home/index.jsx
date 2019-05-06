@@ -12,7 +12,9 @@ class Home extends Component {
         users: [],
         projects: [],
         projectSearchValue: '',
-        userSearchValue: ''
+        userSearchValue: '',
+        typing: false,
+        typingTimeout: 0
     };
 
     async componentDidMount() {
@@ -25,12 +27,28 @@ class Home extends Component {
         this.setState({ projectSearchValue: e.currentTarget.value });
     };
 
-    handleProjectSearch = () => {
+    handleProjectSearch = async () => {
         console.log(this.state.projectSearchValue)
+        const { data: projectsData } = await getProjects(this.state.projectSearchValue);
+        this.setState({projects: projectsData.data})
     };
 
     handleUserSearchChange = e => {
-        this.setState({ userSearchValue: e.currentTarget.value });
+
+        if (this.state.typingTimeout) {
+            clearTimeout(this.state.typingTimeout);
+        }
+
+        this.setState({
+            userSearchValue: e.target.value,
+            typing: false,
+            typingTimeout: setTimeout(async () => {
+                console.log(this.state.userSearchValue);
+                const { data: usersData } = await getUsers(this.state.userSearchValue);
+                this.setState({users: usersData.data})
+            }, 700)
+        });
+        // this.setState({ userSearchValue: e.currentTarget.value });
     };
 
     handleOnUserClick = userId => {
