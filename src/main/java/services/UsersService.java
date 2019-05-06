@@ -37,6 +37,7 @@ public class UsersService {
 				response.setStatus(404);
 				return errorResponse.toJSON();
 			}
+
 			allUsers.remove(loggedInUser);
 			for(models.User user : allUsers) {
 				userList.add(new User(user.getId(),
@@ -65,6 +66,7 @@ public class UsersService {
 			EndorsementMapper endorsementMapper = new EndorsementMapper();
 			models.User user = userMapper.findById(id);
 			models.User loggedInUser = userMapper.findById("c6a0536b-838a-4e94-9af7-fcdabfffb6e5");
+
 			if (user == null) {
 				ErrorResponse errorResponse = new ErrorResponse("User not found", 404);
 				response.setStatus(404);
@@ -77,10 +79,13 @@ public class UsersService {
 					Skill newSkill = new Skill();
 					newSkill.setName(skill.getName());
 				    int point = endorsementMapper.countNumOfEndorsements(skill.getId(), user.getId());
+				    List<String> endorserIdList = endorsementMapper.findEndorserIdList(skill.getId(), id);
 				    newSkill.setPoint(point);
+				    newSkill.setEndorsers(endorserIdList);
 					userSkillsDomain.add(newSkill);
 
 			}
+
 			User newUser = new User(user.getId(),
 					user.getFirstName(),
 					user.getLastName(),

@@ -27,9 +27,10 @@ public class UserSkillMapper extends Mapper<UserSkill, String> implements IUserS
 					 "users",
 					 "skills",
 					 " users.id = user_skills.user_id ",
-					 " skills.id = user_skills.skill_id ") + " WHERE user_skills.user_id IS '" + userId + "'" )
+					 " skills.id = user_skills.skill_id ") + " WHERE user_skills.user_id IS ? " )
 			) {
 			ResultSet resultSet = st.executeQuery();
+			st.setString(1,userId);
 			List<Skill> skills = new ArrayList<>();
 			while (resultSet.next()) {
 				Skill newSkill = new Skill();
@@ -40,6 +41,32 @@ public class UserSkillMapper extends Mapper<UserSkill, String> implements IUserS
 			return skills;
 		}
 	}
+
+	public List<Skill> findSkillNotOwnedById(String userId) throws SQLException {
+		try (Connection con = DBCPDBConnectionPool.getConnection();
+			 PreparedStatement st = con.prepareStatement("SELECT skills.id, skills.name " +
+					 " FROM skills " +
+					 "WHERE skills.id NOT IN (" +
+					 getTrippleInnerJoinStatement("skills.id",
+					 "users",
+					 "skills",
+					 " users.id = user_skills.user_id ",
+					 " skills.id = user_skills.skill_id ") + " WHERE user_skills.user_id IS ? )" )
+		) {
+			ResultSet resultSet = st.executeQuery();
+			st.setString(1,userId);
+			List<Skill> skills = new ArrayList<>();
+			while (resultSet.next()) {
+				Skill newSkill = new Skill();
+				newSkill.setId(resultSet.getString(1));
+				newSkill.setName(resultSet.getString(2));
+				skills.add(newSkill);
+			}
+			return skills;
+		}
+	}
+
+
 
 	public String findUserSkillId(String userId, String skillId) throws SQLException {
 			try (Connection con = DBCPDBConnectionPool.getConnection();
