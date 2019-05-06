@@ -33,7 +33,6 @@ public class UsersService {
 			}
 			else {
 				allUsers = userMapper.findNameLike(userNameLike);
-
 			}
 			List<User> userList = new ArrayList<>();
 			models.User loggedInUser = userMapper.findById("c6a0536b-838a-4e94-9af7-fcdabfffb6e5");
@@ -139,7 +138,7 @@ public class UsersService {
 			for (models.Skill skill: userSkillsModel) {
 				if(skill.getName().equals(request.getSkill())) {
 
-					if (EndorsementMapper.isEndorsedByUserId(loggedInUser.getId(), skill.getId())) {
+					if (EndorsementMapper.isEndorsedByUserId(loggedInUser.getId(), skill.getId(), user.getId())) {
 						FailResponse failResponse = new FailResponse("You cannot endorse a skill twice");
 						response.setStatus(404);
 						return failResponse.toJSON();

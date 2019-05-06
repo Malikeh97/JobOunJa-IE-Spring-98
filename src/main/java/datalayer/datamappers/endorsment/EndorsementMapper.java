@@ -48,12 +48,13 @@ public class EndorsementMapper extends Mapper<Endorsement, String> implements IE
 		}
 	}
 
-	public static boolean isEndorsedByUserId(String endorserId, String userSkillId) throws SQLException {
+	public static boolean isEndorsedByUserId(String endorserId, String userSkillId, String endorsedId) throws SQLException {
 		try (Connection con = DBCPDBConnectionPool.getConnection();
 			 PreparedStatement st = con.prepareStatement(getFindIsEndorsedByStatement())
 		) {
 			st.setString(1, String.valueOf(endorserId));
 			st.setString(2, String.valueOf(userSkillId));
+			st.setString(3, String.valueOf(endorsedId));
 			ResultSet resultSet = st.executeQuery();
 			if (resultSet.next())
 				return resultSet.getInt(1) > 0;
@@ -66,8 +67,9 @@ public class EndorsementMapper extends Mapper<Endorsement, String> implements IE
 	private static String getFindIsEndorsedByStatement() {
 		return "SELECT " + " count(id) " +
 				" FROM " + TABLE_NAME +
-				" WHERE " + TABLE_NAME + ".endorser_id = ? " + " and " +
-				TABLE_NAME + ".user_skill_id = ?";
+				" WHERE endorser_id = ? and " +
+				"user_skill_id = ? and " +
+				"endorsed_id = ?";
 	}
 
 	private static String getFindEndorsementListStatement() {
