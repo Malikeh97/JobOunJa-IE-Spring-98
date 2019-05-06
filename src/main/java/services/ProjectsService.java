@@ -2,6 +2,7 @@ package services;
 
 import api.*;
 import api.data.SingleProjectData;
+import datalayer.datamappers.bid.BidMapper;
 import datalayer.datamappers.project.ProjectMapper;
 import datalayer.datamappers.user.UserMapper;
 import datalayer.datamappers.userskill.UserSkillMapper;
@@ -19,19 +20,20 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class ProjectsService {
 	private ProjectMapper projectMapper = new ProjectMapper();
 	private UserMapper userMapper = new UserMapper();
-	private UserSkillMapper skillMapper = new UserSkillMapper();
+	private BidMapper bidMapper = new BidMapper();
 
 	public ProjectsService() throws SQLException {
 	}
 
 	public String handleAllProjectsRequest(HttpServletResponse response) throws ServletException, IOException, SQLException {
 		List<Project> projectList = this.projectMapper.findAllForDomain();
-		User loggedInUser = this.userMapper.findByIdWithSkills("c6a0536b-838a-4e94-9af7-fcdabfffb6e5");
-		projectList.removeIf(project -> isForbidden(project, loggedInUser));
+//		User loggedInUser = this.userMapper.findByIdWithSkills("c6a0536b-838a-4e94-9af7-fcdabfffb6e5");
+//		projectList.removeIf(project -> isForbidden(project, loggedInUser));
 
 		AllProjectsResponse successResponse = new AllProjectsResponse(projectList);
 		return successResponse.toJSON();
@@ -62,11 +64,11 @@ public class ProjectsService {
 
 	}
 
-	public String handleAddBidRequest(AddBidRequest request, HttpServletResponse response, String id) throws ServletException, IOException {
+	public String handleAddBidRequest(AddBidRequest request, HttpServletResponse response, String id) throws ServletException, IOException, SQLException {
 		ObjectMapper mapper = new ObjectMapper();
 
-		User loggedInUser = InMemoryDBManager.shared.findUserById("1");
-		Project project = InMemoryDBManager.shared.findProjectById(id);
+		User loggedInUser = this.userMapper.findByIdWithSkills("c6a0536b-838a-4e94-9af7-fcdabfffb6e5");
+		Project project = this.projectMapper.findByIdWithBids(id);
 		if (request.getBidAmount() > project.getBudget()) {
 			Map<String, String> failures = new HashMap<>();
 			failures.put("bidAmount", "bidAmount was too big! try another value");
@@ -78,8 +80,16 @@ public class ProjectsService {
 			response.setStatus(403);
 			return errorResponse.toJSON();
 		}
-		Bid bid = new Bid("", loggedInUser.getId(), project.getId(), request.getBidAmount());
-		project.getBids().add(bid);
+		models.Bid bid = new models.Bid();
+		bid.setId(UUID.randomUUID().toString());
+		bid.setAmount(request.getBidAmount());
+		bid.setProjectId(project.getId());
+		bid.setUserId(loggedInUser.getId());
+		if (this.bidMapper.save(bid) == null) {
+			ErrorResponse errorResponse = new ErrorResponse("Internal server error", 500);
+			response.setStatus(500);
+			return errorResponse.toJSON();
+		}
 		AddBidResponse addBidResponse = new AddBidResponse("Bid added successfully");
 		return addBidResponse.toJSON();
 	}

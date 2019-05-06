@@ -97,7 +97,7 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
 		) {
 			st.setString(1, id);
 			ResultSet rs = st.executeQuery();
-			if (rs.next()) {
+			while (rs.next()) {
 				convertWithSkill(project, rs);
 			}
 		}
@@ -107,7 +107,7 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
 		) {
 			st.setString(1, id);
 			ResultSet rs = st.executeQuery();
-			if (rs.next()) {
+			while (rs.next()) {
 				convertWithBid(project, rs);
 			}
 		}
@@ -141,12 +141,22 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
 	}
 
 	private String getProjectsWithBidsStatement(boolean single) {
-		return String.format("SELECT p.id, b.id as bid_id, b.user_id, b.amount " +
+		return String.format("SELECT p.id, b.id as bid_id, b.user_id, b.amount, p.budget " +
 						"FROM %s p " +
 						"JOIN %s b ON p.id = b.project_id %s",
 				ProjectMapper.TABLE_NAME,
 				BidMapper.TABLE_NAME,
 				single ? "WHERE p.id = ?" : ""
+		);
+	}
+
+	private String getSingleProjectWithBidsStatement() {
+		return String.format("SELECT p.id, b.id as bid_id, b.user_id, b.amount, p.budget " +
+						"FROM %s p " +
+						"LEFT JOIN %s b ON p.id = b.project_id " +
+						"WHERE p.id = ?",
+				ProjectMapper.TABLE_NAME,
+				BidMapper.TABLE_NAME
 		);
 	}
 
@@ -186,5 +196,26 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
 		bid.setBidAmount(rs.getInt(4));
 		bid.setProjectId(project.getId());
 		project.getBids().add(bid);
+	}
+
+	public domain.Project findByIdWithBids(String id) throws SQLException {
+		domain.Project project = new domain.Project();
+		try (Connection con = DBCPDBConnectionPool.getConnection();
+			 PreparedStatement st = con.prepareStatement(getSingleProjectWithBidsStatement())
+		) {
+			st.setString(1, id);
+			ResultSet rs = st.executeQuery();
+			if (rs.next()) {
+				project.setId(rs.getString(1));
+				project.setBids(new ArrayList<>());
+				convertWithBid(project, rs);
+				project.setBudget(rs.getInt(5));
+				if (project.getBids().get(0).getId() == null)
+					project.getBids().remove(0);
+			}
+		}
+		if (project.getId() == null)
+			return null;
+		return project;
 	}
 }
