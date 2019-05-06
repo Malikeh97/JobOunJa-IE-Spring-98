@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import './profile.css';
 import Skill from "../common/skill";
 
-import {addSkill, endorse, getUser} from '../../services/userService';
+import {addSkill, deleteSkill, endorse, getUser} from '../../services/userService';
 import Dropdown from "../common/dropdown";
 import {getSkills} from "../../services/skillsService";
 import {toast} from "react-toastify";
@@ -49,6 +49,9 @@ class Profile extends Component {
             } catch (ex) {
                 toast.error(ex.response.data.data)
             }
+        } else if (isOwnSkill) {
+            const { data: userData } = await deleteSkill(this.props.match.params.id, {skill});
+            this.setState({ user: userData.data })
         }
     };
 
