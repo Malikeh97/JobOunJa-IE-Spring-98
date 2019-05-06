@@ -27,11 +27,11 @@ public class UserSkillMapper extends Mapper<UserSkill, String> implements IUserS
 					 "users",
 					 "skills",
 					 " users.id = user_skills.user_id ",
-					 " skills.id = user_skills.skill_id ") + " WHERE user_skills.user_id = `" + userId + "`" )
+					 " skills.id = user_skills.skill_id ") + " WHERE user_skills.user_id IS '" + userId + "'" )
 			) {
 			ResultSet resultSet = st.executeQuery();
 			List<Skill> skills = new ArrayList<>();
-			if (resultSet.next()) {
+			while (resultSet.next()) {
 				Skill newSkill = new Skill();
 				newSkill.setId(resultSet.getString(1));
 				newSkill.setName(resultSet.getString(2));

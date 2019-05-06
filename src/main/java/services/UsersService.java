@@ -61,6 +61,7 @@ public class UsersService {
 				response.setStatus(404);
 				return errorResponse.toJSON();
 			}
+
 			List<models.Skill> userSkillsModel = userSkillMapper.findUserSkillById(user.getId());
 			List<Skill> userSkillsDomain = new ArrayList<>();
 			for (models.Skill skill : userSkillsModel) {
