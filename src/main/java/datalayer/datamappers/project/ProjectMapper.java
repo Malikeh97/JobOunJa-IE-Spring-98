@@ -124,7 +124,7 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
 						"LEFT JOIN %s u ON p.winner_id = u.id %s",
 				ProjectMapper.TABLE_NAME,
 				UserMapper.TABLE_NAME,
-				single ? "WHERE id = ?" : "ORDER BY p.creation_date DESC"
+				single ? "WHERE p.id = ?" : "ORDER BY p.creation_date DESC"
 		);
 	}
 
@@ -136,7 +136,7 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
 				ProjectMapper.TABLE_NAME,
 				ProjectSkillMapper.TABLE_NAME,
 				SkillMapper.TABLE_NAME,
-				single ? "WHERE id = ?" : ""
+				single ? "WHERE p.id = ?" : ""
 		);
 	}
 
@@ -146,7 +146,7 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
 						"JOIN %s b ON p.id = b.project_id %s",
 				ProjectMapper.TABLE_NAME,
 				BidMapper.TABLE_NAME,
-				single ? "WHERE id = ?" : ""
+				single ? "WHERE p.id = ?" : ""
 		);
 	}
 
