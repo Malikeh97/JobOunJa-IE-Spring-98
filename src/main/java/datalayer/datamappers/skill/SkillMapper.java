@@ -14,7 +14,7 @@ public class SkillMapper extends Mapper<Skill, String> implements ISkillMapper {
 	public SkillMapper() throws SQLException {
 		super(Skill.class, TABLE_NAME);
 	}
-	public Skill findByName(String name) throws SQLException {
+	public static Skill findByName(String name) throws SQLException {
 		try (Connection con = DBCPDBConnectionPool.getConnection();
 			 PreparedStatement st = con.prepareStatement(getFindByNameStatement())
 		) {

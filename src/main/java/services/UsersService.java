@@ -1,9 +1,11 @@
 package services;
 
 import datalayer.datamappers.endorsment.EndorsementMapper;
+import datalayer.datamappers.skill.SkillMapper;
 import datalayer.datamappers.user.UserMapper;
 import datalayer.datamappers.userskill.UserSkillMapper;
 import models.Endorsement;
+import models.UserSkill;
 import repository.InMemoryDBManager;
 import api.*;
 import domain.Skill;
@@ -170,36 +172,66 @@ public class UsersService {
 	}
 
 	public String handleAddSkillRequest(SkillRequest request, HttpServletResponse response, String id) throws IOException {
-		User loggedInUser = InMemoryDBManager.shared.findUserById("1");
-		List<Skill> skills = InMemoryDBManager.shared.findAllSkills();
-		if (skills.stream().filter(skill -> skill.getName().equals(request.getSkill())).findFirst().orElse(null) == null) {
-			FailResponse failResponse = new FailResponse("Skill isn't available");
-			response.setStatus(400);
-			return failResponse.toJSON();
-		}
-		boolean isRepeated = false;
-		if(id.equals(loggedInUser.getId())) {
-			for (Skill skill: loggedInUser.getSkills()) {
-				if((skill.getName()).equals(request.getSkill())) {
-					isRepeated = true;
-					break;
-				}
-			}
-			if (!isRepeated) {
-				Skill newSkill = new Skill(request.getSkill(), 0, new ArrayList<>());
-				loggedInUser.getSkills().add(newSkill);
-				UserProfileResponse userProfileResponse = new UserProfileResponse(loggedInUser);
-				return userProfileResponse.toJSON();
-			} else {
-				FailResponse failResponse = new FailResponse("You already have this skill");
+		try {
+			UserMapper userMapper = new UserMapper();
+			SkillMapper skillMapper = new SkillMapper();
+			UserSkillMapper userSkillMapper = new UserSkillMapper();
+			EndorsementMapper endorsementMapper = new EndorsementMapper();
+			models.User loggedInUser = userMapper.findById("c6a0536b-838a-4e94-9af7-fcdabfffb6e5");
+
+			List<models.Skill> skills = skillMapper.findAll();
+
+			if (skills.stream().filter(skill -> skill.getName().equals(request.getSkill())).findFirst().orElse(null) == null) {
+				FailResponse failResponse = new FailResponse("Skill isn't available");
 				response.setStatus(400);
 				return failResponse.toJSON();
 			}
-		} else {
-			FailResponse failResponse = new FailResponse("You cannot add skill for others");
-			response.setStatus(403);
-			return failResponse.toJSON();
+
+			boolean isRepeated = false;
+			if(id.equals(loggedInUser.getId())) {
+				List<models.Skill> userSkillsModel = userSkillMapper.findUserSkillById(loggedInUser.getId());
+				for (models.Skill skill: userSkillsModel) {
+					if((skill.getName()).equals(request.getSkill())) {
+						isRepeated = true;
+						break;
+					}
+				}
+
+				if (!isRepeated) {
+					models.Skill newSkill = SkillMapper.findByName(request.getSkill());
+					userSkillMapper.save(new UserSkill(UUID.randomUUID().toString(), loggedInUser.getId(), newSkill.getId()));
+
+					List<Skill> userSkillsDomain = new ArrayList<>();
+					for (models.Skill skill : userSkillsModel) {
+						Skill itsSkill = new Skill();
+						itsSkill.setName(skill.getName());
+						int point = endorsementMapper.countNumOfEndorsements(skill.getId(), loggedInUser.getId());
+						itsSkill.setPoint(point);
+						userSkillsDomain.add(itsSkill);
+					}
+					UserProfileResponse userProfileResponse = new UserProfileResponse(new User(loggedInUser.getId(),
+							loggedInUser.getFirstName(),
+							loggedInUser.getLastName(),
+							loggedInUser.getJobTitle(),
+							loggedInUser.getProfilePictureURL(),
+							userSkillsDomain,
+							loggedInUser.getBio()));
+					return userProfileResponse.toJSON();
+				} else {
+					FailResponse failResponse = new FailResponse("You already have this skill");
+					response.setStatus(400);
+					return failResponse.toJSON();
+				}
+			} else {
+				FailResponse failResponse = new FailResponse("You cannot add skill for others");
+				response.setStatus(403);
+				return failResponse.toJSON();
+			}
+
+		} catch (SQLException e) {
+			System.out.println(e.getLocalizedMessage());
 		}
+		return null;
 	}
 
 	public String handleDeleteRequest(SkillRequest request, HttpServletResponse response, String id) throws IOException {
