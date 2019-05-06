@@ -34,7 +34,7 @@ public class ProjectsService {
 		if(nameLike == null)
 			projectList = this.projectMapper.findAllForDomain();
 		else
-			projectList = this.projectMapper.findNameLike(nameLike);
+			projectList = this.projectMapper.findNameLike("%" + nameLike + "%");
 
 		User loggedInUser = this.userMapper.findByIdWithSkills("c6a0536b-838a-4e94-9af7-fcdabfffb6e5");
 		projectList.removeIf(project -> isForbidden(project, loggedInUser));

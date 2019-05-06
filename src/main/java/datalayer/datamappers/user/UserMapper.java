@@ -72,9 +72,9 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
     public List<User> findNameLike(String nameLike) throws SQLException {
         try (Connection con = DBCPDBConnectionPool.getConnection();
              PreparedStatement st = con.prepareStatement(getFindAllStatement() +
-                     " WHERE first_name || last_name LIKE '%?%'")
+                     " WHERE first_name || last_name LIKE ?")
         ) {
-            st.setString(1, nameLike);
+            st.setString(1, "%" + nameLike + "%");
             List<User> userList = new ArrayList<>();
             ResultSet resultSet = st.executeQuery();
             while (resultSet.next())

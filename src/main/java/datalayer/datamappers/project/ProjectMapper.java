@@ -84,12 +84,12 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
 		List<domain.Project> projectList = new ArrayList<>();
 		try (Connection con = DBCPDBConnectionPool.getConnection();
 			 PreparedStatement st = con.prepareStatement(getProjectsWithWinnerStatement(false,
-					 " WHERE p.title LIKE '%?%' or " +
-							 " p.description LIKE '%?%'") )
+					 " WHERE p.title LIKE ? or " +
+							 " p.description LIKE ?") )
 		) {
-			ResultSet rs = st.executeQuery();
 			st.setString(1, nameLike);
 			st.setString(2, nameLike);
+			ResultSet rs = st.executeQuery();
 			while (rs.next()) {
 				domain.Project project = new domain.Project();
 				convertWithWinner(project, rs);
@@ -100,12 +100,12 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
 
 		try (Connection con = DBCPDBConnectionPool.getConnection();
 			 PreparedStatement st = con.prepareStatement(getProjectsWithSkillsStatement(false) +
-					 " WHERE p.title LIKE '%?%' or " +
-							 " p.description LIKE '%?%'")
+					 " WHERE p.title LIKE ? or " +
+							 " p.description LIKE ? ")
 		) {
-			ResultSet rs = st.executeQuery();
 			st.setString(1, nameLike);
 			st.setString(2, nameLike);
+			ResultSet rs = st.executeQuery();
 			while (rs.next()) {
 				String projectId = rs.getString(1);
 				domain.Project project = projectMap.get(projectId);
@@ -115,12 +115,12 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
 
 		try (Connection con = DBCPDBConnectionPool.getConnection();
 			 PreparedStatement st = con.prepareStatement(getProjectsWithBidsStatement(false)+
-					 		" WHERE p.title LIKE '%?%' or " +
-							 " p.description LIKE '%?%'")
+					 		" WHERE p.title LIKE ? or " +
+							 " p.description LIKE ?")
 		) {
-			ResultSet rs = st.executeQuery();
 			st.setString(1, nameLike);
 			st.setString(2, nameLike);
+			ResultSet rs = st.executeQuery();
 			while (rs.next()) {
 				String projectId = rs.getString(1);
 				domain.Project project = projectMap.get(projectId);
