@@ -47,7 +47,7 @@ public class UsersController extends BaseController {
 		UsersService usersService = new UsersService();
 		String stringResponse;
 		if (splittedURI.length == 3) {
-			stringResponse = usersService.handleAllUsersRequest(response);
+			stringResponse = usersService.handleAllUsersRequest(response, request.getParameter("name"));
 		} else if (splittedURI.length == 4) {
 			stringResponse = usersService.handleSingleUserRequest(response, splittedURI[3]);
 		} else {

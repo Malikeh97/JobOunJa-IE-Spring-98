@@ -24,13 +24,19 @@ import java.util.UUID;
 
 public class UsersService {
 
-	public String handleAllUsersRequest(HttpServletResponse response) throws IOException {
+	public String handleAllUsersRequest(HttpServletResponse response, String userNameLike) throws IOException {
 		try {
 			UserMapper userMapper = new UserMapper();
-			UserSkillMapper userSkillMapper = new UserSkillMapper();
-			List<models.User> allUsers = userMapper.findAll();
+			List<models.User> allUsers = new ArrayList<>();
+			if(userNameLike == null) {
+				allUsers = userMapper.findAll();
+			}
+			else {
+				allUsers = userMapper.findNameLike(userNameLike);
+
+			}
 			List<User> userList = new ArrayList<>();
-			models.User loggedInUser = userMapper.findById("1");
+			models.User loggedInUser = userMapper.findById("c6a0536b-838a-4e94-9af7-fcdabfffb6e5");
 
 			if (allUsers == null || allUsers.size() < 2) {
 				ErrorResponse errorResponse = new ErrorResponse("User not found", 404);
@@ -39,7 +45,7 @@ public class UsersService {
 			}
 
 			allUsers.remove(loggedInUser);
-			for(models.User user : allUsers) {
+			for (models.User user : allUsers) {
 				userList.add(new User(user.getId(),
 						user.getFirstName(),
 						user.getLastName(),
@@ -52,8 +58,8 @@ public class UsersService {
 
 			AllUsersResponse allUsersResponse = new AllUsersResponse(userList);
 			return allUsersResponse.toJSON();
-		} catch (SQLException e) {
-			System.out.println(e.getLocalizedMessage());
+			} catch (SQLException e) {
+				System.out.println(e.getLocalizedMessage());
 		}
 		return null;
 
