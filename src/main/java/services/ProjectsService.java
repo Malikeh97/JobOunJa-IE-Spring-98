@@ -65,7 +65,6 @@ public class ProjectsService {
 				isBidAdded = true;
 			}
 		}
-		project.setWinner(loggedInUser);//test
 		SingleProjectResponse singleProjectResponse = new SingleProjectResponse(new SingleProjectData(project,isBidAdded));
 		return singleProjectResponse.toJSON();
 
