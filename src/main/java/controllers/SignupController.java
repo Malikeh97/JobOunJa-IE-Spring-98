@@ -17,7 +17,12 @@ public class SignupController extends BaseController {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String[] splittedURI = request.getRequestURI().split("/");
-        SignupService signupService = new SignupService();
+        SignupService signupService = null;
+        try {
+            signupService = new SignupService();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         String stringResponse = null;
 
         if (splittedURI.length == 3) {

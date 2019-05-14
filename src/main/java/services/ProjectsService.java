@@ -38,7 +38,7 @@ public class ProjectsService {
 		else
 			projectList = this.projectMapper.findNameLike("%" + nameLike + "%");
 
-		User loggedInUser = this.userMapper.findByIdWithSkills("c6a0536b-838a-4e94-9af7-fcdabfffb6e5");
+		User loggedInUser = this.userMapper.findByIdWithSkills("488a14ea-faac-41d6-a870-053fd80422c7");
 		projectList.removeIf(project -> isForbidden(project, loggedInUser));
 
 		AllProjectsResponse successResponse = new AllProjectsResponse(projectList);
@@ -49,7 +49,7 @@ public class ProjectsService {
 		Project project = this.projectMapper.findByIdForDomain(id);
 
 		boolean isBidAdded = false;
-		User loggedInUser = this.userMapper.findByIdWithSkills("c6a0536b-838a-4e94-9af7-fcdabfffb6e5");
+		User loggedInUser = this.userMapper.findByIdWithSkills("488a14ea-faac-41d6-a870-053fd80422c7");
 		if (project == null) {
 			ErrorResponse errorResponse = new ErrorResponse("No project found", 404);
 			response.setStatus(404);
@@ -73,7 +73,7 @@ public class ProjectsService {
 	public String handleAddBidRequest(AddBidRequest request, HttpServletResponse response, String id) throws ServletException, IOException, SQLException {
 		ObjectMapper mapper = new ObjectMapper();
 
-		User loggedInUser = this.userMapper.findByIdWithSkills("c6a0536b-838a-4e94-9af7-fcdabfffb6e5");
+		User loggedInUser = this.userMapper.findByIdWithSkills("488a14ea-faac-41d6-a870-053fd80422c7");
 		Project project = this.projectMapper.findByIdWithBids(id);
 		if (request.getBidAmount() > project.getBudget()) {
 			Map<String, String> failures = new HashMap<>();

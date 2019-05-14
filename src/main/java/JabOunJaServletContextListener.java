@@ -53,7 +53,8 @@ public class JabOunJaServletContextListener implements ServletContextListener {
 //            User newUser1 = createHardCodedUser1();
 //            String newId1 = UUID.randomUUID().toString();
 //            userMapper.save(new models.User(newId1,
-//                    "",
+//                    "123",
+//                    "Malikeh97",
 //                    newUser1.getFirstName(),
 //                    newUser1.getLastName(),
 //                    newUser1.getJobTitle(),
@@ -71,7 +72,8 @@ public class JabOunJaServletContextListener implements ServletContextListener {
 //            User newUser2 = createHardCodedUser2();
 //            String newId2 = UUID.randomUUID().toString();
 //            userMapper.save(new models.User(newId2,
-//                    "",
+//                    "ooir",
+//                    "ALiALi99",
 //                    newUser2.getFirstName(),
 //                    newUser2.getLastName(),
 //                    newUser2.getJobTitle(),
@@ -89,7 +91,8 @@ public class JabOunJaServletContextListener implements ServletContextListener {
 //            User newUser3 = createHardCodedUser3();
 //            String newId3 = UUID.randomUUID().toString();
 //            userMapper.save(new models.User(newId3,
-//                    "",
+//                    "ret23",
+//                    "Attqq",
 //                    newUser3.getFirstName(),
 //                    newUser3.getLastName(),
 //                    newUser3.getJobTitle(),

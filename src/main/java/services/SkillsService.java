@@ -21,7 +21,7 @@ public class SkillsService {
 		try {
 			UserSkillMapper userSkillMapper = new UserSkillMapper();
 
-			List<Skill> skillList = userSkillMapper.findSkillNotOwnedById("c6a0536b-838a-4e94-9af7-fcdabfffb6e5");
+			List<Skill> skillList = userSkillMapper.findSkillNotOwnedById("488a14ea-faac-41d6-a870-053fd80422c7");
 
 			List<domain.Skill> skillNames = new ArrayList<>();
 			for (Skill skill : skillList)

@@ -35,7 +35,7 @@ public class UsersService {
 				allUsers = userMapper.findNameLike(userNameLike);
 			}
 			List<User> userList = new ArrayList<>();
-			models.User loggedInUser = userMapper.findById("c6a0536b-838a-4e94-9af7-fcdabfffb6e5");
+			models.User loggedInUser = userMapper.findById("488a14ea-faac-41d6-a870-053fd80422c7");
 
 			if (allUsers == null) {
 				ErrorResponse errorResponse = new ErrorResponse("User not found", 404);
@@ -70,7 +70,7 @@ public class UsersService {
 			UserSkillMapper userSkillMapper = new UserSkillMapper();
 			EndorsementMapper endorsementMapper = new EndorsementMapper();
 			models.User user = userMapper.findById(id);
-			models.User loggedInUser = userMapper.findById("c6a0536b-838a-4e94-9af7-fcdabfffb6e5");
+			models.User loggedInUser = userMapper.findById("488a14ea-faac-41d6-a870-053fd80422c7");
 
 			if (user == null) {
 				ErrorResponse errorResponse = new ErrorResponse("User not found", 404);
@@ -122,7 +122,7 @@ public class UsersService {
 			EndorsementMapper endorsementMapper = new EndorsementMapper();
 
 			models.User user = userMapper.findById(id);
-			models.User loggedInUser = userMapper.findById("c6a0536b-838a-4e94-9af7-fcdabfffb6e5");
+			models.User loggedInUser = userMapper.findById("488a14ea-faac-41d6-a870-053fd80422c7");
 
 			if (id.equals(loggedInUser.getId())) {
 				FailResponse failResponse = new FailResponse("You cannot endorse skill of yours");
@@ -189,7 +189,7 @@ public class UsersService {
 			SkillMapper skillMapper = new SkillMapper();
 			UserSkillMapper userSkillMapper = new UserSkillMapper();
 			EndorsementMapper endorsementMapper = new EndorsementMapper();
-			models.User loggedInUser = userMapper.findById("c6a0536b-838a-4e94-9af7-fcdabfffb6e5");
+			models.User loggedInUser = userMapper.findById("488a14ea-faac-41d6-a870-053fd80422c7");
 
 			List<models.Skill> skills = skillMapper.findAll();
 
@@ -254,7 +254,7 @@ public class UsersService {
 			UserMapper userMapper = new UserMapper();
 			UserSkillMapper userSkillMapper = new UserSkillMapper();
 			EndorsementMapper endorsementMapper = new EndorsementMapper();
-			models.User loggedInUser = userMapper.findById("c6a0536b-838a-4e94-9af7-fcdabfffb6e5");
+			models.User loggedInUser = userMapper.findById("488a14ea-faac-41d6-a870-053fd80422c7");
 			if(id.equals(loggedInUser.getId())) {
 				List<models.Skill> userSkillsModel = userSkillMapper.findUserSkillById(loggedInUser.getId());
 				for (models.Skill skill: userSkillsModel) {

@@ -21,3 +21,7 @@ export function deleteSkill(id, data) {
 export function endorse(id, data) {
     return http.post(`${apiUrl}/users/${id}/endorse`, data);
 }
+
+export function registerUser(data) {
+    return http.post(`${apiUrl}/sign-up`, data);
+}

@@ -1,6 +1,9 @@
 import React, {Component} from "react";
 import Joi from 'joi-browser';
 import './signup.css';
+import {addSkill} from "../../services/userService";
+import {toast} from "react-toastify";
+import {registerUser} from "../../services/signupService";
 
 class Signup extends Component {
     state = {
@@ -34,15 +37,32 @@ class Signup extends Component {
         this.setState({ inputs });
     };
 
-    handleSubmit = e => {
-        e.preventDefault();
+    handleSubmit = async (e) => {
+        try {
+            e.preventDefault();
 
-        const errors = this.validate();
-        this.setState({ errors: errors || {} });
-        if (errors) return;
+            const errors = this.validate();
+            this.setState({ errors: errors || {} });
+            if (errors) return;
 
-        console.log('submitted');
-    };
+            let inputs = { ...this.state.inputs };
+            const { data } = await registerUser(inputs);
+            console.log(data)
+
+        } catch (ex) {
+            toast.error(ex.response.data.data)
+        }
+    }
+
+    // handleSubmit = e => {
+    //     e.preventDefault();
+    //
+    //     const errors = this.validate();
+    //     this.setState({ errors: errors || {} });
+    //     if (errors) return;
+    //
+    //     console.log('submitted');
+    // };
 
     validate = () => {
         const result = Joi.validate(this.state.inputs, this.schema, {abortEarly: false});

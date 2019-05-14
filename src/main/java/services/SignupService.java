@@ -30,7 +30,7 @@ public class SignupService {
         try {
             ObjectMapper mapper = new ObjectMapper();
 
-            User existsUser = this.userMapper.findByUsername(request.getUserName());
+            User existsUser = this.userMapper.findByUsername(request.getUsername());
 
              if (existsUser != null) {
                 ErrorResponse errorResponse = new ErrorResponse("This username already exists", 1000);
@@ -43,12 +43,11 @@ public class SignupService {
             String saltedPassword = SALT + request.getPassword();
             String hashedPassword = generateHash(saltedPassword);
             newUser.setPassword(hashedPassword);
-            newUser.setUserName(request.getUserName());
-            newUser.setFirstName(request.getFirstName());
-            newUser.setLastName(request.getLastName());
-            newUser.setLastName(request.getLastName());
+            newUser.setUserName(request.getUsername());
+            newUser.setFirstName(request.getName());
+            newUser.setLastName(request.getFamilyName());
             newUser.setJobTitle(request.getJobTitle());
-            newUser.setProfilePictureURL(request.getProfilePictureURL());
+            newUser.setProfilePictureURL(request.getImage());
             newUser.setBio(request.getBio());
 
             if (this.userMapper.save(newUser) == null) {
