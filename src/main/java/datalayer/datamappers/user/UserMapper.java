@@ -85,20 +85,19 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
 
 	public User findByUsername(String username) throws SQLException {
 		try (Connection con = DBCPDBConnectionPool.getConnection();
-			 PreparedStatement st = con.prepareStatement(getFindAllStatement())) {
+			 PreparedStatement st = con.prepareStatement(getFindByUsernameStatement())) {
 			st.setString(1, username);
-			User newUser = new User();
 			ResultSet resultSet = st.executeQuery();
 			if (resultSet.next())
 				return MapperUtils.convertResultSetToDomainModel(User.class, columns, resultSet);
-			return newUser;
+			return null;
 		}
 	}
 
 	private String getFindByUsernameStatement() {
-		return " SELECT " + MapperUtils.createTableSql("users", this.columns) +
+		return " SELECT " + MapperUtils.getColumns(columns) +
 				" From users "  +
-				" WHERE username = ?";
+				" WHERE user_name = ?";
 	}
 
 }

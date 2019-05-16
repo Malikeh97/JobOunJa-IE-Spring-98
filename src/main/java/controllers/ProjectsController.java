@@ -20,6 +20,7 @@ public class ProjectsController extends BaseController {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String[] splittedURI = request.getRequestURI().split("/");
         String stringResponse;
+        System.out.println(request);
         try {
             ProjectsService projectsService = new ProjectsService();
             if (splittedURI.length == 5) {
@@ -56,6 +57,7 @@ public class ProjectsController extends BaseController {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String[] splittedURI = request.getRequestURI().split("/");
         String stringResponse;
+
         try {
             ProjectsService projectsService = new ProjectsService();
             if (splittedURI.length == 3) {

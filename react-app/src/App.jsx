@@ -7,7 +7,7 @@ import Profile from "./components/profile";
 import Home from "./components/home";
 import Project from "./components/project";
 import Login from "./components/login";
-import Signup from "./components/singup";
+import Signup from "./components/signup";
 import 'react-toastify/dist/ReactToastify.min.css';
 import './App.css';
 

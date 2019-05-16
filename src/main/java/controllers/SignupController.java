@@ -27,6 +27,7 @@ public class SignupController extends BaseController {
 
         if (splittedURI.length == 3) {
             ObjectMapper mapper = new ObjectMapper();
+            System.out.println("Req: " + request);
             SignupRequest signupRequest = parseJSONRequest(request, SignupRequest.class);
 
             try {

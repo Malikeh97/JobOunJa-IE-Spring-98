@@ -28,12 +28,11 @@ public class SignupService {
 
     public String handleSignupRequest(SignupRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
         try {
-            ObjectMapper mapper = new ObjectMapper();
 
             User existsUser = this.userMapper.findByUsername(request.getUsername());
 
              if (existsUser != null) {
-                ErrorResponse errorResponse = new ErrorResponse("This username already exists", 1000);
+                ErrorResponse errorResponse = new ErrorResponse("This username already exists", 403);
                 response.setStatus(403);
                 return errorResponse.toJSON();
             }

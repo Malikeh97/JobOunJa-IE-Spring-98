@@ -12,6 +12,7 @@ public class SignupRequest {
     private String familyName;
     private String username;
     private String password;
+    private String confirmPassword;
     private String jobTitle;
     private String image;
     private String bio;

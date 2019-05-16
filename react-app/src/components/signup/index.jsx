@@ -37,7 +37,8 @@ class Signup extends Component {
         this.setState({ inputs });
     };
 
-    handleSubmit = async (e) => {
+
+    handleSubmit = async(e) => {
         try {
             e.preventDefault();
 
@@ -45,24 +46,14 @@ class Signup extends Component {
             this.setState({ errors: errors || {} });
             if (errors) return;
 
-            let inputs = { ...this.state.inputs };
-            const { data } = await registerUser(inputs);
-            console.log(data)
-
-        } catch (ex) {
+            const data = { ...this.state.inputs };
+            let resp = await registerUser(data);
+            toast.success(resp)
+        } catch(ex) {
             toast.error(ex.response.data.data)
         }
-    }
 
-    // handleSubmit = e => {
-    //     e.preventDefault();
-    //
-    //     const errors = this.validate();
-    //     this.setState({ errors: errors || {} });
-    //     if (errors) return;
-    //
-    //     console.log('submitted');
-    // };
+    };
 
     validate = () => {
         const result = Joi.validate(this.state.inputs, this.schema, {abortEarly: false});
