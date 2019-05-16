@@ -9,4 +9,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface Column {
     public String name() default "";
+    public boolean nullable() default true;
+    public boolean unique() default false;
 }

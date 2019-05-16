@@ -70,8 +70,12 @@ public class MapperUtils {
 			}
 			tableColumn.setName(field.getName());
 			Column columnAnnotation = field.getAnnotation(Column.class);
-			if (columnAnnotation != null && !columnAnnotation.name().equals(""))
-				tableColumn.setName(columnAnnotation.name());
+			if (columnAnnotation != null) {
+				if (!columnAnnotation.name().equals(""))
+					tableColumn.setName(columnAnnotation.name());
+				tableColumn.setNullable(columnAnnotation.nullable());
+				tableColumn.setUnique(columnAnnotation.unique());
+			}
 			if (field.isAnnotationPresent(Id.class))
 				tableColumn.setIsPrimaryKey(true);
 			if (field.isAnnotationPresent(ForeignKey.class)) {
@@ -109,10 +113,14 @@ public class MapperUtils {
 			}
 			if (column.getIsPrimaryKey())
 				columnsSql.append(" ").append("PRIMARY KEY");
-			columnsSql.append(", ");
+			if (!column.getNullable())
+				columnsSql.append(" ").append("NOT NULL");
+			if (column.getUnique())
+				columnsSql.append(" ").append("UNIQUE");
+			columnsSql.append(",\n");
 			String foreignKeyReference = column.getForeignKeyReference();
 			if (foreignKeyReference != null) {
-				foreignKeysSql.append("FOREIGN KEY(").append(column.getName()).append(") REFERENCES ").append(foreignKeyReference).append(", ");
+				foreignKeysSql.append("FOREIGN KEY(").append(column.getName()).append(") REFERENCES ").append(foreignKeyReference).append(",\n");
 			}
 		}
 		if (foreignKeysSql.length() != 0)
