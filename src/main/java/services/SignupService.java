@@ -1,15 +1,13 @@
 package services;
 
-import api.AddBidResponse;
 import api.ErrorResponse;
 import api.SignupRequest;
 import api.SignupResponse;
 import datalayer.datamappers.user.UserMapper;
 import models.User;
-import org.codehaus.jackson.map.ObjectMapper;
+import org.mindrot.jbcrypt.BCrypt;
 import org.sqlite.SQLiteErrorCode;
 import org.sqlite.SQLiteException;
-import utils.Id;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
@@ -34,9 +32,8 @@ public class SignupService {
             System.out.println(request.toString());
             User newUser = new User();
             newUser.setId(UUID.randomUUID().toString());
-            String saltedPassword = SALT + request.getPassword();
-            String hashedPassword = generateHash(saltedPassword);
-            newUser.setPassword(hashedPassword);
+            String hashed = BCrypt.hashpw(request.getPassword(), BCrypt.gensalt());
+            newUser.setPassword(hashed);
             newUser.setUserName(request.getUsername());
             newUser.setFirstName(request.getName());
             newUser.setLastName(request.getFamilyName());
@@ -51,16 +48,17 @@ public class SignupService {
             }
             SignupResponse signupResponse = new SignupResponse("You registered successfully");
             return signupResponse.toJSON();
-        }catch (SQLiteException e) {
+        } catch (SQLiteException e) {
             if (e.getResultCode() == SQLiteErrorCode.SQLITE_CONSTRAINT_UNIQUE) {
                 ErrorResponse errorResponse = new ErrorResponse("This username already exists", 1505);
                 response.setStatus(403);
                 return errorResponse.toJSON();
             }
-            System.out.println(e.getLocalizedMessage());
-        }
-        return null;
+            ErrorResponse errorResponse = new ErrorResponse("Internal server error", 500);
+            response.setStatus(500);
+            return errorResponse.toJSON();
 
+        }
     }
 
     public static String generateHash(String input) {

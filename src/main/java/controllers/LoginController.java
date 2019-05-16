@@ -10,6 +10,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,7 +40,7 @@ public class LoginController extends BaseController {
                 response.setStatus(404);
             }
 
-        } catch (SQLException e) {
+        } catch (SQLException | InvalidKeySpecException | NoSuchAlgorithmException e) {
             ErrorResponse errorResponse = new ErrorResponse("Internal server error", 500);
             stringResponse = errorResponse.toJSON();
             response.setStatus(500);
