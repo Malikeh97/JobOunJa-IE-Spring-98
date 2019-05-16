@@ -125,7 +125,7 @@ public class UsersService {
 			models.User loggedInUser = userMapper.findById("488a14ea-faac-41d6-a870-053fd80422c7");
 
 			if (id.equals(loggedInUser.getId())) {
-				FailResponse failResponse = new FailResponse("You cannot endorse skill of yours");
+				FailResponse<String> failResponse = new FailResponse<>("You cannot endorse skill of yours");
 				response.setStatus(403);
 				return failResponse.toJSON();
 			}
@@ -139,7 +139,7 @@ public class UsersService {
 				if(skill.getName().equals(request.getSkill())) {
 
 					if (EndorsementMapper.isEndorsedByUserId(loggedInUser.getId(), skill.getId(), user.getId())) {
-						FailResponse failResponse = new FailResponse("You cannot endorse a skill twice");
+						FailResponse<String> failResponse = new FailResponse<>("You cannot endorse a skill twice");
 						response.setStatus(404);
 						return failResponse.toJSON();
 					}
@@ -151,7 +151,7 @@ public class UsersService {
 			}
 
 			if (!found) {
-				FailResponse failResponse = new FailResponse("This user doesn't have this skill");
+				FailResponse<String> failResponse = new FailResponse<>("This user doesn't have this skill");
 				response.setStatus(404);
 				return failResponse.toJSON();
 			}
@@ -194,7 +194,7 @@ public class UsersService {
 			List<models.Skill> skills = skillMapper.findAll();
 
 			if (skills.stream().filter(skill -> skill.getName().equals(request.getSkill())).findFirst().orElse(null) == null) {
-				FailResponse failResponse = new FailResponse("Skill isn't available");
+				FailResponse<String> failResponse = new FailResponse<>("Skill isn't available");
 				response.setStatus(400);
 				return failResponse.toJSON();
 			}
@@ -233,12 +233,12 @@ public class UsersService {
 							loggedInUser.getBio()));
 					return userProfileResponse.toJSON();
 				} else {
-					FailResponse failResponse = new FailResponse("You already have this skill");
+					FailResponse<String> failResponse = new FailResponse<>("You already have this skill");
 					response.setStatus(400);
 					return failResponse.toJSON();
 				}
 			} else {
-				FailResponse failResponse = new FailResponse("You cannot add skill for others");
+				FailResponse<String> failResponse = new FailResponse<>("You cannot add skill for others");
 				response.setStatus(403);
 				return failResponse.toJSON();
 			}
@@ -286,7 +286,7 @@ public class UsersService {
 				return userProfileResponse.toJSON();
 
 			} else {
-				FailResponse failResponse = new FailResponse("You cannot remove skill from others");
+				FailResponse<String> failResponse = new FailResponse<>("You cannot remove skill from others");
 				response.setStatus(403);
 				return failResponse.toJSON();
 			}

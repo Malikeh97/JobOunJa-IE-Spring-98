@@ -31,7 +31,7 @@ public class ProjectsController extends BaseController {
                     if (addBidRequest.getBidAmount() == null) {
                         Map<String, String> failures = new HashMap<>();
                         failures.put("bidAmount", "bidAmount is required");
-                        FailResponse failResponse = new FailResponse(mapper.writeValueAsString(failures));
+                        FailResponse<String> failResponse = new FailResponse<>(mapper.writeValueAsString(failures));
                         stringResponse = failResponse.toJSON();
                     } else {
                         stringResponse = projectsService.handleAddBidRequest(addBidRequest, response, splittedURI[3]);

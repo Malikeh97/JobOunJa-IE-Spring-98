@@ -78,7 +78,7 @@ public class ProjectsService {
 		if (request.getBidAmount() > project.getBudget()) {
 			Map<String, String> failures = new HashMap<>();
 			failures.put("bidAmount", "bidAmount was too big! try another value");
-			FailResponse failResponse = new FailResponse(mapper.writeValueAsString(failures));
+			FailResponse<String> failResponse = new FailResponse<>(mapper.writeValueAsString(failures));
 			response.setStatus(400);
 			return failResponse.toJSON();
 		} else if (project.getBids().stream().filter(bid -> bid.getUserId().equals(loggedInUser.getId())).findFirst().orElse(null) != null) {
