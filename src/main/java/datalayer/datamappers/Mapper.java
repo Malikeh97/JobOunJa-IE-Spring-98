@@ -25,7 +25,8 @@ public abstract class Mapper<T, ID> implements IMapper<T, ID> {
 		try (Connection con = DBCPDBConnectionPool.getConnection();
 			 Statement st = con.createStatement()
 		) {
-			int x = st.executeUpdate(MapperUtils.createTableSql(tableName, this.columns));
+			System.out.println(MapperUtils.createTableSql(tableName, this.columns));
+			st.executeUpdate(MapperUtils.createTableSql(tableName, this.columns));
 		}
 	}
 
@@ -45,8 +46,10 @@ public abstract class Mapper<T, ID> implements IMapper<T, ID> {
 		try (Connection con = DBCPDBConnectionPool.getConnection();
 			 PreparedStatement st = con.prepareStatement(getSaveStatement())
 		) {
-			for (int i = 0; i < columns.size(); i++)
-				st.setString(i + 1, String.valueOf(columns.get(i).getGetter().invoke(entity)));
+			for (int i = 0; i < columns.size(); i++) {
+				Object obj = columns.get(i).getGetter().invoke(entity);
+				st.setObject(i + 1, obj);
+			}
 			int count = st.executeUpdate();
 			if (count == 1)
 				return entity;

@@ -7,6 +7,8 @@ import api.SignupResponse;
 import datalayer.datamappers.user.UserMapper;
 import models.User;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.sqlite.SQLiteErrorCode;
+import org.sqlite.SQLiteException;
 import utils.Id;
 
 import javax.servlet.ServletException;
@@ -29,14 +31,7 @@ public class SignupService {
     public String handleSignupRequest(SignupRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
         try {
 
-            User existsUser = this.userMapper.findByUsername(request.getUsername());
-
-             if (existsUser != null) {
-                ErrorResponse errorResponse = new ErrorResponse("This username already exists", 403);
-                response.setStatus(403);
-                return errorResponse.toJSON();
-            }
-
+            System.out.println(request.toString());
             User newUser = new User();
             newUser.setId(UUID.randomUUID().toString());
             String saltedPassword = SALT + request.getPassword();
@@ -56,7 +51,12 @@ public class SignupService {
             }
             SignupResponse signupResponse = new SignupResponse("You registered successfully");
             return signupResponse.toJSON();
-        } catch (SQLException e) {
+        }catch (SQLiteException e) {
+            if (e.getResultCode() == SQLiteErrorCode.SQLITE_CONSTRAINT_UNIQUE) {
+                ErrorResponse errorResponse = new ErrorResponse("This username already exists", 1505);
+                response.setStatus(403);
+                return errorResponse.toJSON();
+            }
             System.out.println(e.getLocalizedMessage());
         }
         return null;
