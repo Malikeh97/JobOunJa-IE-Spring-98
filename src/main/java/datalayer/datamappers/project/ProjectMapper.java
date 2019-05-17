@@ -327,7 +327,8 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
 			 PreparedStatement st = con.prepareStatement(getUpdateWinnerStatement())
 		) {
 			st.setString(1, winner_id);
-			st.setString(2, project_id);
+			st.setBoolean(2, true);
+			st.setString(3, project_id);
 			int rs = st.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -337,7 +338,7 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
 
 	private String getUpdateWinnerStatement() {
 		return " UPDATE projects " +
-				" SET winner_id = ? " +
+				" SET winner_id = ? , checked = ? " +
 				" WHERE id = ? ";
 
 	}
