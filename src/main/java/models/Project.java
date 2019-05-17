@@ -32,4 +32,7 @@ public class Project {
 	@Column(name = "winner_id")
 	@ForeignKey(foreignTable = "users", foreignField = "id")
 	private String winnerId;
+
+	@Column(name = "checked", nullable = false)
+	private Boolean isChecked = false;
 }

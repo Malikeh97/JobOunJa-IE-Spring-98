@@ -1,9 +1,15 @@
 import datalayer.datamappers.project.ProjectMapper;
+import datalayer.datamappers.user.UserMapper;
+import domain.Bid;
+import domain.Project;
+import domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Data
@@ -11,13 +17,17 @@ import java.util.Map;
 @NoArgsConstructor
 public class Auction implements Runnable  {
     private ProjectMapper projectMapper;
+    private UserMapper userMapper;
     public void run() {
-        HashMap<String, String> winners =  projectMapper.findWinners();
-        for (Map.Entry mapElement : winners.entrySet()) {
-            String project_id = (String)mapElement.getKey();
-            String winner_id = (String)mapElement.getValue();
-            if(project_id != null && winner_id != null)
-                projectMapper.saveWinner(winner_id, project_id);
+        try {
+            List<Project> projects = projectMapper.findUncheckedProjects();
+            for (Project project : projects) {
+                for (Bid bid : project.getBids()) {
+                    User user = userMapper.findByIdWithSkills(bid.getUserId());
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 }

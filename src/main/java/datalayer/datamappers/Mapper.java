@@ -25,7 +25,6 @@ public abstract class Mapper<T, ID> implements IMapper<T, ID> {
 		try (Connection con = DBCPDBConnectionPool.getConnection();
 			 Statement st = con.createStatement()
 		) {
-			System.out.println(MapperUtils.createTableSql(tableName, this.columns));
 			st.executeUpdate(MapperUtils.createTableSql(tableName, this.columns));
 		}
 	}

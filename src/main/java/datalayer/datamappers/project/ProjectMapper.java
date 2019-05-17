@@ -78,13 +78,41 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
 		return projectList;
 	}
 
+	public List<domain.Project> findUncheckedProjects() throws SQLException {
+		Map<String, domain.Project> projectMap = new HashMap<>();
+		List<domain.Project> projectList = new ArrayList<>();
+		try (Connection con = DBCPDBConnectionPool.getConnection();
+			 PreparedStatement st = con.prepareStatement(getUncheckedProjectsWithSkillsStatement())
+		) {
+			ResultSet rs = st.executeQuery();
+			while (rs.next()) {
+				String projectId = rs.getString(1);
+				domain.Project project = projectMap.get(projectId);
+				convertWithSkill(project, rs);
+			}
+		}
+
+		try (Connection con = DBCPDBConnectionPool.getConnection();
+			 PreparedStatement st = con.prepareStatement(getUncheckedProjectsWithBidsStatement())
+		) {
+			ResultSet rs = st.executeQuery();
+			while (rs.next()) {
+				String projectId = rs.getString(1);
+				domain.Project project = projectMap.get(projectId);
+				convertWithBid(project, rs);
+			}
+		}
+
+		return projectList;
+	}
+
 	public List<domain.Project> findNameLike(String nameLike) throws SQLException {
 		Map<String, domain.Project> projectMap = new HashMap<>();
 		List<domain.Project> projectList = new ArrayList<>();
 		try (Connection con = DBCPDBConnectionPool.getConnection();
 			 PreparedStatement st = con.prepareStatement(getProjectsWithWinnerStatement(false,
 					 " WHERE p.title LIKE ? or " +
-							 " p.description LIKE ?") )
+							 " p.description LIKE ?"))
 		) {
 			st.setString(1, nameLike);
 			st.setString(2, nameLike);
@@ -100,7 +128,7 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
 		try (Connection con = DBCPDBConnectionPool.getConnection();
 			 PreparedStatement st = con.prepareStatement(getProjectsWithSkillsStatement(false) +
 					 " WHERE p.title LIKE ? or " +
-							 " p.description LIKE ? ")
+					 " p.description LIKE ? ")
 		) {
 			st.setString(1, nameLike);
 			st.setString(2, nameLike);
@@ -113,9 +141,9 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
 		}
 
 		try (Connection con = DBCPDBConnectionPool.getConnection();
-			 PreparedStatement st = con.prepareStatement(getProjectsWithBidsStatement(false)+
-					 		" WHERE p.title LIKE ? or " +
-							 " p.description LIKE ?")
+			 PreparedStatement st = con.prepareStatement(getProjectsWithBidsStatement(false) +
+					 " WHERE p.title LIKE ? or " +
+					 " p.description LIKE ?")
 		) {
 			st.setString(1, nameLike);
 			st.setString(2, nameLike);
@@ -211,6 +239,30 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
 		);
 	}
 
+	private String getUncheckedProjectsWithSkillsStatement() {
+		return String.format("SELECT p.id, s.id as skill_id, s.name, ps.point " +
+						"FROM %s p " +
+						"JOIN %s ps ON p.id = ps.project_id " +
+						"JOIN %s s ON ps.skill_id = s.id " +
+						"WHERE p.checked = 0 and p.winner_id = null and deadline <= %s",
+				ProjectMapper.TABLE_NAME,
+				ProjectSkillMapper.TABLE_NAME,
+				SkillMapper.TABLE_NAME,
+				new Date().getTime()
+		);
+	}
+
+	private String getUncheckedProjectsWithBidsStatement() {
+		return String.format("SELECT p.id, b.id as bid_id, b.user_id, b.amount, p.budget " +
+						"FROM %s p " +
+						"JOIN %s b ON p.id = b.project_id " +
+						"WHERE p.checked = 0 and p.winner_id = null and deadline <= %s",
+				ProjectMapper.TABLE_NAME,
+				BidMapper.TABLE_NAME,
+				new Date().getTime()
+		);
+	}
+
 
 	private void convertWithWinner(domain.Project project, ResultSet rs) throws SQLException {
 		project.setId(rs.getString(1));
@@ -270,24 +322,6 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
 		return project;
 	}
 
-	public HashMap<String, String> findWinners() {
-		HashMap<String, String> winnerList = new HashMap<>();
-		try (Connection con = DBCPDBConnectionPool.getConnection();
-			 PreparedStatement st = con.prepareStatement(getFindWinnersStatement())
-		) {
-			System.out.println(new Date().getTime());
-			st.setLong(1, new Date().getTime());
-			ResultSet rs = st.executeQuery();
-			if (rs.next()) {
-				winnerList.put(rs.getString(1), rs.getString(2));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return winnerList;
-	}
-
 	public void saveWinner(String winner_id, String project_id) {
 		try (Connection con = DBCPDBConnectionPool.getConnection();
 			 PreparedStatement st = con.prepareStatement(getUpdateWinnerStatement())
@@ -301,19 +335,8 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
 
 	}
 
-	private String getFindWinnersStatement() {
-		return  " SELECT p.id, b.user_id " +
-				" From projects p, bids b "  +
-				" WHERE p.id = b.project_id and " +
-				" p.deadline < ? and " +
-				" p.winner_id = null and b.amount = ( Select max(bb.amount) " +
-				" From bids bb " +
-				" Where bb.project_id = b.project_id ) " +
-				" Group By p.id";
-	}
-
 	private String getUpdateWinnerStatement() {
-		return 	" UPDATE projects " +
+		return " UPDATE projects " +
 				" SET winner_id = ? " +
 				" WHERE id = ? ";
 
