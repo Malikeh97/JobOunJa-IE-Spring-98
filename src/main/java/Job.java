@@ -37,7 +37,8 @@ public class Job implements Runnable {
 							project.getBudget(),
 							project.getDeadline(),
 							project.getCreationDate(),
-							null
+							null,
+							false
 					));
 					for (Skill skill : project.getSkills())
 						projectSkillMapper.save(new models.ProjectSkill(UUID.randomUUID().toString(),

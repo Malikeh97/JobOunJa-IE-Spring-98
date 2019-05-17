@@ -30,9 +30,11 @@ public class JabOunJaServletContextListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent arg0) {
         try {
             IGateway gateway = new HttpGateway();
+            ProjectMapper projectMapper = new ProjectMapper();
             UserMapper userMapper = new UserMapper();
             SkillMapper skillMapper = new SkillMapper();
             UserSkillMapper userSkillMapper = new UserSkillMapper();
+            ProjectSkillMapper projectSkillMapper = new ProjectSkillMapper();
             BidMapper bidMapper = new BidMapper();
             Map<String, String> skills = new HashMap<>();
             List<models.Skill> skillsFromDb = skillMapper.findAll();
@@ -49,12 +51,11 @@ public class JabOunJaServletContextListener implements ServletContextListener {
             scheduler = Executors.newSingleThreadScheduledExecutor();
             System.out.println(new Date());
             scheduler.scheduleAtFixedRate(
-                    new Job(new ProjectMapper(), new ProjectSkillMapper(), skills, gateway),
+                    new Job(projectMapper, projectSkillMapper, skills, gateway),
                     0, 5, TimeUnit.MINUTES);
 
-            //scheduler = Executors.newSingleThreadScheduledExecutor();
             scheduler.scheduleAtFixedRate(
-                    new Auction(new ProjectMapper()),
+                    new Auction(projectMapper, userMapper),
                     0, 1, TimeUnit.MINUTES);
 
         } catch (SQLException e) {
