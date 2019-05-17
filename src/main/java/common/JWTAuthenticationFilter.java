@@ -16,7 +16,7 @@ import java.security.Key;
 import java.sql.SQLException;
 
 
-@WebFilter(asyncSupported = true, urlPatterns = {"/*"})
+//@WebFilter(filterName = "auth")
 public class JWTAuthenticationFilter implements Filter {
 
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
@@ -50,7 +50,6 @@ public class JWTAuthenticationFilter implements Filter {
                 models.User user = userMapper.findByUsername(username);
 
                 servletRequest.setAttribute("user", user);
-
 
                 filterChain.doFilter(request, servletResponse);
 

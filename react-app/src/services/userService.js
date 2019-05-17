@@ -10,8 +10,8 @@ export function getUsers(name) {
   });
 }
 
-export function getUser(id) {
-  return http.get(`${apiUrl}/users/${id}`, {
+export function getUser(name) {
+  return http.get(`${apiUrl}/users/${name}`, {
       headers: {
           "Authorization": localStorage.getItem('jwtToken')
       }

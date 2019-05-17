@@ -20,17 +20,17 @@ import java.util.UUID;
 
 public class UsersService {
 
-	public String handleAllUsersRequest(HttpServletResponse response, String userNameLike) throws IOException {
+	public String handleAllUsersRequest(HttpServletResponse response, String userNameLike, HttpServletRequest request) throws IOException {
 		try {
 			UserMapper userMapper = new UserMapper();
-			List<models.User> allUsers = new ArrayList<>();
+			List<models.User> allUsers;
 			if (userNameLike == null) {
 				allUsers = userMapper.findAll();
 			} else {
 				allUsers = userMapper.findNameLike(userNameLike);
 			}
 			List<User> userList = new ArrayList<>();
-			models.User loggedInUser = userMapper.findById("488a14ea-faac-41d6-a870-053fd80422c7");
+			models.User loggedInUser = (models.User) request.getAttribute("user");
 
 			if (allUsers == null) {
 				ErrorResponse errorResponse = new ErrorResponse("User not found", 404);
@@ -59,13 +59,11 @@ public class UsersService {
 
 	}
 
-	public String handleSingleUserRequest(HttpServletResponse response, String id) throws IOException {
+	public String handleSingleUserRequest(HttpServletResponse response, String username) throws IOException {
 		try {
 			UserMapper userMapper = new UserMapper();
-			UserSkillMapper userSkillMapper = new UserSkillMapper();
 			EndorsementMapper endorsementMapper = new EndorsementMapper();
-			models.User user = userMapper.findById(id);
-			models.User loggedInUser = userMapper.findById("488a14ea-faac-41d6-a870-053fd80422c7");
+			User user = userMapper.findByNameWithSkills(username);
 
 			if (user == null) {
 				ErrorResponse errorResponse = new ErrorResponse("User not found", 404);
@@ -73,17 +71,12 @@ public class UsersService {
 				return errorResponse.toJSON();
 			}
 
-			List<models.Skill> userSkillsModel = userSkillMapper.findUserSkillById(user.getId());
-			List<Skill> userSkillsDomain = new ArrayList<>();
-			for (models.Skill skill : userSkillsModel) {
-				Skill newSkill = new Skill();
-				newSkill.setName(skill.getName());
-				int point = endorsementMapper.countNumOfEndorsements(skill.getId(), user.getId());
-				List<String> endorserIdList = endorsementMapper.findEndorserIdList(skill.getId(), id);
-				newSkill.setPoint(point);
-				newSkill.setEndorsers(endorserIdList);
-				userSkillsDomain.add(newSkill);
-
+			if (user.getSkills() != null) {
+				for (Skill skill : user.getSkills()) {
+					List<String> endorserIdList = endorsementMapper.findEndorserIdList(skill.getId(), user.getId());
+					skill.setPoint(endorserIdList.size());
+					skill.setEndorsers(endorserIdList);
+				}
 			}
 
 			User newUser = new User(user.getId(),
@@ -91,18 +84,11 @@ public class UsersService {
 					user.getLastName(),
 					user.getJobTitle(),
 					user.getProfilePictureURL(),
-					userSkillsDomain,
+					user.getSkills(),
 					user.getBio()
 			);
-
-			if (user == loggedInUser) {
-				UserProfileResponse userProfileResponse = new UserProfileResponse(newUser);
-				return userProfileResponse.toJSON();
-			} else { // may be changing it later
-				UserProfileResponse userProfileResponse = new UserProfileResponse(newUser);
-				return userProfileResponse.toJSON();
-			}
-
+			UserProfileResponse userProfileResponse = new UserProfileResponse(newUser);
+			return userProfileResponse.toJSON();
 		} catch (SQLException e) {
 			System.out.println(e.getLocalizedMessage());
 		}
@@ -116,7 +102,7 @@ public class UsersService {
 			EndorsementMapper endorsementMapper = new EndorsementMapper();
 
 			User user = userMapper.findByIdWithSkills(id);
-			models.User loggedInUser = (models.User)servletRequest.getAttribute("user");
+			models.User loggedInUser = (models.User) servletRequest.getAttribute("user");
 
 			if (id.equals(loggedInUser.getId())) {
 				FailResponse<String> failResponse = new FailResponse<>("You cannot endorse skill of yours");

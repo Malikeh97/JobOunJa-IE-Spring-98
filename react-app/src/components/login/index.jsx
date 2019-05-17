@@ -2,7 +2,6 @@ import React, {Component} from "react";
 import Joi from 'joi-browser'
 import './login.css';
 import {toast} from "react-toastify";
-import {registerUser} from "../../services/signupService";
 import {loginUser} from "../../services/loginService";
 
 
@@ -41,12 +40,17 @@ class Login extends Component {
         try {
             e.preventDefault();
             let errors = this.validate();
-            Object.values(errors).forEach(err => toast.error(err));
-            if (errors) return;
+
+            if (errors) {
+                console.log(errors)
+                Object.values(errors).forEach(err => toast.error(err));
+                return;
+            }
 
             const data = {...this.state.inputs};
             let {data: resp} = await loginUser(data);
             localStorage.setItem('jwtToken', resp.data);
+            localStorage.setItem('username', this.state.inputs.username);
         } catch (ex) {
             toast.error(ex.response.data.data)
         }

@@ -118,6 +118,7 @@ class Profile extends Component {
                 }
                 <div id="skills">
                     {
+                        user.skills &&
                         user.skills.map(skill => {
                             let isEndorsed = skill.endorsers && skill.endorsers.find(endorser => endorser === userId);
                             return (

@@ -222,7 +222,7 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
 		project.setDeadline(rs.getLong(6));
 		project.setCreationDate(rs.getLong(7));
 		String winnerId = rs.getString(8);
-		if (!winnerId.equals("null")) {
+		if (winnerId != null) {
 			domain.User winner = new domain.User();
 			winner.setId(winnerId);
 			winner.setFirstName(rs.getString(9));

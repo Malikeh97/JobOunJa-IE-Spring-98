@@ -3,8 +3,8 @@ import './navbar.css';
 import {Link, NavLink} from "react-router-dom";
 
 const NavBar = props => {
-    const loggedInUserId = localStorage.getItem('userId');
-    const loggedInUserProfileURL = `/profile/${loggedInUserId}`;
+    const loggedInUsername = localStorage.getItem('username');
+    const loggedInUserProfileURL = `/profile/${loggedInUsername}`;
     return (
         <nav className="navbar navbar-expand-sm bg-light">
             <div className="container">

@@ -28,6 +28,22 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
 			 PreparedStatement st = con.prepareStatement(getUserWithSkillsStatement())
 		) {
 			st.setString(1, id);
+			st.setString(2, null);
+			ResultSet rs = st.executeQuery();
+			if (rs.next()) {
+				convertWithSkills(user, rs);
+			}
+		}
+		return user;
+	}
+
+	public domain.User findByNameWithSkills(String name) throws SQLException {
+		domain.User user = new domain.User();
+		try (Connection con = DBCPDBConnectionPool.getConnection();
+			 PreparedStatement st = con.prepareStatement(getUserWithSkillsStatement())
+		) {
+			st.setString(1, null);
+			st.setString(2, name);
 			ResultSet rs = st.executeQuery();
 			if (rs.next()) {
 				convertWithSkills(user, rs);
@@ -62,7 +78,7 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
 						"FROM %s u " +
 						"LEFT JOIN %s us ON u.id = us.user_id " +
 						"LEFT JOIN %s s ON s.id = us.skill_id " +
-						"where u.id = ?",
+						"where u.id = ? or u.user_name = ?",
 				UserMapper.TABLE_NAME,
 				UserSkillMapper.TABLE_NAME,
 				SkillMapper.TABLE_NAME
