@@ -23,8 +23,8 @@ public class ProjectsController extends BaseController {
         System.out.println(request);
         try {
             ProjectsService projectsService = new ProjectsService();
-            if (splittedURI.length == 5) {
-                if (splittedURI[4].equals("add_bid")) {
+            if (splittedURI.length == 4) {
+                if (splittedURI[3].equals("add_bid")) {
                     ObjectMapper mapper = new ObjectMapper();
 
                     AddBidRequest addBidRequest = parseJSONRequest(request, AddBidRequest.class);
@@ -60,9 +60,9 @@ public class ProjectsController extends BaseController {
 
         try {
             ProjectsService projectsService = new ProjectsService();
-            if (splittedURI.length == 3) {
+            if (splittedURI.length == 2) {
                 stringResponse = projectsService.handleAllProjectsRequest(response, request.getParameter("search"), request);
-            } else if (splittedURI.length == 4) {
+            } else if (splittedURI.length == 3) {
                 stringResponse = projectsService.handleSingleProjectRequest(request, response, splittedURI[3]);
             } else {
                 ErrorResponse errorResponse = new ErrorResponse(request.getRequestURI() + " not found", 404);
@@ -70,9 +70,6 @@ public class ProjectsController extends BaseController {
                 response.setStatus(404);
             }
         } catch (SQLException e) {
-            System.out.println(e.getSQLState());
-            System.out.println(e.getLocalizedMessage());
-            e.printStackTrace();
             ErrorResponse errorResponse = new ErrorResponse("Internal server error", 500);
             stringResponse = errorResponse.toJSON();
             response.setStatus(500);

@@ -89,14 +89,17 @@ class Signup extends Component {
 
             if (!errors && (password !== confirmPassword))
                 errors = {confirmPassword: "با رمز عبور مطابقت ندارد"};
-            Object.values(errors).forEach(err => toast.error(err));
-            if (errors) return;
+            if (errors) {
+                Object.values(errors).forEach(err => toast.error(err));
+                return;
+            }
 
             const data = {...this.state.inputs};
             let {data: resp} = await registerUser(data);
             toast.success(resp)
         } catch (ex) {
-            toast.error(ex.response.data.data)
+            console.log(ex)
+            // toast.error(ex.response.data.data)
         }
 
     };
