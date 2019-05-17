@@ -37,7 +37,7 @@ class Login extends Component {
         this.setState({ inputs })
     };
 
-    handleSubmit = async (e) => {
+    handleSubmit = async (e, props) => {
         try {
             e.preventDefault();
             let errors = this.validate();
@@ -47,6 +47,7 @@ class Login extends Component {
             const data = {...this.state.inputs};
             let {data: resp} = await loginUser(data);
             localStorage.setItem('jwtToken', resp.data);
+            props.history.push("/");
         } catch (ex) {
             toast.error(ex.response.data.data)
         }
@@ -89,7 +90,7 @@ class Login extends Component {
                                     </div>
                                 </div>
                                 <div className="row">
-                                    <button type="submit" className="btn btn-primary" id="login-button" onClick={this.handleSubmit}>ورود</button>
+                                    <button type="submit" className="btn btn-primary" id="login-button" onClick={e => this.handleSubmit(e, this.props)}>ورود</button>
                                 </div>
 
                             </form>
