@@ -24,10 +24,9 @@ public class UsersService {
 		try {
 			UserMapper userMapper = new UserMapper();
 			List<models.User> allUsers = new ArrayList<>();
-			if(userNameLike == null) {
+			if (userNameLike == null) {
 				allUsers = userMapper.findAll();
-			}
-			else {
+			} else {
 				allUsers = userMapper.findNameLike(userNameLike);
 			}
 			List<User> userList = new ArrayList<>();
@@ -53,15 +52,15 @@ public class UsersService {
 
 			AllUsersResponse allUsersResponse = new AllUsersResponse(userList);
 			return allUsersResponse.toJSON();
-			} catch (SQLException e) {
-				System.out.println(e.getLocalizedMessage());
+		} catch (SQLException e) {
+			System.out.println(e.getLocalizedMessage());
 		}
 		return null;
 
 	}
 
 	public String handleSingleUserRequest(HttpServletResponse response, String id) throws IOException {
-		try{
+		try {
 			UserMapper userMapper = new UserMapper();
 			UserSkillMapper userSkillMapper = new UserSkillMapper();
 			EndorsementMapper endorsementMapper = new EndorsementMapper();
@@ -77,13 +76,13 @@ public class UsersService {
 			List<models.Skill> userSkillsModel = userSkillMapper.findUserSkillById(user.getId());
 			List<Skill> userSkillsDomain = new ArrayList<>();
 			for (models.Skill skill : userSkillsModel) {
-					Skill newSkill = new Skill();
-					newSkill.setName(skill.getName());
-				    int point = endorsementMapper.countNumOfEndorsements(skill.getId(), user.getId());
-				    List<String> endorserIdList = endorsementMapper.findEndorserIdList(skill.getId(), id);
-				    newSkill.setPoint(point);
-				    newSkill.setEndorsers(endorserIdList);
-					userSkillsDomain.add(newSkill);
+				Skill newSkill = new Skill();
+				newSkill.setName(skill.getName());
+				int point = endorsementMapper.countNumOfEndorsements(skill.getId(), user.getId());
+				List<String> endorserIdList = endorsementMapper.findEndorserIdList(skill.getId(), id);
+				newSkill.setPoint(point);
+				newSkill.setEndorsers(endorserIdList);
+				userSkillsDomain.add(newSkill);
 
 			}
 
@@ -111,14 +110,13 @@ public class UsersService {
 
 	}
 
-	public String handleEndorseRequest(SkillRequest request, HttpServletResponse response, String id) throws IOException {
+	public String handleEndorseRequest(SkillRequest request, HttpServletResponse response, String id, HttpServletRequest servletRequest) throws IOException {
 		try {
 			UserMapper userMapper = new UserMapper();
-			UserSkillMapper userSkillMapper = new UserSkillMapper();
 			EndorsementMapper endorsementMapper = new EndorsementMapper();
 
-			models.User user = userMapper.findById(id);
-			models.User loggedInUser = userMapper.findById("488a14ea-faac-41d6-a870-053fd80422c7");
+			User user = userMapper.findByIdWithSkills(id);
+			models.User loggedInUser = (models.User)servletRequest.getAttribute("user");
 
 			if (id.equals(loggedInUser.getId())) {
 				FailResponse<String> failResponse = new FailResponse<>("You cannot endorse skill of yours");
@@ -127,13 +125,8 @@ public class UsersService {
 			}
 
 			boolean found = false;
-
-			List<models.Skill> userSkillsModel = userSkillMapper.findUserSkillById(user.getId());
-			List<User> endorserList = new ArrayList<>();
-
-			for (models.Skill skill: userSkillsModel) {
-				if(skill.getName().equals(request.getSkill())) {
-
+			for (Skill skill : user.getSkills()) {
+				if (skill.getName().equals(request.getSkill())) {
 					if (EndorsementMapper.isEndorsedByUserId(loggedInUser.getId(), skill.getId(), user.getId())) {
 						FailResponse<String> failResponse = new FailResponse<>("You cannot endorse a skill twice");
 						response.setStatus(404);
@@ -152,25 +145,18 @@ public class UsersService {
 				return failResponse.toJSON();
 			}
 
-			List<Skill> userSkillsDomain = new ArrayList<>();
-			for (models.Skill skill : userSkillsModel) {
-				Skill newSkill = new Skill();
-				newSkill.setName(skill.getName());
-				int point = endorsementMapper.countNumOfEndorsements(skill.getId(), user.getId());
-				List<String> endorserIdList = endorsementMapper.findEndorserIdList(skill.getId(), id);
-				newSkill.setPoint(point);
-				newSkill.setEndorsers(endorserIdList);
-				userSkillsDomain.add(newSkill);
+			for (Skill skill : user.getSkills()) {
+				List<String> endorserIdList = endorsementMapper.findEndorserIdList(skill.getId(), loggedInUser.getId());
+				skill.setEndorsers(endorserIdList);
+				skill.setPoint(endorserIdList.size());
 			}
-
 			UserProfileResponse userProfileResponse = new UserProfileResponse(new User(user.getId(),
 					user.getFirstName(),
 					user.getLastName(),
 					user.getJobTitle(),
 					user.getProfilePictureURL(),
-					userSkillsDomain,
+					user.getSkills(),
 					user.getBio()));
-
 			return userProfileResponse.toJSON();
 
 		} catch (SQLException e) {
@@ -179,117 +165,85 @@ public class UsersService {
 		return null;
 	}
 
-	public String handleAddSkillRequest(SkillRequest request, HttpServletResponse response, String id, HttpServletRequest servletRequest) throws IOException {
+	public String handleAddSkillRequest(SkillRequest request, HttpServletResponse response, HttpServletRequest servletRequest) throws IOException {
 		try {
 			UserMapper userMapper = new UserMapper();
-			SkillMapper skillMapper = new SkillMapper();
 			UserSkillMapper userSkillMapper = new UserSkillMapper();
 			EndorsementMapper endorsementMapper = new EndorsementMapper();
 			models.User user = (models.User) servletRequest.getAttribute("user");
 			User loggedInUser = userMapper.findByIdWithSkills(user.getId());
 
-			if (loggedInUser.getSkills().stream().filter(skill -> skill.getName().equals(request.getSkill())).findFirst().orElse(null) == null) {
-				FailResponse<String> failResponse = new FailResponse<>("Skill isn't available");
+			if (loggedInUser.getSkills().stream()
+					.filter(skill -> skill.getName().equals(request.getSkill()))
+					.findFirst()
+					.orElse(null) != null) {
+				FailResponse<String> failResponse = new FailResponse<>("You already have this skill");
 				response.setStatus(400);
 				return failResponse.toJSON();
 			}
 
-			boolean isRepeated = false;
-			if(id.equals(loggedInUser.getId())) {
-				List<models.Skill> userSkillsModel = userSkillMapper.findUserSkillById(loggedInUser.getId());
-				for (models.Skill skill: userSkillsModel) {
-					if((skill.getName()).equals(request.getSkill())) {
-						isRepeated = true;
-						break;
-					}
-				}
-
-				if (!isRepeated) {
-					models.Skill newSkill = SkillMapper.findByName(request.getSkill());
-					userSkillMapper.save(new UserSkill(UUID.randomUUID().toString(), loggedInUser.getId(), newSkill.getId()));
-
-					List<Skill> userSkillsDomain = new ArrayList<>();
-					userSkillsModel = userSkillMapper.findUserSkillById(loggedInUser.getId());
-					for (models.Skill skill : userSkillsModel) {
-						Skill itsSkill = new Skill();
-						itsSkill.setName(skill.getName());
-						int point = endorsementMapper.countNumOfEndorsements(skill.getId(), loggedInUser.getId());
-						List<String> endorserIdList = endorsementMapper.findEndorserIdList(skill.getId(), id);
-						itsSkill.setEndorsers(endorserIdList);
-						itsSkill.setPoint(point);
-						userSkillsDomain.add(itsSkill);
-					}
-					UserProfileResponse userProfileResponse = new UserProfileResponse(new User(loggedInUser.getId(),
-							loggedInUser.getFirstName(),
-							loggedInUser.getLastName(),
-							loggedInUser.getJobTitle(),
-							loggedInUser.getProfilePictureURL(),
-							userSkillsDomain,
-							loggedInUser.getBio()));
-					return userProfileResponse.toJSON();
-				} else {
-					FailResponse<String> failResponse = new FailResponse<>("You already have this skill");
-					response.setStatus(400);
-					return failResponse.toJSON();
-				}
-			} else {
-				FailResponse<String> failResponse = new FailResponse<>("You cannot add skill for others");
-				response.setStatus(403);
+			models.Skill newSkillModel = SkillMapper.findByName(request.getSkill());
+			if (newSkillModel == null) {
+				FailResponse<String> failResponse = new FailResponse<>("Unknown skill");
+				response.setStatus(400);
 				return failResponse.toJSON();
 			}
+			userSkillMapper.save(new UserSkill(UUID.randomUUID().toString(), loggedInUser.getId(), newSkillModel.getId()));
+
+			for (Skill skill : loggedInUser.getSkills()) {
+				List<String> endorserIdList = endorsementMapper.findEndorserIdList(skill.getId(), loggedInUser.getId());
+				skill.setEndorsers(endorserIdList);
+				skill.setPoint(endorserIdList.size());
+			}
+			UserProfileResponse userProfileResponse = new UserProfileResponse(new User(loggedInUser.getId(),
+					loggedInUser.getFirstName(),
+					loggedInUser.getLastName(),
+					loggedInUser.getJobTitle(),
+					loggedInUser.getProfilePictureURL(),
+					loggedInUser.getSkills(),
+					loggedInUser.getBio()));
+			return userProfileResponse.toJSON();
 
 		} catch (SQLException e) {
-			System.out.println(e.getLocalizedMessage());
+			ErrorResponse errorResponse = new ErrorResponse("Internal server error", 500);
+			response.setStatus(500);
+			return errorResponse.toJSON();
 		}
-		return null;
 	}
 
-	public String handleDeleteRequest(SkillRequest request, HttpServletResponse response, String id, HttpServletRequest servletRequest) throws IOException {
+	public String handleDeleteRequest(SkillRequest request, HttpServletResponse response, HttpServletRequest servletRequest) throws IOException {
 		try {
 			UserMapper userMapper = new UserMapper();
 			UserSkillMapper userSkillMapper = new UserSkillMapper();
 			EndorsementMapper endorsementMapper = new EndorsementMapper();
-			models.User loggedInUser = (models.User) servletRequest.getAttribute("user");
-			if(id.equals(loggedInUser.getId())) {
-				List<models.Skill> userSkillsModel = userSkillMapper.findUserSkillById(loggedInUser.getId());
-				for (models.Skill skill: userSkillsModel) {
-					if((skill.getName()).equals(request.getSkill())) {
-						String deleteId = userSkillMapper.findUserSkillId(loggedInUser.getId(), skill.getId());
-						userSkillMapper.deleteById(deleteId);
-						break;
-					}
+			models.User user = (models.User) servletRequest.getAttribute("user");
+			User loggedInUser = userMapper.findByIdWithSkills(user.getId());
+			for (Skill skill : loggedInUser.getSkills()) {
+				if (skill.getName().equals(request.getSkill())) {
+					userSkillMapper.deleteById(skill.getId());
+					loggedInUser.getSkills().remove(skill);
+					break;
 				}
-
-				List<Skill> userSkillsDomain = new ArrayList<>();
-				userSkillsModel = userSkillMapper.findUserSkillById(loggedInUser.getId());
-				for (models.Skill skill : userSkillsModel) {
-					Skill itsSkill = new Skill();
-					itsSkill.setName(skill.getName());
-					int point = endorsementMapper.countNumOfEndorsements(skill.getId(), loggedInUser.getId());
-					List<String> endorserIdList = endorsementMapper.findEndorserIdList(skill.getId(), id);
-					itsSkill.setEndorsers(endorserIdList);
-					itsSkill.setPoint(point);
-					userSkillsDomain.add(itsSkill);
-				}
-				UserProfileResponse userProfileResponse = new UserProfileResponse(new User(loggedInUser.getId(),
-						loggedInUser.getFirstName(),
-						loggedInUser.getLastName(),
-						loggedInUser.getJobTitle(),
-						loggedInUser.getProfilePictureURL(),
-						userSkillsDomain,
-						loggedInUser.getBio()));
-				return userProfileResponse.toJSON();
-
-			} else {
-				FailResponse<String> failResponse = new FailResponse<>("You cannot remove skill from others");
-				response.setStatus(403);
-				return failResponse.toJSON();
 			}
 
-		} catch (SQLException e) {
-			System.out.println(e.getLocalizedMessage());
-		}
-		return null;
+			for (Skill skill : loggedInUser.getSkills()) {
+				List<String> endorserIdList = endorsementMapper.findEndorserIdList(skill.getId(), loggedInUser.getId());
+				skill.setEndorsers(endorserIdList);
+				skill.setPoint(endorserIdList.size());
+			}
+			UserProfileResponse userProfileResponse = new UserProfileResponse(new User(loggedInUser.getId(),
+					loggedInUser.getFirstName(),
+					loggedInUser.getLastName(),
+					loggedInUser.getJobTitle(),
+					loggedInUser.getProfilePictureURL(),
+					loggedInUser.getSkills(),
+					loggedInUser.getBio()));
+			return userProfileResponse.toJSON();
 
+		} catch (SQLException e) {
+			ErrorResponse errorResponse = new ErrorResponse("Internal server error", 500);
+			response.setStatus(500);
+			return errorResponse.toJSON();
+		}
 	}
 }
