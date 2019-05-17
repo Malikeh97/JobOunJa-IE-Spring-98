@@ -6,19 +6,15 @@ import datalayer.datamappers.user.UserMapper;
 import datalayer.datamappers.userskill.UserSkillMapper;
 import models.Endorsement;
 import models.UserSkill;
-import repository.InMemoryDBManager;
 import api.*;
 import domain.Skill;
 import domain.User;
-import utils.Column;
-import utils.ForeignKey;
-import utils.Id;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -183,17 +179,16 @@ public class UsersService {
 		return null;
 	}
 
-	public String handleAddSkillRequest(SkillRequest request, HttpServletResponse response, String id) throws IOException {
+	public String handleAddSkillRequest(SkillRequest request, HttpServletResponse response, String id, HttpServletRequest servletRequest) throws IOException {
 		try {
 			UserMapper userMapper = new UserMapper();
 			SkillMapper skillMapper = new SkillMapper();
 			UserSkillMapper userSkillMapper = new UserSkillMapper();
 			EndorsementMapper endorsementMapper = new EndorsementMapper();
-			models.User loggedInUser = userMapper.findById("488a14ea-faac-41d6-a870-053fd80422c7");
+			models.User user = (models.User) servletRequest.getAttribute("user");
+			User loggedInUser = userMapper.findByIdWithSkills(user.getId());
 
-			List<models.Skill> skills = skillMapper.findAll();
-
-			if (skills.stream().filter(skill -> skill.getName().equals(request.getSkill())).findFirst().orElse(null) == null) {
+			if (loggedInUser.getSkills().stream().filter(skill -> skill.getName().equals(request.getSkill())).findFirst().orElse(null) == null) {
 				FailResponse<String> failResponse = new FailResponse<>("Skill isn't available");
 				response.setStatus(400);
 				return failResponse.toJSON();
@@ -249,12 +244,12 @@ public class UsersService {
 		return null;
 	}
 
-	public String handleDeleteRequest(SkillRequest request, HttpServletResponse response, String id) throws IOException {
+	public String handleDeleteRequest(SkillRequest request, HttpServletResponse response, String id, HttpServletRequest servletRequest) throws IOException {
 		try {
 			UserMapper userMapper = new UserMapper();
 			UserSkillMapper userSkillMapper = new UserSkillMapper();
 			EndorsementMapper endorsementMapper = new EndorsementMapper();
-			models.User loggedInUser = userMapper.findById("488a14ea-faac-41d6-a870-053fd80422c7");
+			models.User loggedInUser = (models.User) servletRequest.getAttribute("user");
 			if(id.equals(loggedInUser.getId())) {
 				List<models.Skill> userSkillsModel = userSkillMapper.findUserSkillById(loggedInUser.getId());
 				for (models.Skill skill: userSkillsModel) {

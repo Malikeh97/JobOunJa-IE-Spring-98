@@ -1,7 +1,6 @@
 package controllers;
 
 import api.ErrorResponse;
-import services.ProjectsService;
 import services.SkillsService;
 
 import javax.servlet.ServletException;
@@ -17,7 +16,7 @@ public class SkillsController extends BaseController {
 		SkillsService skillsService = new SkillsService();
 		String stringResponse;
 		if (splittedURI.length == 3) {
-			stringResponse = skillsService.handleAllSkillsRequest(response);
+			stringResponse = skillsService.handleAllSkillsRequest(request, response);
 		} else {
 			ErrorResponse errorResponse = new ErrorResponse(request.getRequestURI() + " not found", 404);
 			stringResponse = errorResponse.toJSON();

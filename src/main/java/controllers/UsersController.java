@@ -20,13 +20,13 @@ public class UsersController extends BaseController {
 			SkillRequest skillRequest = parseJSONRequest(request, SkillRequest.class);
 			switch (splittedURI[4]) {
 				case "add_skill":
-					stringResponse = usersService.handleAddSkillRequest(skillRequest, response, splittedURI[3]);
+					stringResponse = usersService.handleAddSkillRequest(skillRequest, response, splittedURI[3], request);
 					break;
 				case "endorse":
 					stringResponse = usersService.handleEndorseRequest(skillRequest, response, splittedURI[3]);
 					break;
 				case "delete_skill":
-					stringResponse = usersService.handleDeleteRequest(skillRequest, response, splittedURI[3]);
+					stringResponse = usersService.handleDeleteRequest(skillRequest, response, splittedURI[3], request);
 					break;
 				default:
 					ErrorResponse errorResponse = new ErrorResponse(request.getRequestURI() + " not found", 404);

@@ -34,7 +34,7 @@ public class ProjectsController extends BaseController {
                         FailResponse<String> failResponse = new FailResponse<>(mapper.writeValueAsString(failures));
                         stringResponse = failResponse.toJSON();
                     } else {
-                        stringResponse = projectsService.handleAddBidRequest(addBidRequest, response, splittedURI[3]);
+                        stringResponse = projectsService.handleAddBidRequest(addBidRequest, response, splittedURI[3], request);
                     }
                 } else {
                     ErrorResponse errorResponse = new ErrorResponse(request.getRequestURI() + " not found", 404);
@@ -61,9 +61,9 @@ public class ProjectsController extends BaseController {
         try {
             ProjectsService projectsService = new ProjectsService();
             if (splittedURI.length == 3) {
-                stringResponse = projectsService.handleAllProjectsRequest(response, request.getParameter("search"));
+                stringResponse = projectsService.handleAllProjectsRequest(response, request.getParameter("search"), request);
             } else if (splittedURI.length == 4) {
-                stringResponse = projectsService.handleSingleProjectRequest(response, splittedURI[3]);
+                stringResponse = projectsService.handleSingleProjectRequest(request, response, splittedURI[3]);
             } else {
                 ErrorResponse errorResponse = new ErrorResponse(request.getRequestURI() + " not found", 404);
                 stringResponse = errorResponse.toJSON();
