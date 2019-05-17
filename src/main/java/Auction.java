@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ public class Auction implements Runnable  {
     private ProjectMapper projectMapper;
     private UserMapper userMapper;
     public void run() {
+        System.out.println(new Date().getTime());
         try {
             List<Project> projects = projectMapper.findUncheckedProjects();
             for (Project project : projects) {

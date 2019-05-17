@@ -82,8 +82,24 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
 		Map<String, domain.Project> projectMap = new HashMap<>();
 		List<domain.Project> projectList = new ArrayList<>();
 		try (Connection con = DBCPDBConnectionPool.getConnection();
+			 PreparedStatement st = con.prepareStatement(getUncheckedProjectsStatement())
+		) {
+			st.setBoolean(1, false);
+			st.setLong(2, new Date().getTime());
+			ResultSet rs = st.executeQuery();
+			while (rs.next()) {
+				domain.Project project = new domain.Project();
+				convertWithWinner(project, rs);
+				projectMap.put(project.getId(), project);
+				projectList.add(project);
+			}
+		}
+
+		try (Connection con = DBCPDBConnectionPool.getConnection();
 			 PreparedStatement st = con.prepareStatement(getUncheckedProjectsWithSkillsStatement())
 		) {
+			st.setBoolean(1, false);
+			st.setLong(2, new Date().getTime());
 			ResultSet rs = st.executeQuery();
 			while (rs.next()) {
 				String projectId = rs.getString(1);
@@ -95,6 +111,8 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
 		try (Connection con = DBCPDBConnectionPool.getConnection();
 			 PreparedStatement st = con.prepareStatement(getUncheckedProjectsWithBidsStatement())
 		) {
+			st.setBoolean(1, false);
+			st.setLong(2, new Date().getTime());
 			ResultSet rs = st.executeQuery();
 			while (rs.next()) {
 				String projectId = rs.getString(1);
@@ -239,16 +257,24 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
 		);
 	}
 
+	private String getUncheckedProjectsStatement() {
+		return String.format("SELECT p.id, p.title, p.description, p.image_url, p.budget, p.deadline, p.creation_date, " +
+						"p.winner_id " +
+						"FROM %s p " +
+						"WHERE p.checked = ? and p.winner_id IS NULL and deadline <= ?",
+				ProjectMapper.TABLE_NAME
+		);
+	}
+
 	private String getUncheckedProjectsWithSkillsStatement() {
 		return String.format("SELECT p.id, s.id as skill_id, s.name, ps.point " +
 						"FROM %s p " +
 						"JOIN %s ps ON p.id = ps.project_id " +
 						"JOIN %s s ON ps.skill_id = s.id " +
-						"WHERE p.checked = 0 and p.winner_id = null and deadline <= %s",
+						"WHERE p.checked = ? and p.winner_id IS NULL and deadline <= ?",
 				ProjectMapper.TABLE_NAME,
 				ProjectSkillMapper.TABLE_NAME,
-				SkillMapper.TABLE_NAME,
-				new Date().getTime()
+				SkillMapper.TABLE_NAME
 		);
 	}
 
@@ -256,10 +282,9 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
 		return String.format("SELECT p.id, b.id as bid_id, b.user_id, b.amount, p.budget " +
 						"FROM %s p " +
 						"JOIN %s b ON p.id = b.project_id " +
-						"WHERE p.checked = 0 and p.winner_id = null and deadline <= %s",
+						"WHERE p.checked = ? and p.winner_id IS NULL and deadline <= ?",
 				ProjectMapper.TABLE_NAME,
-				BidMapper.TABLE_NAME,
-				new Date().getTime()
+				BidMapper.TABLE_NAME
 		);
 	}
 
