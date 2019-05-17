@@ -52,6 +52,11 @@ public class JabOunJaServletContextListener implements ServletContextListener {
                     new Job(new ProjectMapper(), new ProjectSkillMapper(), skills, gateway),
                     0, 5, TimeUnit.MINUTES);
 
+            //scheduler = Executors.newSingleThreadScheduledExecutor();
+            scheduler.scheduleAtFixedRate(
+                    new Auction(new ProjectMapper()),
+                    0, 1, TimeUnit.MINUTES);
+
         } catch (SQLException e) {
             System.out.println(e.getLocalizedMessage());
         }

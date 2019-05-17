@@ -9,14 +9,13 @@ import datalayer.datamappers.user.UserMapper;
 import models.Project;
 import utils.MapperUtils;
 
+import javax.xml.crypto.Data;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.Instant;
+import java.util.*;
 
 public class ProjectMapper extends Mapper<Project, String> implements IProjectMapper {
 	public static final String TABLE_NAME = "projects";
@@ -269,5 +268,54 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
 		if (project.getId() == null)
 			return null;
 		return project;
+	}
+
+	public HashMap<String, String> findWinners() {
+		HashMap<String, String> winnerList = new HashMap<>();
+		try (Connection con = DBCPDBConnectionPool.getConnection();
+			 PreparedStatement st = con.prepareStatement(getFindWinnersStatement())
+		) {
+			System.out.println(new Date().getTime());
+			st.setLong(1, new Date().getTime());
+			ResultSet rs = st.executeQuery();
+			if (rs.next()) {
+				winnerList.put(rs.getString(1), rs.getString(2));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return winnerList;
+	}
+
+	public void saveWinner(String winner_id, String project_id) {
+		try (Connection con = DBCPDBConnectionPool.getConnection();
+			 PreparedStatement st = con.prepareStatement(getUpdateWinnerStatement())
+		) {
+			st.setString(1, winner_id);
+			st.setString(2, project_id);
+			int rs = st.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	private String getFindWinnersStatement() {
+		return  " SELECT p.id, b.user_id " +
+				" From projects p, bids b "  +
+				" WHERE p.id = b.project_id and " +
+				" p.deadline < ? and " +
+				" p.winner_id = null and b.amount = ( Select max(bb.amount) " +
+				" From bids bb " +
+				" Where bb.project_id = b.project_id ) " +
+				" Group By p.id";
+	}
+
+	private String getUpdateWinnerStatement() {
+		return 	" UPDATE projects " +
+				" SET winner_id = ? " +
+				" WHERE id = ? ";
+
 	}
 }
