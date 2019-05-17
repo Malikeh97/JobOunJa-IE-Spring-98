@@ -2,24 +2,27 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './project_info.css';
 
-const ProjectInfo = ({ infoId, altIcon, iconSrc, featureText, valueText, timeIsUp }) => {
-    let featureClass = "static"
-    let valueClass = "text"
+const ProjectInfo = ({infoId, altIcon, iconSrc, featureText, valueText, timeIsUp}) => {
+    let featureClass = "static";
+    let valueClass = "text";
 
-    if (timeIsUp) {
-        featureClass = featureClass + ' red'
+    if (infoId === 'remaining-time' && timeIsUp) {
+        featureClass += ' red';
+        valueClass += ' red';
     } else if (infoId === 'budget') {
-        featureClass = featureClass + ' job-ounja-primary-color-text'
-        valueClass = valueClass + ' job-ounja-primary-color-text'
+        featureClass += ' job-ounja-primary-color-text';
+        valueClass += ' job-ounja-primary-color-text';
     } else if (infoId === 'winner') {
-        featureClass = featureClass + ' green'
-        valueClass = valueClass + ' green'
+        featureClass += ' green';
+        valueClass += ' green';
     }
+
+    console.log(featureText)
     return (
         <div className="project-info" id={infoId}>
             <img src={iconSrc} alt={altIcon}/>
-            {timeIsUp?  <span className={featureClass}>مهلت تمام شده</span> : <span className={featureClass}>{featureText}</span>}
-            {!timeIsUp && <span className={valueClass}> {valueText} </span>}
+            {featureText && <span className={featureClass}>{featureText}</span>}
+            <span className={valueClass}> {valueText} </span>
         </div>
     );
 };
