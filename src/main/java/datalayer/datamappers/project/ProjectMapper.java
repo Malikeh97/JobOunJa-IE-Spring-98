@@ -9,14 +9,13 @@ import datalayer.datamappers.user.UserMapper;
 import models.Project;
 import utils.MapperUtils;
 
+import javax.xml.crypto.Data;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.Instant;
+import java.util.*;
 
 public class ProjectMapper extends Mapper<Project, String> implements IProjectMapper {
 	public static final String TABLE_NAME = "projects";
@@ -79,13 +78,59 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
 		return projectList;
 	}
 
+	public List<domain.Project> findUncheckedProjects() throws SQLException {
+		Map<String, domain.Project> projectMap = new HashMap<>();
+		List<domain.Project> projectList = new ArrayList<>();
+		try (Connection con = DBCPDBConnectionPool.getConnection();
+			 PreparedStatement st = con.prepareStatement(getUncheckedProjectsStatement())
+		) {
+			st.setBoolean(1, false);
+			st.setLong(2, new Date().getTime());
+			ResultSet rs = st.executeQuery();
+			while (rs.next()) {
+				domain.Project project = new domain.Project();
+				convertWithWinner(project, rs);
+				projectMap.put(project.getId(), project);
+				projectList.add(project);
+			}
+		}
+
+		try (Connection con = DBCPDBConnectionPool.getConnection();
+			 PreparedStatement st = con.prepareStatement(getUncheckedProjectsWithSkillsStatement())
+		) {
+			st.setBoolean(1, false);
+			st.setLong(2, new Date().getTime());
+			ResultSet rs = st.executeQuery();
+			while (rs.next()) {
+				String projectId = rs.getString(1);
+				domain.Project project = projectMap.get(projectId);
+				convertWithSkill(project, rs);
+			}
+		}
+
+		try (Connection con = DBCPDBConnectionPool.getConnection();
+			 PreparedStatement st = con.prepareStatement(getUncheckedProjectsWithBidsStatement())
+		) {
+			st.setBoolean(1, false);
+			st.setLong(2, new Date().getTime());
+			ResultSet rs = st.executeQuery();
+			while (rs.next()) {
+				String projectId = rs.getString(1);
+				domain.Project project = projectMap.get(projectId);
+				convertWithBid(project, rs);
+			}
+		}
+
+		return projectList;
+	}
+
 	public List<domain.Project> findNameLike(String nameLike) throws SQLException {
 		Map<String, domain.Project> projectMap = new HashMap<>();
 		List<domain.Project> projectList = new ArrayList<>();
 		try (Connection con = DBCPDBConnectionPool.getConnection();
 			 PreparedStatement st = con.prepareStatement(getProjectsWithWinnerStatement(false,
 					 " WHERE p.title LIKE ? or " +
-							 " p.description LIKE ?") )
+							 " p.description LIKE ?"))
 		) {
 			st.setString(1, nameLike);
 			st.setString(2, nameLike);
@@ -101,7 +146,7 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
 		try (Connection con = DBCPDBConnectionPool.getConnection();
 			 PreparedStatement st = con.prepareStatement(getProjectsWithSkillsStatement(false) +
 					 " WHERE p.title LIKE ? or " +
-							 " p.description LIKE ? ")
+					 " p.description LIKE ? ")
 		) {
 			st.setString(1, nameLike);
 			st.setString(2, nameLike);
@@ -114,9 +159,9 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
 		}
 
 		try (Connection con = DBCPDBConnectionPool.getConnection();
-			 PreparedStatement st = con.prepareStatement(getProjectsWithBidsStatement(false)+
-					 		" WHERE p.title LIKE ? or " +
-							 " p.description LIKE ?")
+			 PreparedStatement st = con.prepareStatement(getProjectsWithBidsStatement(false) +
+					 " WHERE p.title LIKE ? or " +
+					 " p.description LIKE ?")
 		) {
 			st.setString(1, nameLike);
 			st.setString(2, nameLike);
@@ -212,6 +257,37 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
 		);
 	}
 
+	private String getUncheckedProjectsStatement() {
+		return String.format("SELECT p.id, p.title, p.description, p.image_url, p.budget, p.deadline, p.creation_date, " +
+						"p.winner_id " +
+						"FROM %s p " +
+						"WHERE p.checked = ? and p.winner_id IS NULL and deadline <= ?",
+				ProjectMapper.TABLE_NAME
+		);
+	}
+
+	private String getUncheckedProjectsWithSkillsStatement() {
+		return String.format("SELECT p.id, s.id as skill_id, s.name, ps.point " +
+						"FROM %s p " +
+						"JOIN %s ps ON p.id = ps.project_id " +
+						"JOIN %s s ON ps.skill_id = s.id " +
+						"WHERE p.checked = ? and p.winner_id IS NULL and deadline <= ?",
+				ProjectMapper.TABLE_NAME,
+				ProjectSkillMapper.TABLE_NAME,
+				SkillMapper.TABLE_NAME
+		);
+	}
+
+	private String getUncheckedProjectsWithBidsStatement() {
+		return String.format("SELECT p.id, b.id as bid_id, b.user_id, b.amount, p.budget " +
+						"FROM %s p " +
+						"JOIN %s b ON p.id = b.project_id " +
+						"WHERE p.checked = ? and p.winner_id IS NULL and deadline <= ?",
+				ProjectMapper.TABLE_NAME,
+				BidMapper.TABLE_NAME
+		);
+	}
+
 
 	private void convertWithWinner(domain.Project project, ResultSet rs) throws SQLException {
 		project.setId(rs.getString(1));
@@ -222,7 +298,7 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
 		project.setDeadline(rs.getLong(6));
 		project.setCreationDate(rs.getLong(7));
 		String winnerId = rs.getString(8);
-		if (!winnerId.equals("null")) {
+		if (winnerId != null) {
 			domain.User winner = new domain.User();
 			winner.setId(winnerId);
 			winner.setFirstName(rs.getString(9));
@@ -269,5 +345,26 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
 		if (project.getId() == null)
 			return null;
 		return project;
+	}
+
+	public void saveWinner(String winner_id, String project_id) {
+		try (Connection con = DBCPDBConnectionPool.getConnection();
+			 PreparedStatement st = con.prepareStatement(getUpdateWinnerStatement())
+		) {
+			st.setString(1, winner_id);
+			st.setBoolean(2, true);
+			st.setString(3, project_id);
+			int rs = st.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	private String getUpdateWinnerStatement() {
+		return " UPDATE projects " +
+				" SET winner_id = ? , checked = ? " +
+				" WHERE id = ? ";
+
 	}
 }

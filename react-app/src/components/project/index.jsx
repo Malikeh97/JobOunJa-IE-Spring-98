@@ -47,15 +47,18 @@ class Project extends Component {
         });
         this.interval = setInterval(() => {
             const { timeOver, text: timeLeft } = calcTimeLeft(projectData.data.project.deadline);
-            this.setState({ timeOver, timeLeft })
+            this.setState({ timeOver, timeLeft });
+            if (timeOver) clearInterval(this.interval);
         } , 1000);
+
     }
 
     componentWillUnmount() {
         clearInterval(this.interval);
     }
 
-    handleAddBid = async () => {
+    handleAddBid = async (e) => {
+        e.preventDefault();
         try {
             await addBid(this.state.project.id, { bidAmount: this.state.bidAmount });
             this.setState({ isBidAdded: true });
@@ -99,7 +102,7 @@ class Project extends Component {
                                     altIcon="deadliner_red"
                                     iconSrc={deadline_red}
                                     featureText=""
-                                    valueText=""
+                                    valueText={this.state.timeLeft}
                                     timeIsUp={this.state.timeOver}
                                 />
                             }
@@ -115,12 +118,22 @@ class Project extends Component {
                             />
 
                             {
-                                (this.state.project.winner !== null) && <ProjectInfo
+                                this.state.project.winner && <ProjectInfo
                                     infoId="winner"
                                     altIcon="winner"
                                     iconSrc={check_mark}
                                     featureText="برنده:"
                                     valueText={this.state.project.winner.firstName + ' ' + this.state.project.winner.lastName}
+                                    timeIsUp={this.state.timeOver}
+                                />
+                            }
+                            {
+                                !this.state.project.winner && <ProjectInfo
+                                    infoId="winner"
+                                    altIcon="winner"
+                                    iconSrc={check_mark}
+                                    featureText=""
+                                    valueText="پیشنهادی برنده نشده است"
                                     timeIsUp={this.state.timeOver}
                                 />
                             }

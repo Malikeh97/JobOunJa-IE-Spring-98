@@ -6,6 +6,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,8 +71,12 @@ public class MapperUtils {
 			}
 			tableColumn.setName(field.getName());
 			Column columnAnnotation = field.getAnnotation(Column.class);
-			if (columnAnnotation != null && !columnAnnotation.name().equals(""))
-				tableColumn.setName(columnAnnotation.name());
+			if (columnAnnotation != null) {
+				if (!columnAnnotation.name().equals(""))
+					tableColumn.setName(columnAnnotation.name());
+				tableColumn.setNullable(columnAnnotation.nullable());
+				tableColumn.setUnique(columnAnnotation.unique());
+			}
 			if (field.isAnnotationPresent(Id.class))
 				tableColumn.setIsPrimaryKey(true);
 			if (field.isAnnotationPresent(ForeignKey.class)) {
@@ -91,33 +96,40 @@ public class MapperUtils {
 		StringBuilder foreignKeysSql = new StringBuilder();
 		for(TableColumn column : columns) {
 			columnsSql.append(column.getName()).append(" ");
-			switch (column.getType()) {
-				case "int":
-				case "Integer":
-				case "Date":
-				case "Instant":
-				case "boolean":
-				case "Boolean":
-				case "long":
-				case "Long":
-					columnsSql.append("INTEGER");
-					break;
-				case "String":
-				case "LocalDate":
-					columnsSql.append("TEXT");
-					break;
-			}
+			columnsSql.append(getSqlType(column));
 			if (column.getIsPrimaryKey())
 				columnsSql.append(" ").append("PRIMARY KEY");
-			columnsSql.append(", ");
+			if (!column.getNullable())
+				columnsSql.append(" ").append("NOT NULL");
+			if (column.getUnique())
+				columnsSql.append(" ").append("UNIQUE");
+			columnsSql.append(",\n");
 			String foreignKeyReference = column.getForeignKeyReference();
 			if (foreignKeyReference != null) {
-				foreignKeysSql.append("FOREIGN KEY(").append(column.getName()).append(") REFERENCES ").append(foreignKeyReference).append(", ");
+				foreignKeysSql.append("FOREIGN KEY(").append(column.getName()).append(") REFERENCES ").append(foreignKeyReference).append(",\n");
 			}
 		}
 		if (foreignKeysSql.length() != 0)
 			columnsSql.append(foreignKeysSql);
 		columnsSql.delete(columnsSql.length() - 2, columnsSql.length());
 		return String.format("CREATE TABLE IF NOT EXISTS %s (%s)", tableName, columnsSql.toString());
+	}
+
+	public static String getSqlType(TableColumn column) {
+		switch (column.getType()) {
+			case "int":
+			case "Integer":
+			case "Date":
+			case "Instant":
+			case "boolean":
+			case "Boolean":
+			case "long":
+			case "Long":
+				return "INTEGER";
+			case "String":
+			case "LocalDate":
+				return "TEXT";
+		}
+		return "";
 	}
 }

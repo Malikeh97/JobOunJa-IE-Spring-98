@@ -5,8 +5,6 @@ import api.data.SingleProjectData;
 import datalayer.datamappers.bid.BidMapper;
 import datalayer.datamappers.project.ProjectMapper;
 import datalayer.datamappers.user.UserMapper;
-import datalayer.datamappers.userskill.UserSkillMapper;
-import repository.InMemoryDBManager;
 import domain.Bid;
 import domain.Project;
 import domain.Skill;
@@ -14,6 +12,7 @@ import domain.User;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -31,25 +30,27 @@ public class ProjectsService {
 	public ProjectsService() throws SQLException {
 	}
 
-	public String handleAllProjectsRequest(HttpServletResponse response, String nameLike) throws ServletException, IOException, SQLException {
-		List<Project> projectList = new ArrayList<>();
+	public String handleAllProjectsRequest(HttpServletResponse response, String nameLike, HttpServletRequest request) throws ServletException, IOException, SQLException {
+		List<Project> projectList;
+
 		if(nameLike == null)
 			projectList = this.projectMapper.findAllForDomain();
 		else
 			projectList = this.projectMapper.findNameLike("%" + nameLike + "%");
-
-		User loggedInUser = this.userMapper.findByIdWithSkills("c6a0536b-838a-4e94-9af7-fcdabfffb6e5");
+		models.User user = (models.User) request.getAttribute("user");
+		User loggedInUser = this.userMapper.findByIdWithSkills(user.getId());
 		projectList.removeIf(project -> isForbidden(project, loggedInUser));
 
 		AllProjectsResponse successResponse = new AllProjectsResponse(projectList);
 		return successResponse.toJSON();
 	}
 
-	public String handleSingleProjectRequest(HttpServletResponse response, String id) throws ServletException, IOException, SQLException {
+	public String handleSingleProjectRequest(HttpServletRequest request, HttpServletResponse response, String id) throws ServletException, IOException, SQLException {
 		Project project = this.projectMapper.findByIdForDomain(id);
 
 		boolean isBidAdded = false;
-		User loggedInUser = this.userMapper.findByIdWithSkills("c6a0536b-838a-4e94-9af7-fcdabfffb6e5");
+		models.User user = (models.User) request.getAttribute("user");
+		User loggedInUser = this.userMapper.findByIdWithSkills(user.getId());
 		if (project == null) {
 			ErrorResponse errorResponse = new ErrorResponse("No project found", 404);
 			response.setStatus(404);
@@ -70,15 +71,16 @@ public class ProjectsService {
 
 	}
 
-	public String handleAddBidRequest(AddBidRequest request, HttpServletResponse response, String id) throws ServletException, IOException, SQLException {
+	public String handleAddBidRequest(AddBidRequest request, HttpServletResponse response, String id, HttpServletRequest servletRequest) throws ServletException, IOException, SQLException {
 		ObjectMapper mapper = new ObjectMapper();
 
-		User loggedInUser = this.userMapper.findByIdWithSkills("c6a0536b-838a-4e94-9af7-fcdabfffb6e5");
+		models.User user = (models.User) servletRequest.getAttribute("user");
+		User loggedInUser = this.userMapper.findByIdWithSkills(user.getId());
 		Project project = this.projectMapper.findByIdWithBids(id);
 		if (request.getBidAmount() > project.getBudget()) {
 			Map<String, String> failures = new HashMap<>();
 			failures.put("bidAmount", "bidAmount was too big! try another value");
-			FailResponse failResponse = new FailResponse(mapper.writeValueAsString(failures));
+			FailResponse<String> failResponse = new FailResponse<>(mapper.writeValueAsString(failures));
 			response.setStatus(400);
 			return failResponse.toJSON();
 		} else if (project.getBids().stream().filter(bid -> bid.getUserId().equals(loggedInUser.getId())).findFirst().orElse(null) != null) {

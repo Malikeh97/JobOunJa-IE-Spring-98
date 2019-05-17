@@ -18,18 +18,18 @@ class Home extends Component {
     };
 
     async componentDidMount() {
-        const { data: usersData } = await getUsers();
-        const { data: projectsData } = await getProjects();
-        this.setState({ users: usersData.data, projects: projectsData.data });
+        const {data: usersData} = await getUsers();
+        const {data: projectsData} = await getProjects();
+        this.setState({users: usersData.data, projects: projectsData.data});
     }
 
     handleProjectSearchChange = e => {
-        this.setState({ projectSearchValue: e.currentTarget.value });
+        this.setState({projectSearchValue: e.currentTarget.value});
     };
 
     handleProjectSearch = async () => {
         console.log(this.state.projectSearchValue)
-        const { data: projectsData } = await getProjects(this.state.projectSearchValue);
+        const {data: projectsData} = await getProjects(this.state.projectSearchValue);
         this.setState({projects: projectsData.data})
     };
 
@@ -44,7 +44,7 @@ class Home extends Component {
             typing: false,
             typingTimeout: setTimeout(async () => {
                 console.log(this.state.userSearchValue);
-                const { data: usersData } = await getUsers(this.state.userSearchValue);
+                const {data: usersData} = await getUsers(this.state.userSearchValue);
                 this.setState({users: usersData.data})
             }, 700)
         });
@@ -60,7 +60,7 @@ class Home extends Component {
     };
 
     render() {
-        const { projectSearchValue, userSearchValue } = this.state;
+        const {projectSearchValue, userSearchValue} = this.state;
 
         return (
             <Fragment>
@@ -71,25 +71,27 @@ class Home extends Component {
                 />
                 <div id="home-body" className="container-fluid">
                     <div className="row">
-                        <div id="userList" className="col-md-3">
-                            <Form>
+                        <div id="usersList" className="col-md-3">
+                            <Form id="usersForm">
                                 <FormGroup id="userSearchTextField">
                                     <Input type="text" name="search" placeholder="جستجو نام کاربر"
                                            value={userSearchValue}
                                            onChange={this.handleUserSearchChange}/>
                                 </FormGroup>
                             </Form>
-                            {
-                                this.state.users.map(user =>
-                                    <User
-                                        key={user.id}
-                                        onUserClick={() => this.handleOnUserClick(user.id)}
-                                        profilePictureURL={user.profilePictureURL}
-                                        fullName={`${user.firstName} ${user.lastName}`}
-                                        jobTitle={user.jobTitle}
-                                    />
-                                )
-                            }
+                            <div id="users">
+                                {
+                                    this.state.users.map(user =>
+                                        <User
+                                            key={user.id}
+                                            onUserClick={() => this.handleOnUserClick(user.username)}
+                                            profilePictureURL={user.profilePictureURL}
+                                            fullName={`${user.firstName} ${user.lastName}`}
+                                            jobTitle={user.jobTitle}
+                                        />
+                                    )
+                                }
+                            </div>
                         </div>
                         <div id="projectList" className="col-md-9">
                             {

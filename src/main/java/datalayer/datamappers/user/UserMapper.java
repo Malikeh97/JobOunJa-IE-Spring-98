@@ -28,6 +28,22 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
 			 PreparedStatement st = con.prepareStatement(getUserWithSkillsStatement())
 		) {
 			st.setString(1, id);
+			st.setString(2, null);
+			ResultSet rs = st.executeQuery();
+			if (rs.next()) {
+				convertWithSkills(user, rs);
+			}
+		}
+		return user;
+	}
+
+	public domain.User findByNameWithSkills(String name) throws SQLException {
+		domain.User user = new domain.User();
+		try (Connection con = DBCPDBConnectionPool.getConnection();
+			 PreparedStatement st = con.prepareStatement(getUserWithSkillsStatement())
+		) {
+			st.setString(1, null);
+			st.setString(2, name);
 			ResultSet rs = st.executeQuery();
 			if (rs.next()) {
 				convertWithSkills(user, rs);
@@ -43,6 +59,7 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
 		user.setJobTitle(rs.getString(4));
 		user.setProfilePictureURL(rs.getString(5));
 		user.setBio(rs.getString(6));
+		user.setUsername(rs.getString(9));
 		user.setSkills(new ArrayList<>());
 		do {
 			String skillId = rs.getString(7);
@@ -58,11 +75,11 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
 
 	private String getUserWithSkillsStatement() {
 		return String.format("SELECT u.id, u.first_name, u.last_name, u.job_title, u.profile_picture_url, u.bio, " +
-						"s.id as skill_id, s.name " +
+						"s.id as skill_id, s.name, u.user_name " +
 						"FROM %s u " +
 						"LEFT JOIN %s us ON u.id = us.user_id " +
 						"LEFT JOIN %s s ON s.id = us.skill_id " +
-						"where u.id = ?",
+						"where u.id = ? or u.user_name = ?",
 				UserMapper.TABLE_NAME,
 				UserSkillMapper.TABLE_NAME,
 				SkillMapper.TABLE_NAME
@@ -82,5 +99,22 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
             return userList;
         }
     }
+
+	public User findByUsername(String username) throws SQLException {
+		try (Connection con = DBCPDBConnectionPool.getConnection();
+			 PreparedStatement st = con.prepareStatement(getFindByUsernameStatement())) {
+			st.setString(1, username);
+			ResultSet resultSet = st.executeQuery();
+			if (resultSet.next())
+				return MapperUtils.convertResultSetToDomainModel(User.class, columns, resultSet);
+			return null;
+		}
+	}
+
+	private String getFindByUsernameStatement() {
+		return " SELECT " + MapperUtils.getColumns(columns) +
+				" From users "  +
+				" WHERE user_name = ?";
+	}
 
 }

@@ -19,6 +19,7 @@
 
 .navbar .nav-item .nav-link {
     color: #222;
+    cursor: pointer;
 }
 
 #logo {
