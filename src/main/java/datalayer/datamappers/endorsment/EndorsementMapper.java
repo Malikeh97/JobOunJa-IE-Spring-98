@@ -2,6 +2,7 @@ package datalayer.datamappers.endorsment;
 
 import datalayer.DBCPDBConnectionPool;
 import datalayer.datamappers.Mapper;
+import datalayer.datamappers.user.UserMapper;
 import models.Endorsement;
 import utils.MapperUtils;
 
@@ -33,7 +34,7 @@ public class EndorsementMapper extends Mapper<Endorsement, String> implements IE
 		}
 	}
 
-	public List<String> findEndorserIdList(String userSkillId, String endorsedId) throws SQLException {
+	public List<String> findEndorsersList(String userSkillId, String endorsedId) throws SQLException {
 		try (Connection con = DBCPDBConnectionPool.getConnection();
 			 PreparedStatement st = con.prepareStatement(getFindEndorsementListStatement()
 			 )) {
@@ -73,10 +74,12 @@ public class EndorsementMapper extends Mapper<Endorsement, String> implements IE
 	}
 
 	private static String getFindEndorsementListStatement() {
-		return "SELECT " +  TABLE_NAME + ".endorser_id"+
-				" FROM " + TABLE_NAME +
-				" WHERE " + TABLE_NAME + ".endorsed_id = ?" + " and " +
-				TABLE_NAME + ".user_skill_id = ?";
+		return String.format("SELECT u.user_name,"+
+				" FROM %s e" +
+				" WHERE e.endorsed_id = ? and e.user_skill_id = ?" +
+				" JOIN %s b ON e.endorser_id = u.id",
+				TABLE_NAME,
+				UserMapper.TABLE_NAME);
 	}
 
 }

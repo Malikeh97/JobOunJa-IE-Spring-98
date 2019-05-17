@@ -41,6 +41,7 @@ public class UsersService {
 			allUsers.remove(loggedInUser);
 			for (models.User user : allUsers) {
 				userList.add(new User(user.getId(),
+						user.getUserName(),
 						user.getFirstName(),
 						user.getLastName(),
 						user.getJobTitle(),
@@ -73,13 +74,14 @@ public class UsersService {
 
 			if (user.getSkills() != null) {
 				for (Skill skill : user.getSkills()) {
-					List<String> endorserIdList = endorsementMapper.findEndorserIdList(skill.getId(), user.getId());
+					List<String> endorserIdList = endorsementMapper.findEndorsersList(skill.getId(), user.getId());
 					skill.setPoint(endorserIdList.size());
 					skill.setEndorsers(endorserIdList);
 				}
 			}
 
 			User newUser = new User(user.getId(),
+					user.getUsername(),
 					user.getFirstName(),
 					user.getLastName(),
 					user.getJobTitle(),
@@ -118,7 +120,6 @@ public class UsersService {
 						response.setStatus(404);
 						return failResponse.toJSON();
 					}
-
 					endorsementMapper.save(new Endorsement(UUID.randomUUID().toString(), loggedInUser.getId(), skill.getId(), user.getId()));
 					found = true;
 					break;
@@ -132,11 +133,12 @@ public class UsersService {
 			}
 
 			for (Skill skill : user.getSkills()) {
-				List<String> endorserIdList = endorsementMapper.findEndorserIdList(skill.getId(), loggedInUser.getId());
+				List<String> endorserIdList = endorsementMapper.findEndorsersList(skill.getId(), loggedInUser.getId());
 				skill.setEndorsers(endorserIdList);
 				skill.setPoint(endorserIdList.size());
 			}
 			UserProfileResponse userProfileResponse = new UserProfileResponse(new User(user.getId(),
+					user.getUsername(),
 					user.getFirstName(),
 					user.getLastName(),
 					user.getJobTitle(),
@@ -174,14 +176,17 @@ public class UsersService {
 				response.setStatus(400);
 				return failResponse.toJSON();
 			}
-			userSkillMapper.save(new UserSkill(UUID.randomUUID().toString(), loggedInUser.getId(), newSkillModel.getId()));
-
+			String newSkillId = UUID.randomUUID().toString();
+			userSkillMapper.save(new UserSkill(newSkillId, loggedInUser.getId(), newSkillModel.getId()));
 			for (Skill skill : loggedInUser.getSkills()) {
-				List<String> endorserIdList = endorsementMapper.findEndorserIdList(skill.getId(), loggedInUser.getId());
+				List<String> endorserIdList = endorsementMapper.findEndorsersList(skill.getId(), loggedInUser.getId());
 				skill.setEndorsers(endorserIdList);
 				skill.setPoint(endorserIdList.size());
 			}
+			loggedInUser.getSkills().add(new Skill(newSkillId, newSkillModel.getName(), 0, new ArrayList<>()));
+
 			UserProfileResponse userProfileResponse = new UserProfileResponse(new User(loggedInUser.getId(),
+					loggedInUser.getUsername(),
 					loggedInUser.getFirstName(),
 					loggedInUser.getLastName(),
 					loggedInUser.getJobTitle(),
@@ -213,11 +218,12 @@ public class UsersService {
 			}
 
 			for (Skill skill : loggedInUser.getSkills()) {
-				List<String> endorserIdList = endorsementMapper.findEndorserIdList(skill.getId(), loggedInUser.getId());
+				List<String> endorserIdList = endorsementMapper.findEndorsersList(skill.getId(), loggedInUser.getId());
 				skill.setEndorsers(endorserIdList);
 				skill.setPoint(endorserIdList.size());
 			}
 			UserProfileResponse userProfileResponse = new UserProfileResponse(new User(loggedInUser.getId(),
+					loggedInUser.getUsername(),
 					loggedInUser.getFirstName(),
 					loggedInUser.getLastName(),
 					loggedInUser.getJobTitle(),

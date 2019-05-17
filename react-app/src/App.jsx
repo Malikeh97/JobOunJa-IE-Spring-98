@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Route, Switch} from 'react-router-dom';
+import {Route, Switch, withRouter} from 'react-router-dom';
 import {ToastContainer} from "react-toastify";
 
 import NavBar from "./components/common/navbar";
@@ -24,7 +24,7 @@ class App extends Component {
                         <Switch>
                             <Route path="/sign-up" component={Signup}/>
                             <Route path="/login" component={Login}/>
-                            <PrivateRoute path="/profile/:id" component={Profile}/>
+                            <PrivateRoute path="/profile/:username" component={Profile}/>
                             <PrivateRoute path="/projects/:id" component={Project}/>
                             <PrivateRoute path="/" component={Home}/>
                         </Switch>

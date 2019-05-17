@@ -1,6 +1,12 @@
 import React from 'react';
 import './navbar.css';
-import {Link, NavLink} from "react-router-dom";
+import {Link, NavLink, withRouter} from "react-router-dom";
+
+const handleLogoutOrLogin = async (e, props) => {
+    e.preventDefault();
+    localStorage.clear();
+    props.history.push("/login");
+};
 
 const NavBar = props => {
     const loggedInUsername = localStorage.getItem('username');
@@ -18,10 +24,14 @@ const NavBar = props => {
 
                 <ul className="navbar-nav" style={{float: 'left'}}>
                     <li className="nav-item">
-                        <NavLink className="nav-link" to={loggedInUserProfileURL}>حساب کاربری</NavLink>
+                        <NavLink className="nav-link" to={loggedInUsername ? loggedInUserProfileURL : "/sign-up"}>
+                            {loggedInUsername ? "حساب کاربری" : "ثبت نام"}
+                        </NavLink>
                     </li>
                     <li className="nav-item">
-                        <NavLink className="nav-link" to="/logout">خروج</NavLink>
+                        <a className="nav-link" onClick={e => handleLogoutOrLogin(e, props)}>
+                            {loggedInUsername ? "خروج" : "ورود"}
+                        </a>
                     </li>
                 </ul>
             </div>
@@ -30,4 +40,4 @@ const NavBar = props => {
 };
 
 
-export default NavBar;
+export default withRouter(NavBar);

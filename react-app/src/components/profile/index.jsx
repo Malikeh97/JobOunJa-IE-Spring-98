@@ -22,7 +22,7 @@ class Profile extends Component {
     };
 
     async componentDidUpdate(prevProps, prevState, snapshot) {
-        if (prevProps.match.params.id !== this.props.match.params.id)
+        if (prevProps.match.params.username !== this.props.match.params.username)
             await this.getData()
     }
 
@@ -31,10 +31,10 @@ class Profile extends Component {
     }
 
     getData = async () => {
-        const { data: userData } = await getUser(this.props.match.params.id);
+        const { data: userData } = await getUser(this.props.match.params.username);
         const availableSkills = [];
-        const userId = localStorage.getItem('userId');
-        if (userId === this.props.match.params.id) {
+        const username = localStorage.getItem('username');
+        if (username === this.props.match.params.username) {
             const { data: skillsData } = await getSkills();
             skillsData.data.forEach(skill => availableSkills.push(skill.name));
         }
@@ -50,7 +50,7 @@ class Profile extends Component {
                 toast.error(ex.response.data.data)
             }
         } else if (isOwnSkill) {
-            const { data: userData } = await deleteSkill(this.props.match.params.id, {skill});
+            const { data: userData } = await deleteSkill(this.state.user.id, {skill});
             this.setState({ user: userData.data })
         }
     };
@@ -78,8 +78,8 @@ class Profile extends Component {
 
 
     render() {
-        const userId = localStorage.getItem('userId');
-        const isOwnSkill = userId === this.props.match.params.id;
+        const username = localStorage.getItem('username');
+        const isOwnSkill = username === this.props.match.params.username;
         const { user, availableSkills, dropdownIsOpen, selectedNewSkill } = this.state;
 
         return (
@@ -120,7 +120,7 @@ class Profile extends Component {
                     {
                         user.skills &&
                         user.skills.map(skill => {
-                            let isEndorsed = skill.endorsers && skill.endorsers.find(endorser => endorser === userId);
+                            let isEndorsed = skill.endorsers && skill.endorsers.find(endorser => endorser === username);
                             return (
                                 <Skill key={skill.name}
                                        skill={skill}

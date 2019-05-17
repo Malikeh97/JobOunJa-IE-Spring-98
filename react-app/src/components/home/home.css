@@ -30,6 +30,15 @@
 
 #home-body #usersList {
     height: 100%;
+}
+
+#home-body #usersList #usersForm {
+    height: 48px;
+}
+
+#home-body #usersList #users {
+    margin-top: 12px;
+    height: calc(100% - 60px);
     overflow: auto;
 }
 
