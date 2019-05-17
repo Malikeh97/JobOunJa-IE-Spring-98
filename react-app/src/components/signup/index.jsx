@@ -98,8 +98,7 @@ class Signup extends Component {
             let {data: resp} = await registerUser(data);
             toast.success(resp.data)
         } catch (ex) {
-            console.log(ex)
-            // toast.error(ex.response.data.data)
+            toast.error(ex.response.data.data)
         }
 
     };
