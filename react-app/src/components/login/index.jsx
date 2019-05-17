@@ -2,6 +2,8 @@ import React, {Component} from "react";
 import Joi from 'joi-browser'
 import './login.css';
 import {toast} from "react-toastify";
+import {registerUser} from "../../services/signupService";
+import {loginUser} from "../../services/loginService";
 
 
 
@@ -17,8 +19,16 @@ class Login extends Component {
     };
 
     schema = {
-        username: Joi.string().required(),
-        password: Joi.string().required()
+        username: Joi.string().required().error(e => {
+            return {
+                message: "نام کاربری اجباری است"
+            }
+        }),
+        password: Joi.string().required().error(e => {
+            return {
+                message: "رمز عبور اجباری است"
+            }
+        })
     }
 
     handleInputChange = ({currentTarget: input}) => {
@@ -27,13 +37,20 @@ class Login extends Component {
         this.setState({ inputs })
     };
 
-    handleSubmit = e => {
-        e.preventDefault();
-        const errors = this.validate();
-        console.log(errors);
-        this.setState({ errors: errors || {} });
-        if(errors) return;
-        console.log('submitted')
+    handleSubmit = async (e) => {
+        try {
+            e.preventDefault();
+            let errors = this.validate();
+            Object.values(errors).forEach(err => toast.error(err));
+            if (errors) return;
+
+            const data = {...this.state.inputs};
+            let {data: resp} = await loginUser(data);
+            localStorage.setItem('jwtToken', resp.data);
+        } catch (ex) {
+            toast.error(ex.response.data.data)
+        }
+
     };
 
     validate = () => {

@@ -94,7 +94,7 @@ class Signup extends Component {
 
             const data = {...this.state.inputs};
             let {data: resp} = await registerUser(data);
-            toast.success(resp)
+            toast.success(resp.data)
         } catch (ex) {
             toast.error(ex.response.data.data)
         }

@@ -10,6 +10,7 @@ import Login from "./components/login";
 import Signup from "./components/signup";
 import 'react-toastify/dist/ReactToastify.min.css';
 import './App.css';
+import PrivateRoute from "./components/common/privateRoute";
 
 
 class App extends Component {
@@ -23,9 +24,9 @@ class App extends Component {
                         <Switch>
                             <Route path="/sign-up" component={Signup}/>
                             <Route path="/login" component={Login}/>
-                            <Route path="/profile/:id" component={Profile}/>
-                            <Route path="/projects/:id" component={Project}/>
-                            <Route path="/" component={Home}/>
+                            <PrivateRoute path="/profile/:id" component={Profile}/>
+                            <PrivateRoute path="/projects/:id" component={Project}/>
+                            <PrivateRoute path="/" component={Home}/>
                         </Switch>
                     </main>
                     <footer>
