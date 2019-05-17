@@ -54,10 +54,10 @@ public class UsersService {
 			AllUsersResponse allUsersResponse = new AllUsersResponse(userList);
 			return allUsersResponse.toJSON();
 		} catch (SQLException e) {
-			System.out.println(e.getLocalizedMessage());
+			ErrorResponse errorResponse = new ErrorResponse("Internal server error", 500);
+			response.setStatus(500);
+			return errorResponse.toJSON();
 		}
-		return null;
-
 	}
 
 	public String handleSingleUserRequest(HttpServletResponse response, String username) throws IOException {
@@ -92,10 +92,10 @@ public class UsersService {
 			UserProfileResponse userProfileResponse = new UserProfileResponse(newUser);
 			return userProfileResponse.toJSON();
 		} catch (SQLException e) {
-			System.out.println(e.getLocalizedMessage());
+			ErrorResponse errorResponse = new ErrorResponse("Internal server error", 500);
+			response.setStatus(500);
+			return errorResponse.toJSON();
 		}
-		return null;
-
 	}
 
 	public String handleEndorseRequest(SkillRequest request, HttpServletResponse response, String id, HttpServletRequest servletRequest) throws IOException {
@@ -133,7 +133,7 @@ public class UsersService {
 			}
 
 			for (Skill skill : user.getSkills()) {
-				List<String> endorserIdList = endorsementMapper.findEndorsersList(skill.getId(), loggedInUser.getId());
+				List<String> endorserIdList = endorsementMapper.findEndorsersList(skill.getId(), user.getId());
 				skill.setEndorsers(endorserIdList);
 				skill.setPoint(endorserIdList.size());
 			}
@@ -148,9 +148,10 @@ public class UsersService {
 			return userProfileResponse.toJSON();
 
 		} catch (SQLException e) {
-			System.out.println(e.getLocalizedMessage());
+			ErrorResponse errorResponse = new ErrorResponse("Internal server error", 500);
+			response.setStatus(500);
+			return errorResponse.toJSON();
 		}
-		return null;
 	}
 
 	public String handleAddSkillRequest(SkillRequest request, HttpServletResponse response, HttpServletRequest servletRequest) throws IOException {

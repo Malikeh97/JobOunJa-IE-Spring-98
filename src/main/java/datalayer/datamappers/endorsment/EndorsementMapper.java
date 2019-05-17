@@ -74,11 +74,11 @@ public class EndorsementMapper extends Mapper<Endorsement, String> implements IE
 	}
 
 	private static String getFindEndorsementListStatement() {
-		return String.format("SELECT u.user_name,"+
+		return String.format("SELECT u.user_name"+
 				" FROM %s e" +
-				" WHERE e.endorsed_id = ? and e.user_skill_id = ?" +
-				" JOIN %s b ON e.endorser_id = u.id",
-				TABLE_NAME,
+				" JOIN %s u ON e.endorser_id = u.id" +
+				" WHERE e.endorsed_id = ? and e.user_skill_id = ?",
+						TABLE_NAME,
 				UserMapper.TABLE_NAME);
 	}
 

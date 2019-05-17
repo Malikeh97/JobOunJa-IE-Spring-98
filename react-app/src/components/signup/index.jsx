@@ -20,6 +20,12 @@ class Signup extends Component {
         errors: {}
     };
 
+    componentWillMount = () => {
+        if (localStorage.getItem("username")) {
+            this.props.history.push("/")
+        }
+    };
+
     schema = {
         name: Joi.string().required().error(e => {
             return {

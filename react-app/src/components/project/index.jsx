@@ -55,7 +55,8 @@ class Project extends Component {
         clearInterval(this.interval);
     }
 
-    handleAddBid = async () => {
+    handleAddBid = async (e) => {
+        e.preventDefault()
         try {
             await addBid(this.state.project.id, { bidAmount: this.state.bidAmount });
             this.setState({ isBidAdded: true });

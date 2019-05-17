@@ -25,9 +25,9 @@ public class UsersController extends BaseController {
 		UsersService usersService = new UsersService();
 		String stringResponse;
 		SkillRequest skillRequest = parseJSONRequest(request, SkillRequest.class);
-		if (splittedURI.length == 3) {
+		if (splittedURI.length == 2) {
 			stringResponse = usersService.handleAddSkillRequest(skillRequest, response, request);
-		} else if (splittedURI.length == 4) {
+		} else if (splittedURI.length == 3) {
 			stringResponse = usersService.handleEndorseRequest(skillRequest, response, splittedURI[2], request);
 		} else {
 			ErrorResponse errorResponse = new ErrorResponse(request.getRequestURI() + " not found", 404);

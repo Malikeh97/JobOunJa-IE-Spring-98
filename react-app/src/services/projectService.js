@@ -18,7 +18,7 @@ export function getProject(id) {
 }
 
 export function addBid(id, data) {
-    return http.post(`${apiUrl}/projects/${id}/add_bid`, data, {
+    return http.put(`${apiUrl}/projects/${id}`, data, {
         headers: {
             "Authorization": localStorage.getItem('jwtToken')
         }

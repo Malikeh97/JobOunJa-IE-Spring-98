@@ -5,8 +5,6 @@ import {toast} from "react-toastify";
 import {loginUser} from "../../services/loginService";
 
 
-
-
 class Login extends Component {
     state = {
         inputs: {
@@ -15,6 +13,12 @@ class Login extends Component {
         },
         errors: {}
 
+    };
+
+    componentWillMount = () => {
+        if (localStorage.getItem("username")) {
+            this.props.history.push("/")
+        }
     };
 
     schema = {
@@ -33,7 +37,7 @@ class Login extends Component {
     handleInputChange = ({currentTarget: input}) => {
         const inputs = {...this.state.inputs};
         inputs[input.name] = input.value;
-        this.setState({ inputs })
+        this.setState({inputs})
     };
 
     handleSubmit = async (e, props) => {
@@ -61,10 +65,10 @@ class Login extends Component {
     validate = () => {
         const result = Joi.validate(this.state.inputs, this.schema, {abortEarly: false});
         console.log('error');
-        if(!result.error) return null;
+        if (!result.error) return null;
 
         const errors = {};
-        for(let item of result.error.details)
+        for (let item of result.error.details)
             errors[item.path[0]] = item.message;
         return errors;
     };
@@ -72,33 +76,39 @@ class Login extends Component {
     render() {
         return (
             <div className="container-fluid" id="login">
-                        <div className="well card card-body">
-                            <h2 id="title">
-                                 ورود
-                            </h2>
+                <div className="well card card-body">
+                    <h2 id="title">
+                        ورود
+                    </h2>
 
-                            <form>
-                                <div className="row">
-                                    <div className="form-group col-md-10" id="username">
-                                        <label htmlFor="username-input">نام کاربری: </label>
-                                        <input type="text" placeholder='نام کاربری' className="form-control" id="username-input" name="username" onChange={this.handleInputChange}/>
-                                        {this.state.errors.username && <div className="alert alert-danger">{this.state.errors.username}</div>}
-                                    </div>
-                                </div>
-
-                                <div className="row">
-                                    <div className="form-group col-md-10" id="password">
-                                        <label htmlFor="password-input">رمزعبور: </label>
-                                        <input type="password" placeholder='رمز عبور' className="form-control" id="password-input" name="password" onChange={this.handleInputChange}/>
-                                        {this.state.errors.password && <div className="alert alert-danger">{this.state.errors.password}</div>}
-                                    </div>
-                                </div>
-                                <div className="row">
-                                    <button type="submit" className="btn btn-primary" id="login-button" onClick={e => this.handleSubmit(e, this.props)}>ورود</button>
-                                </div>
-
-                            </form>
+                    <form>
+                        <div className="row">
+                            <div className="form-group col-md-10" id="username">
+                                <label htmlFor="username-input">نام کاربری: </label>
+                                <input type="text" placeholder='نام کاربری' className="form-control" id="username-input"
+                                       name="username" onChange={this.handleInputChange}/>
+                                {this.state.errors.username &&
+                                <div className="alert alert-danger">{this.state.errors.username}</div>}
+                            </div>
                         </div>
+
+                        <div className="row">
+                            <div className="form-group col-md-10" id="password">
+                                <label htmlFor="password-input">رمزعبور: </label>
+                                <input type="password" placeholder='رمز عبور' className="form-control"
+                                       id="password-input" name="password" onChange={this.handleInputChange}/>
+                                {this.state.errors.password &&
+                                <div className="alert alert-danger">{this.state.errors.password}</div>}
+                            </div>
+                        </div>
+                        <div className="row">
+                            <button type="submit" className="btn btn-primary" id="login-button"
+                                    onClick={e => this.handleSubmit(e, this.props)}>ورود
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
 
             </div>
         );

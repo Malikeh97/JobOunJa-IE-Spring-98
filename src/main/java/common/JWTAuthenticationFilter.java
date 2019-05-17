@@ -35,6 +35,7 @@ public class JWTAuthenticationFilter implements Filter {
                 PrintWriter out = response.getWriter();
                 out.print(failResponse.toJSON());
                 out.flush();
+                return;
             }
 
             Jws<Claims> jws;
@@ -50,9 +51,7 @@ public class JWTAuthenticationFilter implements Filter {
                 models.User user = userMapper.findByUsername(username);
 
                 servletRequest.setAttribute("user", user);
-
                 filterChain.doFilter(request, servletResponse);
-
             } catch (JwtException ex) {
                 FailResponse<String> failResponse = new FailResponse<>("Invalid token");
                 response.setStatus(403);

@@ -31,7 +31,7 @@ public class ProjectsService {
 	}
 
 	public String handleAllProjectsRequest(HttpServletResponse response, String nameLike, HttpServletRequest request) throws ServletException, IOException, SQLException {
-		List<Project> projectList = new ArrayList<>();
+		List<Project> projectList;
 
 		if(nameLike == null)
 			projectList = this.projectMapper.findAllForDomain();
