@@ -46,7 +46,6 @@ class Login extends Component {
             let errors = this.validate();
 
             if (errors) {
-                console.log(errors);
                 Object.values(errors).forEach(err => toast.error(err));
                 return;
             }
@@ -64,7 +63,6 @@ class Login extends Component {
 
     validate = () => {
         const result = Joi.validate(this.state.inputs, this.schema, {abortEarly: false});
-        console.log('error');
         if (!result.error) return null;
 
         const errors = {};

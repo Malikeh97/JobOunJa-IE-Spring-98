@@ -27,7 +27,6 @@ export function addSkill(id, data) {
 }
 
 export function deleteSkill(id, data) {
-    console.log(localStorage.getItem('jwtToken'));
     return http.delete(`${apiUrl}/users`, {
         data,
         headers: {

@@ -1,7 +1,6 @@
 import React, {Component} from "react";
 import Joi from 'joi-browser';
 import './signup.css';
-import {addSkill} from "../../services/userService";
 import {toast} from "react-toastify";
 import {registerUser} from "../../services/signupService";
 
@@ -44,7 +43,6 @@ class Signup extends Component {
         }),
         password: Joi.string().required().min(8).error(e => {
             e.forEach(err => {
-                console.log(err);
                 switch (err.type) {
                     case "any.required":
                         err.message = "پسورد اجباری است";
@@ -52,6 +50,8 @@ class Signup extends Component {
                     case "string.min":
                         err.message = "پسورد باید حداقل ۸ کاراکتر باشد";
                         break;
+                    default:
+                            break;
                 }
                 // case "string.required"
             });
@@ -126,10 +126,10 @@ class Signup extends Component {
 
                 <div id="slideshow">
                     <div className="slide-wrapper">
-                        <div className="slide"><img src={require("../../assets/1.jpg")}/></div>
-                        <div className="slide"><img src={require("../../assets/2.jpg")}/></div>
-                        <div className="slide"><img src={require("../../assets/3.jpg")}/></div>
-                        <div className="slide"><img src={require("../../assets/4.jpg")}/></div>
+                        <div className="slide"><img src={require("../../assets/1.jpg")} alt="slide"/></div>
+                        <div className="slide"><img src={require("../../assets/2.jpg")} alt="slide"/></div>
+                        <div className="slide"><img src={require("../../assets/3.jpg")} alt="slide"/></div>
+                        <div className="slide"><img src={require("../../assets/4.jpg")} alt="slide"/></div>
                     </div>
                 </div>
 

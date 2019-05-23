@@ -1,7 +1,5 @@
-import React, {Component} from "react";
+import React from "react";
 import './BidPlaceHolder.css';
-import BidInfoText from "./BidInfoText";
-
 
 const BidPlaceHolder = ({ bidAmount, bidValueChanged, onClick}) => {
 

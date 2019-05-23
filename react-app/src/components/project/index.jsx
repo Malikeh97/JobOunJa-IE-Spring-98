@@ -79,7 +79,7 @@ class Project extends Component {
                         <div className="col-md-2 p-0">
                             <img src={require("../../assets/target.png")}
                                  className="img-thumbnail over"// eslint-disable-line no-console
-                                 alt="default image"
+                                 alt="profile"
                                  id="profile-picture"/>
                         </div>
                         <div className="col-md-10">

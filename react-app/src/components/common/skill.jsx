@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './skill.css';
-import Dropdown from "./dropdown";
 
 const Skill = ({ skill, isOwnSkill, isEndorsed, onClick }) => {
     let skillClass = 'point default';

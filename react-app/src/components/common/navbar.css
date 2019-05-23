@@ -22,6 +22,12 @@
     cursor: pointer;
 }
 
+.navbar .nav-item button.nav-link {
+    background: none;
+    border: none;
+    outline: none;
+}
+
 #logo {
     height: 60px;
 }

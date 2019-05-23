@@ -5,7 +5,6 @@ import Skill from "../common/skill";
 import {addSkill, deleteSkill, endorse, getUser} from '../../services/userService';
 import Dropdown from "../common/dropdown";
 import {getSkills} from "../../services/skillsService";
-import {toast} from "react-toastify";
 import {requestHandler} from "../../utilities";
 
 class Profile extends Component {

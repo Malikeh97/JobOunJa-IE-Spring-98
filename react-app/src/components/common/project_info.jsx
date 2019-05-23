@@ -17,7 +17,6 @@ const ProjectInfo = ({infoId, altIcon, iconSrc, featureText, valueText, timeIsUp
         valueClass += ' green';
     }
 
-    console.log(featureText)
     return (
         <div className="project-info" id={infoId}>
             <img src={iconSrc} alt={altIcon}/>

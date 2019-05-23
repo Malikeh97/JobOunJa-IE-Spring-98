@@ -29,9 +29,9 @@ const NavBar = props => {
                         </NavLink>
                     </li>
                     <li className="nav-item">
-                        <a className="nav-link" onClick={e => handleLogoutOrLogin(e, props)}>
+                        <button className="nav-link" onClick={e => handleLogoutOrLogin(e, props)}>
                             {loggedInUsername ? "خروج" : "ورود"}
-                        </a>
+                        </button>
                     </li>
                 </ul>
             </div>
