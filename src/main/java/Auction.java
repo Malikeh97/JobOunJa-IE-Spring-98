@@ -21,7 +21,6 @@ public class Auction implements Runnable  {
     private ProjectMapper projectMapper;
     private UserMapper userMapper;
     public void run() {
-        System.out.println(new Date().getTime());
         try {
             List<Project> projects = projectMapper.findUncheckedProjects();
             for (Project project : projects) {
@@ -45,17 +44,15 @@ public class Auction implements Runnable  {
     }
 
     private double getBidEvaluation(Project project, User user, Bid bid) {
-        HashMap<String, Integer> projectSkills = new HashMap<>();
-        List<Skill> userSkills = user.getSkills();
+        HashMap<String, Integer> userSkills = new HashMap<>();
+        List<Skill> projectSkills = project.getSkills();
 
-        for(Skill skill: project.getSkills()) {
-            projectSkills.put(skill.getName(), skill.getPoint());
-        }
+        for(Skill skill: user.getSkills())
+            userSkills.put(skill.getName(), skill.getPoint());
 
         double value = 0;
-        for (Skill skill : userSkills) {
-            value += Math.pow(projectSkills.get(skill.getName()) - skill.getPoint(), 2.0);
-        }
+        for (Skill skill : projectSkills)
+            value += Math.pow(userSkills.get(skill.getName()) - skill.getPoint(), 2.0);
         value *= 10000;
         value += (double) (project.getBudget() - bid.getBidAmount());
 

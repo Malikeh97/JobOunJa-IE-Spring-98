@@ -118,7 +118,7 @@ class Project extends Component {
                             />
 
                             {
-                                this.state.project.winner && <ProjectInfo
+                                this.state.timeOver && this.state.project.winner && <ProjectInfo
                                     infoId="winner"
                                     altIcon="winner"
                                     iconSrc={check_mark}
@@ -128,7 +128,7 @@ class Project extends Component {
                                 />
                             }
                             {
-                                !this.state.project.winner && <ProjectInfo
+                                this.state.timeOver && !this.state.project.winner && <ProjectInfo
                                     infoId="winner"
                                     altIcon="winner"
                                     iconSrc={check_mark}
