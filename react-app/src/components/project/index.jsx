@@ -13,7 +13,7 @@ import check_mark from '../../assets/check_mark.svg';
 
 import {getProject, addBid} from '../../services/projectService';
 import {toast} from "react-toastify";
-import {formatNumber, calcTimeLeft} from "../../utilities";
+import {formatNumber, calcTimeLeft, requestHandler} from "../../utilities";
 
 class Project extends Component {
     state = {
@@ -37,20 +37,21 @@ class Project extends Component {
     };
 
     async componentDidMount() {
-        const { data: projectData } = await getProject(this.props.match.params.id);
-        const { timeOver, text: timeLeft } = calcTimeLeft(projectData.data.project.deadline);
-        this.setState({
-            project: projectData.data.project,
-            isBidAdded: projectData.data.bidAdded,
-            requiredSkills: projectData.data.project.skills,
-            timeOver, timeLeft
-        });
-        this.interval = setInterval(() => {
-            const { timeOver, text: timeLeft } = calcTimeLeft(projectData.data.project.deadline);
-            this.setState({ timeOver, timeLeft });
-            if (timeOver) clearInterval(this.interval);
-        } , 1000);
-
+        await requestHandler(async () => {
+            const {data: projectData} = await getProject(this.props.match.params.id);
+            const {timeOver, text: timeLeft} = calcTimeLeft(projectData.data.project.deadline);
+            this.setState({
+                project: projectData.data.project,
+                isBidAdded: projectData.data.bidAdded,
+                requiredSkills: projectData.data.project.skills,
+                timeOver, timeLeft
+            });
+            this.interval = setInterval(() => {
+                const {timeOver, text: timeLeft} = calcTimeLeft(projectData.data.project.deadline);
+                this.setState({timeOver, timeLeft});
+                if (timeOver) clearInterval(this.interval);
+            }, 1000);
+        }, this.props);
     }
 
     componentWillUnmount() {
@@ -59,18 +60,16 @@ class Project extends Component {
 
     handleAddBid = async (e) => {
         e.preventDefault();
-        try {
-            await addBid(this.state.project.id, { bidAmount: this.state.bidAmount });
-            this.setState({ isBidAdded: true });
+        await requestHandler(async () => {
+            await addBid(this.state.project.id, {bidAmount: this.state.bidAmount});
+            this.setState({isBidAdded: true});
             toast.success("مقدار پیشنهادی با موفقیت ثبت شد!")
-        } catch (ex) {
-            toast.error(ex.response.data.data)
-        }
+        }, this.props);
     };
 
     updateBid = (e) => {
-        this.setState({ bidAmount: e.currentTarget.value });
-    }
+        this.setState({bidAmount: e.currentTarget.value});
+    };
 
     render() {
         return (
@@ -78,7 +77,8 @@ class Project extends Component {
                 <div className="well card card-body">
                     <div className="row">
                         <div className="col-md-2 p-0">
-                            <img src={require("../../assets/target.png")} className="img-thumbnail over"// eslint-disable-line no-console
+                            <img src={require("../../assets/target.png")}
+                                 className="img-thumbnail over"// eslint-disable-line no-console
                                  alt="default image"
                                  id="profile-picture"/>
                         </div>

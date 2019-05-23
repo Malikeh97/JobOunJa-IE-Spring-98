@@ -131,7 +131,7 @@ public abstract class Mapper<T, ID> implements IMapper<T, ID> {
 				"VALUES (" + new String(new char[columns.size() - 1]).replace("\0", "?, ") + "?)";
 	}
 
-	private String getDeleteByIdStatement() {
+	protected String getDeleteByIdStatement() {
 		return "DELETE " +
 				" FROM " + this.tableName +
 				" WHERE id = ?";

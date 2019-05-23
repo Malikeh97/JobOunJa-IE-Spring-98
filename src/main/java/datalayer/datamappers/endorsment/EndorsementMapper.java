@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EndorsementMapper extends Mapper<Endorsement, String> implements IEndorsementMapper {
-	private static final String TABLE_NAME = "endorsements";
+	public static final String TABLE_NAME = "endorsements";
 
 	public EndorsementMapper() throws SQLException {
 		super(Endorsement.class, TABLE_NAME);

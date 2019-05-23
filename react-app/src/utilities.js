@@ -1,17 +1,27 @@
 import moment from "moment";
 import persianJs from "persianjs";
+import {toast} from "react-toastify";
+
+export async function requestHandler(tryFunction, props) {
+    try {
+        await tryFunction();
+    } catch (e) {
+        if (e.response.status === 403 && e.response.data.data === 'Invalid token') {
+            localStorage.clear();
+            props.history.push("/login");
+        }
+        toast.error(e.response.data.data)
+    }
+};
 
 export function formatNumber(num) {
     return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
 }
 
 export function calcTimeLeft(deadline) {
-    console.log(deadline);
     deadline = moment(deadline);
     let currentTime = moment();
     let diff = deadline.diff(currentTime);
-    // console.log("deadline",deadline)
-    // console.log("c",currentTime)
     if (diff <= 0)
         return {timeOver: true, text: 'مهلت تمام شده'};
 

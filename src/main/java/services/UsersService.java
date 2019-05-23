@@ -212,7 +212,7 @@ public class UsersService {
 			User loggedInUser = userMapper.findByIdWithSkills(user.getId());
 			for (Skill skill : loggedInUser.getSkills()) {
 				if (skill.getName().equals(request.getSkill())) {
-					userSkillMapper.deleteById(skill.getId());
+					userSkillMapper.delete(loggedInUser.getId(), skill.getId());
 					loggedInUser.getSkills().remove(skill);
 					break;
 				}

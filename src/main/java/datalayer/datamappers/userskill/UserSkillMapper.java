@@ -2,16 +2,15 @@ package datalayer.datamappers.userskill;
 
 import datalayer.DBCPDBConnectionPool;
 import datalayer.datamappers.Mapper;
+import datalayer.datamappers.endorsment.EndorsementMapper;
 import models.Skill;
 import models.UserSkill;
-import utils.MapperUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class UserSkillMapper extends Mapper<UserSkill, String> implements IUserSkillMapper {
@@ -66,27 +65,38 @@ public class UserSkillMapper extends Mapper<UserSkill, String> implements IUserS
 		}
 	}
 
+	public void delete(String userId, String skillId) throws SQLException {
+		try (Connection con = DBCPDBConnectionPool.getConnection();
+			 PreparedStatement st = con.prepareStatement(getDeleteEndorsementByUserIdAndUserSkillIdStatement())
+		) {
+			st.setString(1, userId);
+			st.setString(2, skillId);
+			System.out.println(st.executeUpdate());
+		}
 
-
-	public String findUserSkillId(String userId, String skillId) throws SQLException {
-			try (Connection con = DBCPDBConnectionPool.getConnection();
-				 PreparedStatement st = con.prepareStatement(getUserSkillIdStatement()
-			)) {
-				st.setString(1,skillId);
-				st.setString(2, userId);
-				ResultSet resultSet = st.executeQuery();
-				List<Skill> skills = new ArrayList<>();
-				if (resultSet.next()) {
-					return resultSet.getString(1);
-				}
-				return "0";
-			}
+		try (Connection con = DBCPDBConnectionPool.getConnection();
+			 PreparedStatement st = con.prepareStatement(getDeleteByUserIdAndSkillId())
+		) {
+			st.setString(1, userId);
+			st.setString(2, skillId);
+			System.out.println(st.executeUpdate());
+		}
 	}
 
-	private String getUserSkillIdStatement() {
-		return "SELECT " + TABLE_NAME + ".id" +
-				" FROM " + TABLE_NAME +
-				" WHERE " + TABLE_NAME + ".skill_id = ? and " + TABLE_NAME + ".user_id = ?";
+	private String getDeleteByUserIdAndSkillId() {
+		return String.format("DELETE" +
+						" FROM %s" +
+						" WHERE user_id = ? and skill_id = ?",
+				TABLE_NAME
+		);
+	}
+
+	private String getDeleteEndorsementByUserIdAndUserSkillIdStatement() {
+		return String.format("DELETE" +
+				" FROM %s" +
+				" WHERE endorsed_id = ? and user_skill_id = ?",
+				EndorsementMapper.TABLE_NAME
+		);
 	}
 
 

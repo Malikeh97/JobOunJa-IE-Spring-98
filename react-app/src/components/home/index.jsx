@@ -6,6 +6,7 @@ import User from "./user";
 import {getUsers} from "../../services/userService";
 import Project from "./project";
 import {getProjects} from "../../services/projectService";
+import {requestHandler} from "../../utilities";
 
 class Home extends Component {
     state = {
@@ -18,9 +19,11 @@ class Home extends Component {
     };
 
     async componentDidMount() {
-        const {data: usersData} = await getUsers();
-        const {data: projectsData} = await getProjects();
-        this.setState({users: usersData.data, projects: projectsData.data});
+        await requestHandler(async () => {
+            const {data: usersData} = await getUsers();
+            const {data: projectsData} = await getProjects();
+            this.setState({users: usersData.data, projects: projectsData.data});
+        }, this.props);
     }
 
     handleProjectSearchChange = e => {
@@ -28,9 +31,10 @@ class Home extends Component {
     };
 
     handleProjectSearch = async () => {
-        console.log(this.state.projectSearchValue)
-        const {data: projectsData} = await getProjects(this.state.projectSearchValue);
-        this.setState({projects: projectsData.data})
+        await requestHandler(async () => {
+            const {data: projectsData} = await getProjects(this.state.projectSearchValue);
+            this.setState({projects: projectsData.data})
+        }, this.props);
     };
 
     handleUserSearchChange = e => {
@@ -43,9 +47,10 @@ class Home extends Component {
             userSearchValue: e.target.value,
             typing: false,
             typingTimeout: setTimeout(async () => {
-                console.log(this.state.userSearchValue);
-                const {data: usersData} = await getUsers(this.state.userSearchValue);
-                this.setState({users: usersData.data})
+                await requestHandler(async () => {
+                    const {data: usersData} = await getUsers(this.state.userSearchValue);
+                    this.setState({users: usersData.data})
+                }, this.props);
             }, 700)
         });
         // this.setState({ userSearchValue: e.currentTarget.value });

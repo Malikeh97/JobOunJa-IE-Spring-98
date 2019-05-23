@@ -6,6 +6,7 @@ import {addSkill, deleteSkill, endorse, getUser} from '../../services/userServic
 import Dropdown from "../common/dropdown";
 import {getSkills} from "../../services/skillsService";
 import {toast} from "react-toastify";
+import {requestHandler} from "../../utilities";
 
 class Profile extends Component {
     state = {
@@ -31,32 +32,32 @@ class Profile extends Component {
     }
 
     getData = async () => {
-        const { data: userData } = await getUser(this.props.match.params.username);
+        const {data: userData} = await getUser(this.props.match.params.username);
         const availableSkills = [];
         const username = localStorage.getItem('username');
         if (username === this.props.match.params.username) {
-            const { data: skillsData } = await getSkills();
-            skillsData.data.forEach(skill => availableSkills.push(skill.name));
+            await requestHandler(async () => {
+                const {data: skillsData} = await getSkills();
+                skillsData.data.forEach(skill => availableSkills.push(skill.name));
+            });
         }
-        this.setState({ user: userData.data, availableSkills })
+        this.setState({user: userData.data, availableSkills})
     };
 
     handleOnSkillClick = async (skill, isOwnSkill, isEndorsed) => {
-        if (!isOwnSkill && !isEndorsed) {
-            try {
-                const { data } = await endorse(this.state.user.id, { skill });
-                this.setState({ user: data.data })
-            } catch (ex) {
-                toast.error(ex.response.data.data)
+        await requestHandler(async () => {
+            if (!isOwnSkill && !isEndorsed) {
+                const {data} = await endorse(this.state.user.id, {skill});
+                this.setState({user: data.data})
+            } else if (isOwnSkill) {
+                const {data: userData} = await deleteSkill(this.state.user.id, {skill});
+                this.setState({user: userData.data})
             }
-        } else if (isOwnSkill) {
-            const { data: userData } = await deleteSkill(this.state.user.id, {skill});
-            this.setState({ user: userData.data })
-        }
+        }, this.props);
     };
 
     handleDropdownSelect = (skill) => {
-        this.setState({ selectedNewSkill: skill })
+        this.setState({selectedNewSkill: skill})
     };
 
     toggle = () => {
@@ -66,21 +67,19 @@ class Profile extends Component {
     };
 
     handleDropdownButtonClick = async () => {
-        try {
-            const { data } = await addSkill(this.state.user.id, { skill: this.state.selectedNewSkill });
+        await requestHandler(async () => {
+            const {data} = await addSkill(this.state.user.id, {skill: this.state.selectedNewSkill});
             let availableSkills = [...this.state.availableSkills];
             availableSkills = availableSkills.filter(skill => skill !== this.state.selectedNewSkill);
-            this.setState({ user: data.data, selectedNewSkill: '', availableSkills });
-        } catch (ex) {
-            toast.error(ex.response.data.data)
-        }
+            this.setState({user: data.data, selectedNewSkill: '', availableSkills});
+        }, this.props);
     };
 
 
     render() {
         const username = localStorage.getItem('username');
         const isOwnSkill = username === this.props.match.params.username;
-        const { user, availableSkills, dropdownIsOpen, selectedNewSkill } = this.state;
+        const {user, availableSkills, dropdownIsOpen, selectedNewSkill} = this.state;
 
         return (
             <div id="profile" className="container-fluid">
@@ -89,8 +88,8 @@ class Profile extends Component {
                         <img src={user.profilePictureURL} className="img-thumbnail over" alt="Profile"/>
                     </div>
                     <svg height="30" width="150">
-                        <polygon points="40,0 0,40 150,40 150,0" style={{ fill: "rgb(147, 216, 221)" }}/>
-                        <polygon points="55,0 15,40 138,40 138,0" style={{ fill: "rgb(129, 199, 204)" }}/>
+                        <polygon points="40,0 0,40 150,40 150,0" style={{fill: "rgb(147, 216, 221)"}}/>
+                        <polygon points="55,0 15,40 138,40 138,0" style={{fill: "rgb(129, 199, 204)"}}/>
                     </svg>
                     <div id="user-details">
                         <div id="username">{`${user.firstName} ${user.lastName}`}</div>
