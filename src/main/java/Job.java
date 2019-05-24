@@ -2,14 +2,10 @@ import datalayer.datamappers.project.ProjectMapper;
 import datalayer.datamappers.projectskill.ProjectSkillMapper;
 import domain.Project;
 import domain.Skill;
-import gateways.HttpGateway;
 import gateways.IGateway;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import utils.Column;
-import utils.ForeignKey;
-import utils.Id;
 
 import java.sql.SQLException;
 import java.util.*;
