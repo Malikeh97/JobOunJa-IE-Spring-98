@@ -1,3 +1,4 @@
+import datalayer.DBCPDBConnectionPool;
 import datalayer.datamappers.bid.BidMapper;
 import datalayer.datamappers.project.ProjectMapper;
 import datalayer.datamappers.projectskill.ProjectSkillMapper;
@@ -70,6 +71,11 @@ public class JabOunJaServletContextListener implements ServletContextListener {
     @Override
     public void contextDestroyed(ServletContextEvent event) {
         scheduler.shutdownNow();
+        try {
+            DBCPDBConnectionPool.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         Enumeration<Driver> drivers = DriverManager.getDrivers();
         while (drivers.hasMoreElements()) {
             Driver driver = drivers.nextElement();
@@ -80,7 +86,6 @@ public class JabOunJaServletContextListener implements ServletContextListener {
                 System.out.println(String.format("Error deregistering driver %s", driver));
                 System.out.println(e.getLocalizedMessage());
             }
-
         }
     }
 }

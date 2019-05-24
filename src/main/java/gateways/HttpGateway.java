@@ -25,7 +25,7 @@ public class HttpGateway implements IGateway {
 		} catch (IOException ex) {
 			System.err.println(ex.getLocalizedMessage());
 		}
-		return null;
+		return new ArrayList<>();
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public class HttpGateway implements IGateway {
 		} catch (IOException ex) {
 			System.err.println(ex.getLocalizedMessage());
 		}
-		return null;
+		return new ArrayList<>();
 	}
 
 	private String getResponse(String path) throws IOException {

@@ -115,7 +115,7 @@ public class MapperUtils {
 		return String.format("CREATE TABLE IF NOT EXISTS %s (%s)", tableName, columnsSql.toString());
 	}
 
-	public static String getSqlType(TableColumn column) {
+	private static String getSqlType(TableColumn column) {
 		switch (column.getType()) {
 			case "int":
 			case "Integer":

@@ -31,5 +31,9 @@ public class DBCPDBConnectionPool {
         return ds.getConnection();
     }
 
+    public static void close() throws SQLException {
+        ds.close();
+    }
+
     private DBCPDBConnectionPool(){ }
 }
