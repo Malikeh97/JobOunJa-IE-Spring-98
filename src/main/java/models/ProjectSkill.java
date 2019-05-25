@@ -22,5 +22,6 @@ public class ProjectSkill {
 	@ForeignKey(foreignTable = "skills", foreignField = "id")
 	private String skillId;
 
+	@Column(length = 11)
 	private Integer point;
 }

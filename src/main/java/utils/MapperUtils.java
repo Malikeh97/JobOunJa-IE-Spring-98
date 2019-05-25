@@ -76,6 +76,7 @@ public class MapperUtils {
 					tableColumn.setName(columnAnnotation.name());
 				tableColumn.setNullable(columnAnnotation.nullable());
 				tableColumn.setUnique(columnAnnotation.unique());
+				tableColumn.setLength(columnAnnotation.length());
 			}
 			if (field.isAnnotationPresent(Id.class))
 				tableColumn.setIsPrimaryKey(true);
@@ -116,6 +117,8 @@ public class MapperUtils {
 	}
 
 	private static String getSqlType(TableColumn column) {
+		if (column.getIsPrimaryKey() || column.getForeignKeyReference() != null)
+			return "VARCHAR(40)";
 		switch (column.getType()) {
 			case "int":
 			case "Integer":
@@ -125,10 +128,12 @@ public class MapperUtils {
 			case "Boolean":
 			case "long":
 			case "Long":
-				return "INTEGER";
+				return "BIGINT";
 			case "String":
 			case "LocalDate":
-				return "TEXT";
+				if (column.getLength() == -1)
+					return "TEXT";
+				return String.format("VARCHAR(%d)", column.getLength());
 		}
 		return "";
 	}

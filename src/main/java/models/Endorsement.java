@@ -19,9 +19,9 @@ public class Endorsement {
 	@ForeignKey(foreignTable = "users", foreignField = "id")
 	private String endorserId;
 
-	@Column(name = "user_skill_id")
-	@ForeignKey(foreignTable = "user_skills", foreignField = "id")
-	private String userSkillId;
+	@Column(name = "skill_id")
+	@ForeignKey(foreignTable = "skills", foreignField = "id")
+	private String skillId;
 
 	@Column(name = "endorsed_id")
 	@ForeignKey(foreignTable = "users", foreignField = "id")

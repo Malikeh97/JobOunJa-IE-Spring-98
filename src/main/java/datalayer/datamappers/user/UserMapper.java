@@ -14,7 +14,6 @@ import java.util.List;
 
 public class UserMapper extends Mapper<User, String> implements IUserMapper {
 	public static final String TABLE_NAME = "users";
-	private EndorsementMapper endorsementMapper = new EndorsementMapper();
 
 	public UserMapper() throws SQLException {
 		super(User.class, TABLE_NAME);
@@ -53,6 +52,7 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
 	}
 
 	private void convertWithSkills(domain.User user, ResultSet rs) throws SQLException {
+		EndorsementMapper endorsementMapper = new EndorsementMapper();
 		user.setId(rs.getString(1));
 		user.setFirstName(rs.getString(2));
 		user.setLastName(rs.getString(3));
@@ -68,7 +68,7 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
 			domain.Skill skill = new domain.Skill();
 			skill.setId(skillId);
 			skill.setName(rs.getString(8));
-			skill.setPoint(this.endorsementMapper.countNumOfEndorsements(skill.getId(), user.getId()));
+			skill.setPoint(endorsementMapper.countNumOfEndorsements(skill.getId(), user.getId()));
 			user.getSkills().add(skill);
 		} while (rs.next());
 	}
@@ -89,7 +89,7 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
     public List<User> findNameLike(String nameLike) throws SQLException {
         try (Connection con = DBCPDBConnectionPool.getConnection();
              PreparedStatement st = con.prepareStatement(getFindAllStatement() +
-                     " WHERE first_name || last_name LIKE ?")
+                     " WHERE CONCAT_WS(\" \", first_name, last_name) LIKE ?")
         ) {
             st.setString(1, "%" + nameLike + "%");
             List<User> userList = new ArrayList<>();

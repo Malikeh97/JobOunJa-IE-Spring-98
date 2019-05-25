@@ -94,7 +94,7 @@ public class UserSkillMapper extends Mapper<UserSkill, String> implements IUserS
 	private String getDeleteEndorsementByUserIdAndUserSkillIdStatement() {
 		return String.format("DELETE" +
 				" FROM %s" +
-				" WHERE endorsed_id = ? and user_skill_id = ?",
+				" WHERE endorsed_id = ? and skill_id = ?",
 				EndorsementMapper.TABLE_NAME
 		);
 	}

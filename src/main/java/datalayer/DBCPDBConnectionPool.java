@@ -1,6 +1,7 @@
 package datalayer;
 
 
+
 import org.apache.commons.dbcp.BasicDataSource;
 
 import java.sql.Connection;
@@ -18,11 +19,12 @@ import java.sql.SQLException;
 public class DBCPDBConnectionPool {
 
     private static BasicDataSource ds = new BasicDataSource();
-    private final static String dbURL = "jdbc:sqlite:jobounja.db";
+    private final static String dbURL = "jdbc:mysql://localhost:3306/jobOunJa?useUnicode=yes&characterEncoding=UTF-8";
 
     static {
-        ds.setDriverClassName("org.sqlite.JDBC");
+        ds.setDriverClassName("com.mysql.jdbc.Driver");
         ds.setUrl(dbURL);
+        ds.setUsername("root");
         ds.setMinIdle(5);
         ds.setMaxIdle(10);
     }

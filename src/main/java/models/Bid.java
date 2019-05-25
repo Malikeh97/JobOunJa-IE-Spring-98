@@ -22,5 +22,6 @@ public class Bid {
 	@ForeignKey(foreignTable = "users", foreignField = "id")
 	private String userId;
 
+	@Column(length = 11)
 	private Integer amount;
 }

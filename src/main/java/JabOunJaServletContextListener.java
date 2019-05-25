@@ -1,5 +1,6 @@
 import datalayer.DBCPDBConnectionPool;
 import datalayer.datamappers.bid.BidMapper;
+import datalayer.datamappers.endorsment.EndorsementMapper;
 import datalayer.datamappers.project.ProjectMapper;
 import datalayer.datamappers.projectskill.ProjectSkillMapper;
 import datalayer.datamappers.skill.SkillMapper;
@@ -33,12 +34,13 @@ public class JabOunJaServletContextListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent arg0) {
         try {
             IGateway gateway = new HttpGateway();
-            ProjectMapper projectMapper = new ProjectMapper();
             UserMapper userMapper = new UserMapper();
+            ProjectMapper projectMapper = new ProjectMapper();
             SkillMapper skillMapper = new SkillMapper();
             UserSkillMapper userSkillMapper = new UserSkillMapper();
             ProjectSkillMapper projectSkillMapper = new ProjectSkillMapper();
             BidMapper bidMapper = new BidMapper();
+            EndorsementMapper endorsementMapper = new EndorsementMapper();
             Map<String, String> skills = new HashMap<>();
             List<models.Skill> skillsFromDb = skillMapper.findAll();
 

@@ -8,7 +8,7 @@ const Project = ({ project, onProjectClick }) => {
     const { timeOver, text: timeLeft } = calcTimeLeft(project.deadline);
     return (
         <div className="row project" onClick={onProjectClick}>
-            <img src={project.imageURL ? project.imageURL : require('./project.png')} alt="project"/>
+            <img src={project.imageUrl ? project.imageUrl : require('./project.png')} alt="project"/>
             <div className="details">
                 <div className="title">
                     <span>{project.title}</span>

@@ -20,12 +20,14 @@ public class EndorsementMapper extends Mapper<Endorsement, String> implements IE
 		super(Endorsement.class, TABLE_NAME);
 	}
 
-	public Integer countNumOfEndorsements(String userSkillId, String endorsedId) throws SQLException {
+	public Integer countNumOfEndorsements(String skillId, String endorsedId) throws SQLException {
 		try (Connection con = DBCPDBConnectionPool.getConnection();
 			 PreparedStatement st = con.prepareStatement(getCountAllStatement() +
-					 " WHERE endorsements.endorsed_id IS '" + endorsedId +
-					 "' and endorsements.user_skill_id = '" + userSkillId + "'");
+					 " WHERE endorsements.endorsed_id = ?" +
+					 " and endorsements.skill_id = ?")
 		) {
+			st.setString(1, endorsedId);
+			st.setString(2, skillId);
 			ResultSet resultSet = st.executeQuery();
 			if (resultSet.next()) {
 				return resultSet.getInt(1);
@@ -34,13 +36,13 @@ public class EndorsementMapper extends Mapper<Endorsement, String> implements IE
 		}
 	}
 
-	public List<String> findEndorsersList(String userSkillId, String endorsedId) throws SQLException {
+	public List<String> findEndorsersList(String skillId, String endorsedId) throws SQLException {
 		try (Connection con = DBCPDBConnectionPool.getConnection();
 			 PreparedStatement st = con.prepareStatement(getFindEndorsementListStatement()
 			 )) {
 			List<String> endorserIdList = new ArrayList<>();
 			st.setString(1, endorsedId);
-			st.setString(2, userSkillId);
+			st.setString(2, skillId);
 			ResultSet resultSet = st.executeQuery();
 			while (resultSet.next()) {
 				endorserIdList.add(resultSet.getString(1));
@@ -49,12 +51,12 @@ public class EndorsementMapper extends Mapper<Endorsement, String> implements IE
 		}
 	}
 
-	public static boolean isEndorsedByUserId(String endorserId, String userSkillId, String endorsedId) throws SQLException {
+	public static boolean isEndorsedByUserId(String endorserId, String skillId, String endorsedId) throws SQLException {
 		try (Connection con = DBCPDBConnectionPool.getConnection();
 			 PreparedStatement st = con.prepareStatement(getFindIsEndorsedByStatement())
 		) {
 			st.setString(1, String.valueOf(endorserId));
-			st.setString(2, String.valueOf(userSkillId));
+			st.setString(2, String.valueOf(skillId));
 			st.setString(3, String.valueOf(endorsedId));
 			ResultSet resultSet = st.executeQuery();
 			if (resultSet.next())
@@ -69,7 +71,7 @@ public class EndorsementMapper extends Mapper<Endorsement, String> implements IE
 		return "SELECT " + " count(id) " +
 				" FROM " + TABLE_NAME +
 				" WHERE endorser_id = ? and " +
-				"user_skill_id = ? and " +
+				"skill_id = ? and " +
 				"endorsed_id = ?";
 	}
 
@@ -77,7 +79,7 @@ public class EndorsementMapper extends Mapper<Endorsement, String> implements IE
 		return String.format("SELECT u.user_name"+
 				" FROM %s e" +
 				" JOIN %s u ON e.endorser_id = u.id" +
-				" WHERE e.endorsed_id = ? and e.user_skill_id = ?",
+				" WHERE e.endorsed_id = ? and e.skill_id = ?",
 						TABLE_NAME,
 				UserMapper.TABLE_NAME);
 	}

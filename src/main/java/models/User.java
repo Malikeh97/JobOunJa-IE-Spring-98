@@ -14,19 +14,19 @@ public class User {
     @Id
     private String id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 200)
     private String password;
 
-    @Column(name = "user_name", nullable = false, unique = true)
+    @Column(name = "user_name", nullable = false, unique = true, length = 20)
     private String userName;
 
-    @Column(name = "first_name", nullable = false)
+    @Column(name = "first_name", nullable = false, length = 20)
     private String firstName;
 
-    @Column(name = "last_name", nullable = false)
+    @Column(name = "last_name", nullable = false, length = 20)
     private String lastName;
 
-    @Column(name = "job_title", nullable = false)
+    @Column(name = "job_title", nullable = false, length = 20)
     private String jobTitle;
 
     @Column(name = "profile_picture_url", nullable = false)

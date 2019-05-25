@@ -16,6 +16,7 @@ public class TableColumn {
 	private Boolean nullable = true;
 	private Boolean unique = false;
 	private String foreignKeyReference;
+	private int length;
 	private Method getter;
 	private Method setter;
 }
