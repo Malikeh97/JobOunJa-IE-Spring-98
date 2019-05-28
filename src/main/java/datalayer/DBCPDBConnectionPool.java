@@ -26,7 +26,7 @@ public class DBCPDBConnectionPool {
         ds.setDriverClassName("com.mysql.jdbc.Driver");
         ds.setUrl(dbURL);
         ds.setUsername("root");
-        ds.setPassword("password");
+        ds.setPassword("mypasswd");
         ds.setMinIdle(5);
         ds.setMaxIdle(10);
     }

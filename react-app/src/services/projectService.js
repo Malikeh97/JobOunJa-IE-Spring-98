@@ -1,8 +1,7 @@
 import http from "./httpService";
-import {apiUrl} from "../config.json";
 
 export function getProjects(search) {
-    return http.get(`${apiUrl}/projects${search ? '?search=' + search : ''}`, {
+    return http.get(`/projects${search ? '?search=' + search : ''}`, {
         headers: {
             "Authorization": localStorage.getItem('jwtToken')
         }
@@ -10,7 +9,7 @@ export function getProjects(search) {
 }
 
 export function getProject(id) {
-    return http.get(`${apiUrl}/projects/${id}`, {
+    return http.get(`/projects/${id}`, {
         headers: {
             "Authorization": localStorage.getItem('jwtToken')
         }
@@ -18,7 +17,7 @@ export function getProject(id) {
 }
 
 export function addBid(id, data) {
-    return http.put(`${apiUrl}/projects/${id}`, data, {
+    return http.put(`/projects/${id}`, data, {
         headers: {
             "Authorization": localStorage.getItem('jwtToken')
         }

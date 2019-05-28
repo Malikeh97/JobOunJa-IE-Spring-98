@@ -1,6 +1,5 @@
 import http from "./httpService";
-import {apiUrl} from "../config";
 
 export function loginUser(data) {
-    return http.post(`${apiUrl}/login`, data);
+    return http.post(`/login`, data);
 }
