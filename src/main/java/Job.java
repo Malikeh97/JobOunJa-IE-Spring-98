@@ -36,12 +36,13 @@ public class Job implements Runnable {
 							null,
 							false
 					));
-					for (Skill skill : project.getSkills())
+					for (Skill skill : project.getSkills()) {
 						projectSkillMapper.save(new models.ProjectSkill(UUID.randomUUID().toString(),
 								project.getId(),
 								skills.get(skill.getName()),
 								skill.getPoint()
 						));
+					}
 					System.out.println(project.getTitle() + "added successfully");
 				}
 

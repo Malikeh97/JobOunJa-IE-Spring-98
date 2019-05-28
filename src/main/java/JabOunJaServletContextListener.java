@@ -44,13 +44,16 @@ public class JabOunJaServletContextListener implements ServletContextListener {
             Map<String, String> skills = new HashMap<>();
             List<models.Skill> skillsFromDb = skillMapper.findAll();
 
-            for (models.Skill skill : skillsFromDb)
-                skills.put(skill.getName(), skill.getId());
-
-            if (skillMapper.countAll() == 0) {
+            if (skillsFromDb.isEmpty()) {
                 List<Skill> skillList = gateway.getSkills();
-                for (Skill skill : skillList)
-                    skillMapper.save(new models.Skill(UUID.randomUUID().toString(), skill.getName()));
+                for (Skill skill : skillList) {
+                    String id = UUID.randomUUID().toString();
+                    skillMapper.save(new models.Skill(id, skill.getName()));
+                    skills.put(skill.getName(), id);
+                }
+            } else {
+                for (models.Skill skill : skillsFromDb)
+                    skills.put(skill.getName(), skill.getId());
             }
 
             scheduler = Executors.newSingleThreadScheduledExecutor();
