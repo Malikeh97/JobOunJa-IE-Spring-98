@@ -3,7 +3,7 @@ package services;
 import api.ErrorResponse;
 import api.SignupRequest;
 import api.SignupResponse;
-import com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException;
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import datalayer.datamappers.user.UserMapper;
 import models.User;
 import org.mindrot.jbcrypt.BCrypt;
@@ -47,12 +47,12 @@ public class SignupService {
             }
             SignupResponse signupResponse = new SignupResponse("You registered successfully");
             return signupResponse.toJSON();
-        } catch (MySQLIntegrityConstraintViolationException e) {
-//            if (e.getResultCode() == SQLiteErrorCode.SQLITE_CONSTRAINT_UNIQUE) {
-//                ErrorResponse errorResponse = new ErrorResponse("This username already exists", 1505);
-//                response.setStatus(403);
-//                return errorResponse.toJSON();
-//            }
+        } catch (SQLException e) {
+            if (e instanceof MySQLIntegrityConstraintViolationException) {
+                ErrorResponse errorResponse = new ErrorResponse("This username already exists", 1505);
+                response.setStatus(403);
+                return errorResponse.toJSON();
+            }
             ErrorResponse errorResponse = new ErrorResponse("Internal server error", 500);
             response.setStatus(500);
             return errorResponse.toJSON();

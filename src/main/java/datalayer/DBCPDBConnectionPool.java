@@ -19,12 +19,14 @@ import java.sql.SQLException;
 public class DBCPDBConnectionPool {
 
     private static BasicDataSource ds = new BasicDataSource();
-    private final static String dbURL = "jdbc:mysql://localhost:3306/jobOunJa?useUnicode=yes&characterEncoding=UTF-8";
+    private final static String dbURL = "jdbc:mysql://db:3306/jobOunJa?useUnicode=yes&characterEncoding=UTF-8";
 
     static {
+        System.out.println(System.getenv().get("test"));
         ds.setDriverClassName("com.mysql.jdbc.Driver");
         ds.setUrl(dbURL);
         ds.setUsername("root");
+        ds.setPassword("password");
         ds.setMinIdle(5);
         ds.setMaxIdle(10);
     }
